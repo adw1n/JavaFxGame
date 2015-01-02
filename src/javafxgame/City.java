@@ -18,5 +18,8 @@ public class City extends Node{ //city na razie ma tylko wiekszy promien
         
         citizens.add(new Citizen(this));
     }
+    public boolean isCity(){
+        return true;
+    }
     
 }

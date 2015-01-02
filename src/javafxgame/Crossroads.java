@@ -10,4 +10,7 @@ public class Crossroads extends Node{
     Crossroads(int x,int y,Pane pane){
         super(x,y,pane,radius);
     }
+    public boolean isCity(){
+        return false;
+    }
 }
