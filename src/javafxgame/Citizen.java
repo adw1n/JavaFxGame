@@ -22,8 +22,9 @@ public class Citizen extends Guy {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println("kliknales mnie bro"+getCircle());
-                if(!suspended) mySuspend();
-                else {myResume();System.out.println("wznowilem bro!");}
+                myStop();
+//                if(!suspended) mySuspend();
+//                else {myResume();System.out.println("wznowilem bro!");}
 //                setRunning(false);
 //                thrd.stop();
             }
@@ -59,6 +60,12 @@ public class Citizen extends Guy {
             }
         }
         System.out.println("juz nie runnuje");
+        JavaFxGame.runAndWait( new Thread(){
+            public void run(){
+                getCircle().setCenterX(-100);
+            }
+        });
+        
     }
 
     /**

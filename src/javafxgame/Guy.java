@@ -86,6 +86,19 @@ public abstract class Guy extends Entity implements Runnable {
                     System.out.println("zaczynam runandwait");
                     if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() < it.getCircle().getCenterX()) {//go right
                         System.out.println("go right bro!" + getCircle());
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                        System.out.println("koniec waitowania");
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterY(getCircle().getCenterY() + Graph.getRoadWidth() / 2);
@@ -100,14 +113,12 @@ public abstract class Guy extends Entity implements Runnable {
                             try {
                                 synchronized (this) {
                                     while (suspended) {
-                                       wait();
-
-//                                        Thread.sleep(100);
+//                                       wait();
+                                        Thread.sleep(100);
                                         System.out.println("koniec waitowania");
                                     }
-                                    if (stopped) {
+                                    if (stopped) 
                                         break;
-                                    }
                                 }
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,7 +129,7 @@ public abstract class Guy extends Entity implements Runnable {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             doStuffWhenWantsToEnterCrossroad(it);
-
+                            
                             t = new Thread() {
                                 public void run() {
                                     getCircle().setCenterX(getCircle().getCenterX() + 1);
@@ -129,6 +140,19 @@ public abstract class Guy extends Entity implements Runnable {
 
 //                                    } 
                         }
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                        System.out.println("koniec waitowania");
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterY(getCircle().getCenterY() - Graph.getRoadWidth() / 2);
@@ -138,6 +162,19 @@ public abstract class Guy extends Entity implements Runnable {
                         JavaFxGame.runAndWait(t);
                         //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
                     } else if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() > it.getCircle().getCenterX()) {//go left
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                        System.out.println("koniec waitowania");
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterY(getCircle().getCenterY() - Graph.getRoadWidth() / 2);
@@ -148,6 +185,19 @@ public abstract class Guy extends Entity implements Runnable {
                         int ile = Math.abs((int) (getCircle().getCenterX() - it.getCircle().getCenterX()));
                         System.out.println("left ile: " + ile);
                         for (int i = 0; i < ile; i++) {
+                            try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                        System.out.println("koniec waitowania");
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             try {
                                 Thread.sleep(50);
                             } catch (InterruptedException ex) {
@@ -164,6 +214,18 @@ public abstract class Guy extends Entity implements Runnable {
 
 //                                    
                         }
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterY(getCircle().getCenterY() + Graph.getRoadWidth() / 2);
@@ -173,6 +235,18 @@ public abstract class Guy extends Entity implements Runnable {
                         };
                         JavaFxGame.runAndWait(t);
                     } else if (getCircle().getCenterY() < it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go down
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterX(getCircle().getCenterX() - Graph.getRoadWidth() / 2);
@@ -184,6 +258,19 @@ public abstract class Guy extends Entity implements Runnable {
                         System.out.println("w dol ile: " + ile);
 
                         for (int i = 0; i < ile; i++) {
+                            try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                        System.out.println("koniec waitowania");
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             try {
                                 Thread.sleep(50);
                             } catch (InterruptedException ex) {
@@ -200,6 +287,18 @@ public abstract class Guy extends Entity implements Runnable {
                             JavaFxGame.runAndWait(t);
 
                         }
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterX(getCircle().getCenterX() + Graph.getRoadWidth() / 2);
@@ -211,6 +310,18 @@ public abstract class Guy extends Entity implements Runnable {
 //
 
                     } else if (getCircle().getCenterY() > it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go up
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterX(getCircle().getCenterX() + Graph.getRoadWidth() / 2);
@@ -220,6 +331,19 @@ public abstract class Guy extends Entity implements Runnable {
                         JavaFxGame.runAndWait(t);
                         int ile = (int) Math.abs(getCircle().getCenterY() - it.getCircle().getCenterY());
                         for (int i = 0; i < ile; i++) {
+                            try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                        System.out.println("koniec waitowania");
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             try {
                                 Thread.sleep(50);
                             } catch (InterruptedException ex) {
@@ -235,6 +359,18 @@ public abstract class Guy extends Entity implements Runnable {
                             JavaFxGame.runAndWait(t);
 //                                    
                         }
+                        try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                    }
+                                    if (stopped) 
+                                        break;
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterX(getCircle().getCenterX() - Graph.getRoadWidth() / 2);
