@@ -3,37 +3,52 @@ package javafxgame;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 
-public class Citizen extends Guy{
+public class Citizen extends Guy {
+
     private String surname;
     private City nativeCity;
-    private static final String colour="yellow";
-    private static final int hp=10;
-    public Citizen(City nativeCity){
-        super(hp,nativeCity.getCircle().getCenterX(),nativeCity.getCircle().getCenterY(),nativeCity.getPane(),nativeCity);
-        
-        this.nativeCity=nativeCity;
+    private static final String colour = "yellow";
+    private static final int hp = 10;
+    
+    public Citizen(City nativeCity) {
+        super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity);
+//        running = true;
+        this.nativeCity = nativeCity;
+       getCircle().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("kliknales mnie bro"+getCircle());
+                setRunning(false);
+            }
+        });
     }
+
     @Override
-    public void run(){
-        while(true){
-                
-        try {
-            while(zajety){thrd.sleep(1000);
+    public void run() {
+        while (isRunning()) {
+
+            try {
+                while (zajety) {
+                    thrd.sleep(1000);
 //            System.out.println("ludzik zajety bro!");
-            };
+                };
+                if(!isRunning()) { System.out.println("wybrejkowales mnie bro");break;}
                 System.out.println("niezajety! znow jade");
-            Random randomGenerator = new Random();
-            Thread.sleep(randomGenerator.nextInt(10000));
-            go(getGraph().findPathBetweenCities(currentNode,getGraph().getRandomCity(currentNode)));
-            System.out.println("wysleepowalem sie");
+                Random randomGenerator = new Random();
+                Thread.sleep(randomGenerator.nextInt(10000));
+                go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
+                System.out.println("wysleepowalem sie");
 //            //goToCity();
 //            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Citizen.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Citizen.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
+
     /**
      * @return the surname
      */
@@ -55,12 +70,15 @@ public class Citizen extends Guy{
         //nativeCity might have been destroyed, add checking this l8er
         return nativeCity;
     }
-    void stop(){
-        
+
+    void stop() {
+
     }
-    City selectCityToGoTo(){
-       return null;
+
+    City selectCityToGoTo() {
+        return null;
     }
+
     /**
      * @param nativeCity the nativeCity to set
      */

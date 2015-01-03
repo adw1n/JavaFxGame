@@ -1,4 +1,3 @@
-
 package javafxgame;
 
 import java.util.Stack;
@@ -17,13 +16,14 @@ import javafx.stage.Stage;
  * @author Przemyslaw
  */
 public class JavaFxGame extends Application {
+
     Graph graf;
+
     @Override
     public void start(Stage primaryStage) {
-       
-        
+
         Pane root = new Pane();
-        
+
         Scene scene = new Scene(root, 1200, 700);
 //        City c=new City(100,100,root);
 //        c.createCitizen();
@@ -32,27 +32,27 @@ public class JavaFxGame extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         graf = new Graph(root);
-        City c1=new City(50,300,root,graf);
+        City c1 = new City(50, 300, root, graf);
         c1.setGraph(graf);
         graf.addNode(c1);
-        graf.addNode(new Crossroads(200,300,root,graf));
-        graf.addNode(new Crossroads(200,100,root,graf));
-        graf.addNode(new Crossroads(200,500,root,graf));
-        graf.addEdge(1,2);
-        graf.addEdge(1,3);
+        graf.addNode(new Crossroads(200, 300, root, graf));
+        graf.addNode(new Crossroads(200, 100, root, graf));
+        graf.addNode(new Crossroads(200, 500, root, graf));
+        graf.addEdge(1, 2);
+        graf.addEdge(1, 3);
         graf.addEdge(0, 1);
-        Node c2=new City(350,500,root,graf);
+        Node c2 = new City(350, 500, root, graf);
         graf.addNode(c2);
         graf.addEdge(3, 4);
-        graf.addNode(new City(350,100,root,graf));
+        graf.addNode(new City(350, 100, root, graf));
         graf.addEdge(2, 5);
-        graf.addNode(new Crossroads(600,300,root,graf));
+        graf.addNode(new Crossroads(600, 300, root, graf));
         graf.addEdge(6, 1);
-        graf.addNode(new Crossroads(600,100,root,graf));
+        graf.addNode(new Crossroads(600, 100, root, graf));
         graf.addEdge(6, 7);
-        graf.addNode(new City(450,100,root,graf));
+        graf.addNode(new City(450, 100, root, graf));
         graf.addEdge(7, 8);
-        Stack<Node> s=graf.findPathBetweenCities(c1,c2),s2;
+        Stack<Node> s = graf.findPathBetweenCities(c1, c2), s2;
 //        Citizen c=new Citizen(c1);
 //        c.go(s);
 //        Citizen cc=new Citizen((City) c2);
@@ -92,7 +92,7 @@ public class JavaFxGame extends Application {
 //        t.start();
 //        for(Node a : s)
 //            System.out.println(a.getCircle().getCenterX()+ " "+a.getCircle().getCenterY());
-        
+
     }
 
     /**
@@ -101,38 +101,41 @@ public class JavaFxGame extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
     /**
- * Runs the specified {@link Runnable} on the
- * JavaFX application thread and waits for completion.
- *autor:http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/
- * @param action the {@link Runnable} to run
- * @throws NullPointerException if {@code action} is {@code null}
- */
-public static void runAndWait(Runnable action) {
-    if (action == null)
-        throw new NullPointerException("action");
- 
-    // run synchronously on JavaFX thread
-    if (Platform.isFxApplicationThread()) {
-        action.run();
-        return;
-    }
- 
-    // queue on JavaFX thread and wait for completion
-    final CountDownLatch doneLatch = new CountDownLatch(1);
-    Platform.runLater(() -> {
-        try {
-            action.run();
-        } finally {
-            doneLatch.countDown();
+     * Runs the specified {@link Runnable} on the JavaFX application thread and
+     * waits for completion.
+     * autor:http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/
+     *
+     * @param action the {@link Runnable} to run
+     * @throws NullPointerException if {@code action} is {@code null}
+     */
+    public static void runAndWait(Runnable action) {
+        if (action == null) {
+            throw new NullPointerException("action");
         }
-    });
- 
-    try {
-        doneLatch.await();
-    } catch (InterruptedException e) {
-        // ignore exception
+
+        // run synchronously on JavaFX thread
+        if (Platform.isFxApplicationThread()) {
+            action.run();
+            return;
+        }
+
+        // queue on JavaFX thread and wait for completion
+        final CountDownLatch doneLatch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            try {
+                action.run();
+            } finally {
+                doneLatch.countDown();
+            }
+        });
+
+        try {
+            doneLatch.await();
+        } catch (InterruptedException e) {
+            // ignore exception
+        }
     }
-}
 
 }

@@ -1,30 +1,33 @@
-
-
 package javafxgame;
 
 import java.util.ArrayList;
 import javafx.scene.layout.Pane;
 
+public class City extends Node { //city na razie ma tylko wiekszy promien
 
-public class City extends Node{ //city na razie ma tylko wiekszy promien
-    private static final int radius=32;
+    private static final int radius = 32;
     ArrayList<Citizen> citizens;
-    static int ile=0;
-    public City(int x, int y, Pane pane,Graph graph) {
-        super(x, y, pane,radius,graph);
-        citizens=new ArrayList<>();
+    static int ile = 0;
+
+    public City(int x, int y, Pane pane, Graph graph) {
+        super(x, y, pane, radius, graph);
+        citizens = new ArrayList<>();
         ile++;
-        if(ile%3==0)
-        createCitizen();
+//        if (ile % 3 == 0) {
+//        for(int i=0;i<10;i++)
+            createCitizen();
+//        }
     }
-    public void createCitizen(){
+
+    public void createCitizen() {
 //        Citizen c=new Citizen(this);
-        Citizen c=new Citizen(this);
+        Citizen c = new Citizen(this);
         c.setGraph(getGraph());
         citizens.add(c);
     }
-    public boolean isCity(){
+
+    public boolean isCity() {
         return true;
     }
-    
+
 }
