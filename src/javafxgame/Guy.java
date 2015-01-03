@@ -9,7 +9,7 @@ import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
 
 public abstract class Guy extends Entity implements Runnable {
-
+    
     private int hp;
     private Circle circle;
     Thread thrd;
@@ -17,17 +17,22 @@ public abstract class Guy extends Entity implements Runnable {
     private Graph graph;
     boolean zajety;
     private static final int radius = 5;
-private volatile boolean running = true;
+    private volatile boolean running = true;
+    boolean suspended;
+    boolean stopped;
+
     public Guy(int hp, double x, double y, Pane pane, Node currentNode) {
         zajety = false;
 //        super(name);
+        suspended = false;
+        stopped = false;
         this.hp = hp;
         this.currentNode = currentNode;
         thrd = new Thread(this);
         thrd.setDaemon(true);
         thrd.start();
         circle = new Circle(x, y, radius);
-        circle.setFill(valueOf("yellow"));
+        circle.setFill(valueOf("blue"));
         pane.getChildren().add(circle);
     }
 
@@ -35,6 +40,24 @@ private volatile boolean running = true;
     public void run() {
         System.out.println("nowy watek hurra!" + toString());
         //goToCity();
+    }
+
+    synchronized void myStop() {
+        stopped = true;
+        suspended = false;
+        notify();
+    }
+
+    synchronized void mySuspend() {
+        suspended = true;
+//        notify();
+    }
+
+    synchronized void myResume() {
+        suspended = false;
+        
+        notify();
+        System.out.println("notifajnalem");
     }
 
     /**
@@ -48,8 +71,9 @@ private volatile boolean running = true;
         path.remove(0);
         Thread renderer;
         renderer = new Thread() {
-            Node skrzyzowanie=null;
-            boolean wchodze=false;
+            Node skrzyzowanie = null;
+            boolean wchodze = false;
+
             @Override
             public void run() {
                 for (Node it : path) {
@@ -73,6 +97,21 @@ private volatile boolean running = true;
                         int ile = Math.abs((int) (getCircle().getCenterX() - it.getCircle().getCenterX()));
                         System.out.println("ile to " + ile);
                         for (int i = 0; i < ile; i++) {
+                            try {
+                                synchronized (this) {
+                                    while (suspended) {
+                                       wait();
+
+//                                        Thread.sleep(100);
+                                        System.out.println("koniec waitowania");
+                                    }
+                                    if (stopped) {
+                                        break;
+                                    }
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             try {
                                 Thread.sleep(50);
                             } catch (InterruptedException ex) {
@@ -218,7 +257,8 @@ private volatile boolean running = true;
                 }
                 zajety = false;
             }
-        ;
+
+            ;
 
 //                while (true) {
 //                    try {
@@ -237,23 +277,23 @@ private volatile boolean running = true;
 
             private void doStuffWhenWantsToEnterCrossroad(Node it) {
                 //System.out.println("sleepuje");
-                if (!it.isCity() && !wchodze && getCircle().getBoundsInParent().intersects(it.getCircle().getBoundsInParent()) ) {
+                if (!it.isCity() && !wchodze && getCircle().getBoundsInParent().intersects(it.getCircle().getBoundsInParent())) {
                     System.out.println("Wszedlem na skrzyzowanie bro!!!");
-                    wchodze=true;//potrzebuje jeszcze wychodzenie
-                    skrzyzowanie=it;
+                    wchodze = true;//potrzebuje jeszcze wychodzenie
+                    skrzyzowanie = it;
                     try {
                         ((Crossroads) it).getSem().acquire();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if(wchodze & skrzyzowanie!=null && !skrzyzowanie.isCity() && !circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent())){
+                if (wchodze & skrzyzowanie != null && !skrzyzowanie.isCity() && !circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent())) {
                     System.out.println("opuszczam bro!");
                     wchodze = false;
                     ((Crossroads) skrzyzowanie).getSem().release();
-                    
-                    skrzyzowanie=null;
-                    
+
+                    skrzyzowanie = null;
+
                 }
             }
         };

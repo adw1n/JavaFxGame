@@ -4,13 +4,14 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 public class Citizen extends Guy {
 
     private String surname;
     private City nativeCity;
-    private static final String colour = "yellow";
+    private static final String colour = "blue";
     private static final int hp = 10;
     
     public Citizen(City nativeCity) {
@@ -21,21 +22,31 @@ public class Citizen extends Guy {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println("kliknales mnie bro"+getCircle());
-                setRunning(false);
+                if(!suspended) mySuspend();
+                else {myResume();System.out.println("wznowilem bro!");}
+//                setRunning(false);
+//                thrd.stop();
             }
         });
+      
     }
 
     @Override
     public void run() {
-        while (isRunning()) {
+        while (true) {
 
             try {
                 while (zajety) {
                     thrd.sleep(1000);
-//            System.out.println("ludzik zajety bro!");
+            System.out.println("ludzik zajety bro!");
                 };
-                if(!isRunning()) { System.out.println("wybrejkowales mnie bro");break;}
+//                if(!isRunning()) { System.out.println("wybrejkowales mnie bro");break;}
+                synchronized(this){
+                    while(suspended){
+                        wait();
+                    }
+                    if(stopped) break;
+                }
                 System.out.println("niezajety! znow jade");
                 Random randomGenerator = new Random();
                 Thread.sleep(randomGenerator.nextInt(10000));
@@ -47,6 +58,7 @@ public class Citizen extends Guy {
                 Logger.getLogger(Citizen.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println("juz nie runnuje");
     }
 
     /**

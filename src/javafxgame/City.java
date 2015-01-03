@@ -13,7 +13,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
         super(x, y, pane, radius, graph);
         citizens = new ArrayList<>();
         ile++;
-//        if (ile % 3 == 0) {
+        if (ile  == 1) 
 //        for(int i=0;i<10;i++)
             createCitizen();
 //        }
