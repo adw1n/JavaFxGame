@@ -37,141 +37,125 @@ public abstract class Guy extends Entity implements Runnable{
      * to be implemented
      */
     void go(Stack<Node> path){
-        zajety=true;
+        /*zajety=true;
             //jezeli jestem w srodku miasta
         currentNode=path.get(0);
         path.remove(0);
-        Thread renderer = new Thread(){
-        
+        Thread renderer;
+        renderer = new Thread(){
+            
             @Override
             public void run(){
-                Circle previous=circle;
                 for(Node it: path){
                     
-                    boolean spieprzone=false;
-                do{
-                    spieprzone=false;
-                       if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()<it.getCircle().getCenterX() ){//go right
-                            Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                           circle.setCenterY(circle.getCenterY()+Graph.getRoadWidth()/2);}});
                             
-                            int ile=Math.abs((int) (previous.getCenterX()-it.getCircle().getCenterX()));
-                           for(int i=0;i<ile;i++){
-                               try {
-                                   Thread.sleep(50);
-                                   //System.out.println("sleepuje");
-                                   Platform.runLater(new Runnable() {
+//                    final Circle previous ;
+//                    previous=circle;
+                    
+                        
+                    
+                    
+                    
+                    boolean spieprzone=false;
+//                do
+                    Thread t=new Thread(){
+                        
                         @Override
-                        public void run() {
-                                   circle.setCenterX(circle.getCenterX()+1);
-                        }});
-                               } catch (InterruptedException ex) {
-                                   Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                               }
-                           }
-                            Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            circle.setCenterY(circle.getCenterY()-Graph.getRoadWidth()/2);}});
-                            //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
-                       }
-                            else if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()>it.getCircle().getCenterX() ){//go left
-                                 Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                                circle.setCenterY(circle.getCenterY()-Graph.getRoadWidth()/2);}});
-                                 int ile=Math.abs((int) (previous.getCenterX()-it.getCircle().getCenterX()));
-                                 for(int i=0;i<ile;i++)
-                           {
+                        public void run()
+                        {
+//                    spieprzone=false;
+                            System.out.println("zaczynam runandwait");
+                            if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()<it.getCircle().getCenterX() ){//go right
+                                System.out.println("go right bro!" + circle);
+                                        circle.setCenterY(circle.getCenterY()+Graph.getRoadWidth()/2);
+                                
+                                int ile=Math.abs((int) (circle.getCenterX()-it.getCircle().getCenterX()));
+                                System.out.println("ile to "+ile);
+                                for(int i=0;i<ile;i++){
                                     try {
                                         Thread.sleep(50);
-                                         Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                                        circle.setCenterX(circle.getCenterX()-1);
-                        }});
+                                        //System.out.println("sleepuje");
+                                        
+                                                circle.setCenterX(circle.getCenterX()+1);
+                                           
                                     } catch (InterruptedException ex) {
                                         Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                     }
-                           } Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            circle.setCenterY(circle.getCenterY()+Graph.getRoadWidth()/2);}});
+                                }
+                                
+                                        circle.setCenterY(circle.getCenterY()-Graph.getRoadWidth()/2);
+                                //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
+                            }
+                            else if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()>it.getCircle().getCenterX() ){//go left
+                               
+                                        circle.setCenterY(circle.getCenterY()-Graph.getRoadWidth()/2);
+                                int ile=Math.abs((int) (circle.getCenterX()-it.getCircle().getCenterX()));
+                                for(int i=0;i<ile;i++)
+                                {
+                                    try {
+                                        Thread.sleep(50);
+                                        
+                                                circle.setCenterX(circle.getCenterX()-1);
+                                           
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } 
+                                        circle.setCenterY(circle.getCenterY()+Graph.getRoadWidth()/2);
                             }
                             else if(circle.getCenterY()<it.getCircle().getCenterY() &&circle.getCenterX()==it.getCircle().getCenterX() ){//go down
-                                Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                                circle.setCenterX(circle.getCenterX()-Graph.getRoadWidth()/2);}});
-                                int ile = (int) Math.abs(previous.getCenterY()-it.getCircle().getCenterY());
+                                
+                                        circle.setCenterX(circle.getCenterX()-Graph.getRoadWidth()/2);
+                                int ile = (int) Math.abs(circle.getCenterY()-it.getCircle().getCenterY());
                                 for(int i=0;i<ile;i++)
-                           {
+                                {
                                     try {
                                         Thread.sleep(50);
-                                         Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                                        circle.setCenterY(circle.getCenterY()+1);}});
+                                        
+                                                circle.setCenterY(circle.getCenterY()+1);
                                     } catch (InterruptedException ex) {
                                         Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                     }
-                           }
-                            Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            circle.setCenterX(circle.getCenterX()+Graph.getRoadWidth()/2);
-                        //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
-//                            
-                        }});
+                                }
+                                
+                                        circle.setCenterX(circle.getCenterX()+Graph.getRoadWidth()/2);
+                                        //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
+//
+                                 
                             }
                             else if(circle.getCenterY()>it.getCircle().getCenterY() &&circle.getCenterX()==it.getCircle().getCenterX() ){//go up
-                                 Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                               circle.setCenterX(circle.getCenterX()+Graph.getRoadWidth()/2);}});
-                                 int ile=(int) Math.abs(previous.getCenterY()-it.getCircle().getCenterY());
-                          for(int i=0;i<ile;i++) {
-                                   try {
-                                       Thread.sleep(50);
-                                        Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                                       circle.setCenterY(circle.getCenterY()-1);}});
-                                   } catch (InterruptedException ex) {
-                                       Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                                   }
-                           }
-                            Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            circle.setCenterX(circle.getCenterX()-Graph.getRoadWidth()/2);}});
+                             
+                                        circle.setCenterX(circle.getCenterX()+Graph.getRoadWidth()/2);
+                                int ile=(int) Math.abs(circle.getCenterY()-it.getCircle().getCenterY());
+                                for(int i=0;i<ile;i++) {
+                                    try {
+                                        Thread.sleep(50);
+                                        
+                                                circle.setCenterY(circle.getCenterY()-1);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                                
+                                        circle.setCenterX(circle.getCenterX()-Graph.getRoadWidth()/2);
                             }
-                            else spieprzone=true;
-                }while(spieprzone);
-                     
-//            if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()<it.getCircle().getCenterX() )
-//                            circle.setCenterX(circle.getCenterX()+1);
-//                            else if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()>it.getCircle().getCenterX() )
-//                            circle.setCenterX(circle.getCenterX()-1);
-//                            else if(circle.getCenterY()<it.getCircle().getCenterY() &&circle.getCenterX()==it.getCircle().getCenterX() )
-//                            circle.setCenterY(circle.getCenterY()+1);
-//                            else if(circle.getCenterY()>it.getCircle().getCenterY() &&circle.getCenterX()==it.getCircle().getCenterX() )
-//                           circle.setCenterY(circle.getCenterY()-1);
-               
-                    
-//                        }
-//                });
-                       previous=it.getCircle();
-//                       if(it!=path.get(0))
-//                    while( circle.getCenterX()!=it.getCircle().getCenterX() || circle.getCenterY()!=it.getCircle().getCenterY()) {System.out.println("zablokowany!");};
-        }
-                currentNode=path.lastElement();
-                System.out.println("skonczylem!");
-                zajety=false;
+                            else System.out.println("cos spieprzylem!");
+//                            else spieprzone=true;
                 
-        }
+//                       while(spieprzone);
+                            
+                            
+                        }
+//                        if(it!=path.get(0))
+//                    while( circle.getCenterX()!=it.getCircle().getCenterX() || circle.getCenterY()!=it.getCircle().getCenterY()) {System.out.println("zablokowany!");};
+                    };
+//                                        prev=it.getCircle();
+                    JavaFxGame.runAndWait(t);
+                    currentNode=path.lastElement();
+                    System.out.println("skonczylem!");
+                    zajety=false;
+                    
+                }};
 //                while (true) {
 //                    try {
 //                        Thread.sleep(40);
@@ -193,7 +177,7 @@ public abstract class Guy extends Entity implements Runnable{
         
         
         
-
+*/
     }
 
     /**
