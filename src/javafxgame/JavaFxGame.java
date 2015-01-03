@@ -60,38 +60,38 @@ public class JavaFxGame extends Application {
 //        cc.go(s2);
 //        cc.go(s);
 //        c.go(s);
-        Circle cc=new Circle(200, 600, 30);
-                root.getChildren().add(cc);
-        Thread t=new Thread(){
-            @Override
-            public void run(){
-                for(int i=0;i<500;i++){
+//        Circle cc=new Circle(200, 600, 30);
+//                root.getChildren().add(cc);
+//        Thread t=new Thread(){
+//            @Override
+//            public void run(){
+//                for(int i=0;i<500;i++){
+////                    try {
+////                        sleep(100);
+////                    } catch (InterruptedException ex) {
+////                        Logger.getLogger(JavaFxGame.class.getName()).log(Level.SEVERE, null, ex);
+////                    }
 //                    try {
-//                        sleep(100);
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(JavaFxGame.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-                    try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(JavaFxGame.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                    Thread h=new Thread(){
-                        public void run(){
-                           
-                            cc.setCenterX(cc.getCenterX()+1);
-                             
-                        }
-                    };
-                    runAndWait(h);
-                
-                }
-            }
-        };
-        t.setDaemon(true);
-        t.start();
-        for(Node a : s)
-            System.out.println(a.getCircle().getCenterX()+ " "+a.getCircle().getCenterY());
+//                                Thread.sleep(100);
+//                            } catch (InterruptedException ex) {
+//                                Logger.getLogger(JavaFxGame.class.getName()).log(Level.SEVERE, null, ex);
+//                            }
+//                    Thread h=new Thread(){
+//                        public void run(){
+//                           
+//                            cc.setCenterX(cc.getCenterX()+1);
+//                             
+//                        }
+//                    };
+//                    runAndWait(h);
+//                
+//                }
+//            }
+//        };
+//        t.setDaemon(true);
+//        t.start();
+//        for(Node a : s)
+//            System.out.println(a.getCircle().getCenterX()+ " "+a.getCircle().getCenterY());
         
     }
 
