@@ -16,19 +16,23 @@ public class Citizen extends Guy{
     }
     @Override
     public void run(){
-//        try {
-//            while(true){
-//                while(zajety){thrd.sleep(100);System.out.println("ludzik zajety bro!");};
-//                System.out.println("niezajety! znow jade");
-//            Random randomGenerator = new Random();
-//            Thread.sleep(randomGenerator.nextInt(10000));
-//            go(getGraph().findPathBetweenCities(currentNode,getGraph().getRandomCity(currentNode)));
-//            System.out.println("wysleepowalem sie");
+        while(true){
+                
+        try {
+            while(zajety){thrd.sleep(1000);
+//            System.out.println("ludzik zajety bro!");
+            };
+                System.out.println("niezajety! znow jade");
+            Random randomGenerator = new Random();
+            Thread.sleep(randomGenerator.nextInt(10000));
+            go(getGraph().findPathBetweenCities(currentNode,getGraph().getRandomCity(currentNode)));
+            System.out.println("wysleepowalem sie");
 //            //goToCity();
 //            }
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(Citizen.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Citizen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
     }
     /**
      * @return the surname
