@@ -3,6 +3,7 @@
 package javafxgame;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,11 +39,25 @@ public class Graph {
     public void addNode(Node node){
         //if(node.isCity()) citiesNumbers.add(nodes.size());
         node.setNodeNumber(nodes.size());
+        node.setGraph(this);
         nodes.add(node);
         
          
     }
-    
+    public Node getRandomCity( Node n){
+        while(true){
+         Random randomGenerator = new Random();
+            int generatedNumber=randomGenerator.nextInt(nodes.size());
+            if(nodes.get(generatedNumber).isCity() && nodes.get(generatedNumber)!= n) return nodes.get(generatedNumber);
+        }
+//        for(Node it: nodes){
+//            if(it!=n && it.isCity()){
+//                System.out.println(it.getCircle());
+//                return it;
+//            }
+//        }
+//        return null;
+    }
     //creates road lanes
     public void addEdge(int poczatek,int koniec){
         

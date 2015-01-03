@@ -14,17 +14,19 @@ public abstract class Node {
     private Circle circle;
     private Pane pane;
     private int nodeNumber;
-    public Node(int x,int y,Pane pane,int radius){
+    private Graph graph;
+    public Node(int x,int y,Pane pane,int radius,Graph graph){
 //        edges = new ArrayList<>();
         this.nodeNumber=nodeNumber;
         this.x=x;
         this.y=y;
         circle=new Circle(x,y,radius);
         this.pane=pane;
+        setGraph(graph);
         pane.getChildren().add(circle);
     }
-    public Node(int x,int y,Pane pane,int radius,String color){
-        this(x,y,pane,radius);
+    public Node(int x,int y,Pane pane,int radius,String color,Graph graph){
+        this(x,y,pane,radius,graph);
         circle.setFill(valueOf(color));
     }
 //    void addEdge(int koniec){
@@ -47,6 +49,20 @@ public abstract class Node {
         nodeNumber=number;
     }
     public abstract boolean isCity();
+
+    /**
+     * @return the graph
+     */
+    public Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * @param graph the graph to set
+     */
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
         
     
 }

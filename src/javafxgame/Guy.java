@@ -13,11 +13,14 @@ public abstract class Guy extends Entity implements Runnable{
     private Circle circle;
     Thread thrd;
     Node currentNode;
+    private Graph graph;
+    boolean zajety;
     private static final int radius=5;
-    public Guy(int hp,double x,double y,Pane pane) {
+    public Guy(int hp,double x,double y,Pane pane,Node currentNode) {
+        zajety=false;
 //        super(name);
         this.hp = hp;
-//        this.currentCity = currentCity;
+        this.currentNode = currentNode;
         thrd=new Thread(this);
         thrd.setDaemon(true);
         thrd.start();
@@ -34,6 +37,7 @@ public abstract class Guy extends Entity implements Runnable{
      * to be implemented
      */
     void go(Stack<Node> path){
+        zajety=true;
             //jezeli jestem w srodku miasta
         currentNode=path.get(0);
         path.remove(0);
@@ -44,17 +48,9 @@ public abstract class Guy extends Entity implements Runnable{
                 Circle previous=circle;
                 for(Node it: path){
                     
-                    
-//            while(circle.getCenterX()!=it.getCircle().getCenterX() || circle.getCenterY()!=it.getCircle().getCenterY()){
-//                try {
-//                    //                Platform.runLater(new Runnable() {
-////                        @Override
-////                        public void run() {
-//                    thrd.sleep(10);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-                
+                    boolean spieprzone=false;
+                do{
+                    spieprzone=false;
                        if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()<it.getCircle().getCenterX() ){//go right
                             Platform.runLater(new Runnable() {
                         @Override
@@ -65,7 +61,7 @@ public abstract class Guy extends Entity implements Runnable{
                            for(int i=0;i<ile;i++){
                                try {
                                    Thread.sleep(50);
-                                   System.out.println("sleepuje");
+                                   //System.out.println("sleepuje");
                                    Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -79,7 +75,7 @@ public abstract class Guy extends Entity implements Runnable{
                         @Override
                         public void run() {
                             circle.setCenterY(circle.getCenterY()-Graph.getRoadWidth()/2);}});
-                            System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
+                            //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
                        }
                             else if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()>it.getCircle().getCenterX() ){//go left
                                  Platform.runLater(new Runnable() {
@@ -105,7 +101,10 @@ public abstract class Guy extends Entity implements Runnable{
                             circle.setCenterY(circle.getCenterY()+Graph.getRoadWidth()/2);}});
                             }
                             else if(circle.getCenterY()<it.getCircle().getCenterY() &&circle.getCenterX()==it.getCircle().getCenterX() ){//go down
-                                circle.setCenterX(circle.getCenterX()-Graph.getRoadWidth()/2);
+                                Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                                circle.setCenterX(circle.getCenterX()-Graph.getRoadWidth()/2);}});
                                 int ile = (int) Math.abs(previous.getCenterY()-it.getCircle().getCenterY());
                                 for(int i=0;i<ile;i++)
                            {
@@ -123,7 +122,7 @@ public abstract class Guy extends Entity implements Runnable{
                         @Override
                         public void run() {
                             circle.setCenterX(circle.getCenterX()+Graph.getRoadWidth()/2);
-                        System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
+                        //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
 //                            
                         }});
                             }
@@ -149,7 +148,8 @@ public abstract class Guy extends Entity implements Runnable{
                         public void run() {
                             circle.setCenterX(circle.getCenterX()-Graph.getRoadWidth()/2);}});
                             }
-                  
+                            else spieprzone=true;
+                }while(spieprzone);
                      
 //            if(circle.getCenterY()==it.getCircle().getCenterY() &&circle.getCenterX()<it.getCircle().getCenterX() )
 //                            circle.setCenterX(circle.getCenterX()+1);
@@ -164,10 +164,13 @@ public abstract class Guy extends Entity implements Runnable{
 //                        }
 //                });
                        previous=it.getCircle();
-                       if(it!=path.get(0))
-                    while( circle.getCenterX()!=it.getCircle().getCenterX() || circle.getCenterY()!=it.getCircle().getCenterY()) {};
+//                       if(it!=path.get(0))
+//                    while( circle.getCenterX()!=it.getCircle().getCenterX() || circle.getCenterY()!=it.getCircle().getCenterY()) {System.out.println("zablokowany!");};
         }
                 currentNode=path.lastElement();
+                System.out.println("skonczylem!");
+                zajety=false;
+                
         }
 //                while (true) {
 //                    try {
@@ -205,6 +208,20 @@ public abstract class Guy extends Entity implements Runnable{
      */
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    /**
+     * @return the graph
+     */
+    public Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * @param graph the graph to set
+     */
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
     
 }
