@@ -14,7 +14,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
         citizens = new ArrayList<>();
         ile++;
 //        if (ile  == 1) 
-        for(int i=0;i<10;i++)
+        for(int i=0;i<50;i++)
             createCitizen();
 //        }
     }
@@ -24,6 +24,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
         Citizen c = new Citizen(this);
         c.setGraph(getGraph());
         citizens.add(c);
+        getGraph().addGuy(c);
     }
 
     public boolean isCity() {

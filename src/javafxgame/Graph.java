@@ -15,6 +15,7 @@ public class Graph {
 
     ArrayList<Node> nodes;
     ArrayList<Line> roads;
+    ArrayList<Guy> guys;
     ArrayList<Integer> citiesNumbers;//potem trzeba bedzie usuwac
     private Pane pane;
     private boolean adj[][];
@@ -26,7 +27,7 @@ public class Graph {
         this.pane = pane;
         nodes = new ArrayList<>();
         roads = new ArrayList<>();
-
+        guys=new ArrayList<>();
         adj = new boolean[100][100];
         for (boolean[] adj1 : adj) {
             for (boolean a : adj1) {
@@ -34,7 +35,9 @@ public class Graph {
             }
         }
     }
-
+    public void addGuy(Guy guy){
+        guys.add(guy);
+    }
     public void addNode(Node node) {
         //if(node.isCity()) citiesNumbers.add(nodes.size());
         node.setNodeNumber(nodes.size());
@@ -42,10 +45,11 @@ public class Graph {
         nodes.add(node);
 
     }
-
+//tu moze byc blad bo na samym poczatku tworze miasto, ale jeszcze nie dodalem do nodes, miasto tworzy mieszkanca a on wywoluje ta fun i moze byc pusto
     public Node getRandomCity(Node n) {
         while (true) {
             Random randomGenerator = new Random();
+            if(nodes.size()<8) throw new TryLater();
             int generatedNumber = randomGenerator.nextInt(nodes.size());
             if (nodes.get(generatedNumber).isCity() && nodes.get(generatedNumber) != n) {
                 return nodes.get(generatedNumber);

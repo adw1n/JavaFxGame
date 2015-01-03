@@ -67,10 +67,13 @@ public abstract class Guy extends Entity implements Runnable {
     void go(Stack<Node> path) {
         zajety = true;
         //jezeli jestem w srodku miasta
+        if(!path.empty()){
         currentNode = path.get(0);
         path.remove(0);
         Thread renderer;
         renderer = new Thread() {
+                    boolean znalezione=false;
+Circle c;
             Node skrzyzowanie = null;
             boolean wchodze = false;
 
@@ -99,6 +102,7 @@ public abstract class Guy extends Entity implements Runnable {
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                        
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterY(getCircle().getCenterY() + Graph.getRoadWidth() / 2);
@@ -129,7 +133,21 @@ public abstract class Guy extends Entity implements Runnable {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             doStuffWhenWantsToEnterCrossroad(it);
+                            c=new Circle(circle.getCenterX()+1,circle.getCenterY(),radius);
                             
+                            do{
+                                znalezione=false;
+                            for(Guy iterator: graph.guys){
+                                if(!stopped && iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()>=c.getCenterX() &&iterator.getCircle().getCenterY()==c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
+                                    try {
+                                        Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                    znalezione=true;
+                                }
+                            }
+                            }while ( znalezione);
                             t = new Thread() {
                                 public void run() {
                                     getCircle().setCenterX(getCircle().getCenterX() + 1);
@@ -153,6 +171,7 @@ public abstract class Guy extends Entity implements Runnable {
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                       
                         t = new Thread() {
                             public void run() {
                                 getCircle().setCenterY(getCircle().getCenterY() - Graph.getRoadWidth() / 2);
@@ -198,6 +217,21 @@ public abstract class Guy extends Entity implements Runnable {
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            c=new Circle(circle.getCenterX()-1,circle.getCenterY(),radius);
+
+                            do{
+                                znalezione=false;
+                            for(Guy iterator: graph.guys){
+                                if(!stopped &&iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()<=c.getCenterX() &&iterator.getCircle().getCenterY()==c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
+                                    try {
+                                        Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                    znalezione=true;
+                                }
+                            }
+                            }while ( znalezione);
                             try {
                                 Thread.sleep(50);
                             } catch (InterruptedException ex) {
@@ -271,6 +305,21 @@ public abstract class Guy extends Entity implements Runnable {
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                                                        c=new Circle(circle.getCenterX(),circle.getCenterY()+1,radius);
+
+                            do{
+                                znalezione=false;
+                            for(Guy iterator: graph.guys){
+                                if(!stopped &&iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()==c.getCenterX() &&iterator.getCircle().getCenterY()>=c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
+                                    try {
+                                        Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                    znalezione=true;
+                                }
+                            }
+                            }while ( znalezione);
                             try {
                                 Thread.sleep(50);
                             } catch (InterruptedException ex) {
@@ -349,6 +398,21 @@ public abstract class Guy extends Entity implements Runnable {
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                                                        c=new Circle(circle.getCenterX(),circle.getCenterY()-1,radius);
+
+                            do{
+                                znalezione=false;
+                            for(Guy iterator: graph.guys){
+                                if(!stopped &&iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()==c.getCenterX() &&iterator.getCircle().getCenterY()<=c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
+                                    try {
+                                        Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                    znalezione=true;
+                                }
+                            }
+                            }while ( znalezione);
                             doStuffWhenWantsToEnterCrossroad(it);
                             t = new Thread() {
                                 public void run() {
@@ -436,7 +500,7 @@ public abstract class Guy extends Entity implements Runnable {
 //        
         renderer.setDaemon(true);
         renderer.start();
-
+        }
     }
 
     /**

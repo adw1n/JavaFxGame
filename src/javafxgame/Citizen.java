@@ -50,8 +50,19 @@ public class Citizen extends Guy {
                 }
                 System.out.println("niezajety! znow jade");
                 Random randomGenerator = new Random();
-                Thread.sleep(randomGenerator.nextInt(10000));
+                Thread.sleep(randomGenerator.nextInt(10000)+1000);
+                boolean succeded=true;
+                do{
+                    thrd.sleep(100);
+                    try{
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
+                    }
+                    catch(TryLater e){
+                        succeded=false;
+                        System.out.println("polecial wyjatek bro!");
+                    }
+                }
+                while (!succeded);
                 System.out.println("wysleepowalem sie");
 //            //goToCity();
 //            }
