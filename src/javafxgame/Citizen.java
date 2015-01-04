@@ -18,11 +18,13 @@ public class Citizen extends Guy {
         super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity);
 //        running = true;
         this.nativeCity = nativeCity;
+        thisEntity=this;
        getCircle().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println("kliknales mnie bro"+getCircle());
-                myStop();
+                //myStop();
+                getGraph().displayEntity(thisEntity);
 //                if(!suspended) mySuspend();
 //                else {myResume();System.out.println("wznowilem bro!");}
 //                setRunning(false);
@@ -39,7 +41,7 @@ public class Citizen extends Guy {
             try {
                 while (zajety) {
                     thrd.sleep(1000);
-            System.out.println("ludzik zajety bro!");
+//            System.out.println("ludzik zajety bro!");
                 };
 //                if(!isRunning()) { System.out.println("wybrejkowales mnie bro");break;}
                 synchronized(this){
@@ -48,7 +50,7 @@ public class Citizen extends Guy {
                     }
                     if(stopped) break;
                 }
-                System.out.println("niezajety! znow jade");
+//                System.out.println("niezajety! znow jade");
                 Random randomGenerator = new Random();
                 Thread.sleep(randomGenerator.nextInt(10000)+1000);
                 boolean succeded=true;
@@ -63,7 +65,8 @@ public class Citizen extends Guy {
                     }
                 }
                 while (!succeded);
-                System.out.println("wysleepowalem sie");
+                
+//                System.out.println("wysleepowalem sie");
 //            //goToCity();
 //            }
             } catch (InterruptedException ex) {
@@ -71,11 +74,17 @@ public class Citizen extends Guy {
             }
         }
         System.out.println("juz nie runnuje");
+//               getGraph().getGuys().remove(this); tu jest problem bo inne watki iteruja po tej liscie!
         JavaFxGame.runAndWait( new Thread(){
             public void run(){
+
                 getCircle().setCenterX(-100);
+                                                getPane().getChildren().remove(getCircle());
+
             }
         });
+ 
+
         
     }
 

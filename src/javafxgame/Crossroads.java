@@ -38,6 +38,12 @@ public class Crossroads extends Node {
         return sem;
     }
 
+    @Override
+    void myStop() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+
     /**
      * @param sem the sem to set
      */

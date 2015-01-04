@@ -1,11 +1,13 @@
 package javafxgame;
 
 import java.util.ArrayList;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
 
-public abstract class Node {
+public abstract class Node extends Entity {
 
     private int x, y;
     private Circle circle;
@@ -22,6 +24,18 @@ public abstract class Node {
         this.pane = pane;
         setGraph(graph);
         pane.getChildren().add(circle);
+        getCircle().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("kliknales mnie bro"+getCircle());
+                //myStop();
+                getGraph().displayEntity(thisEntity);
+//                if(!suspended) mySuspend();
+//                else {myResume();System.out.println("wznowilem bro!");}
+//                setRunning(false);
+//                thrd.stop();
+            }
+        });
     }
 
     public Node(int x, int y, Pane pane, int radius, String color, Graph graph) {

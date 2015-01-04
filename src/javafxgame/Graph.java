@@ -15,13 +15,13 @@ public class Graph {
 
     ArrayList<Node> nodes;
     ArrayList<Line> roads;
-    ArrayList<Guy> guys;
+    private ArrayList<Guy> guys;
     ArrayList<Integer> citiesNumbers;//potem trzeba bedzie usuwac
     private Pane pane;
     private boolean adj[][];
     private boolean visited[];//for dfs
     private static final int roadWidth = 16;
-
+    private ControlPanel controlPanel;
     public Graph(Pane pane) {
 //        stosProcesow=new Stack<>();
         this.pane = pane;
@@ -34,9 +34,13 @@ public class Graph {
                 a = false;
             }
         }
+        controlPanel=new ControlPanel(pane);
+    }
+    public synchronized void displayEntity(Entity e){
+        getControlPanel().displayEntity(e);
     }
     public void addGuy(Guy guy){
-        guys.add(guy);
+        getGuys().add(guy);
     }
     public void addNode(Node node) {
         //if(node.isCity()) citiesNumbers.add(nodes.size());
@@ -126,9 +130,9 @@ public class Graph {
     }
 
     private boolean dfs(Node wierzcholek, Node cel, Stack<Node> sciezka, boolean visited[]) {
-        System.out.println("wielkosc " + sciezka.size());
+//        System.out.println("wielkosc " + sciezka.size());
         sciezka.push(wierzcholek);
-        System.out.println("udalo sie");
+//        System.out.println("udalo sie");
         visited[wierzcholek.getNodeNumber()] = true;
         boolean znaleziono = false;
         if (wierzcholek.getNodeNumber() == cel.getNodeNumber()) {
@@ -185,5 +189,33 @@ public class Graph {
 
     public static int getRoadWidth() {
         return roadWidth;
+    }
+
+    /**
+     * @return the controlPanel
+     */
+    public ControlPanel getControlPanel() {
+        return controlPanel;
+    }
+
+    /**
+     * @param controlPanel the controlPanel to set
+     */
+    public void setControlPanel(ControlPanel controlPanel) {
+        this.controlPanel = controlPanel;
+    }
+
+    /**
+     * @return the guys
+     */
+    public synchronized ArrayList<Guy> getGuys() {
+        return guys;
+    }
+
+    /**
+     * @param guys the guys to set
+     */
+    public synchronized void setGuys(ArrayList<Guy> guys) {
+        this.guys = guys;
     }
 }

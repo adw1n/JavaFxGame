@@ -9,7 +9,7 @@ import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
 
 public abstract class Guy extends Entity implements Runnable {
-    
+
     private int hp;
     private Circle circle;
     Thread thrd;
@@ -20,7 +20,7 @@ public abstract class Guy extends Entity implements Runnable {
     private volatile boolean running = true;
     boolean suspended;
     boolean stopped;
-
+    private Pane pane;
     public Guy(int hp, double x, double y, Pane pane, Node currentNode) {
         zajety = false;
 //        super(name);
@@ -34,11 +34,13 @@ public abstract class Guy extends Entity implements Runnable {
         circle = new Circle(x, y, radius);
         circle.setFill(valueOf("blue"));
         pane.getChildren().add(circle);
+        this.pane=pane;
+                
     }
 
     @Override
     public void run() {
-        System.out.println("nowy watek hurra!" + toString());
+//        System.out.println("nowy watek hurra!" + toString());
         //goToCity();
     }
 
@@ -55,9 +57,9 @@ public abstract class Guy extends Entity implements Runnable {
 
     synchronized void myResume() {
         suspended = false;
-        
+
         notify();
-        System.out.println("notifajnalem");
+//        System.out.println("notifajnalem");
     }
 
     /**
@@ -67,398 +69,443 @@ public abstract class Guy extends Entity implements Runnable {
     void go(Stack<Node> path) {
         zajety = true;
         //jezeli jestem w srodku miasta
-        if(!path.empty()){
-        currentNode = path.get(0);
-        path.remove(0);
-        Thread renderer;
-        renderer = new Thread() {
-                    boolean znalezione=false;
-Circle c;
-            Node skrzyzowanie = null;
-            boolean wchodze = false;
+        if (!path.empty()) {
+            currentNode = path.get(0);
+            path.remove(0);
+            Thread renderer;
+            renderer = new Thread() {
+                boolean znalezione = false;
+                Circle c;
+                Node skrzyzowanie = null;
+                boolean wchodze = false;
 
-            @Override
-            public void run() {
-                for (Node it : path) {
+                @Override
+                public void run() {
+                    for (Node it : path) {
 
 //                    final Circle previous ;
 //                    previous=circle;
-                    boolean spieprzone = false;
+                        boolean spieprzone = false;
 //                do
-                    Thread t;
-                    System.out.println("zaczynam runandwait");
-                    if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() < it.getCircle().getCenterX()) {//go right
-                        System.out.println("go right bro!" + getCircle());
-                        try {
-                                synchronized (this) {
-                                    while (suspended) {
-//                                       wait();
-                                        Thread.sleep(100);
-                                        System.out.println("koniec waitowania");
-                                    }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterY(getCircle().getCenterY() + Graph.getRoadWidth() / 2);
-
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-
-                        int ile = Math.abs((int) (getCircle().getCenterX() - it.getCircle().getCenterX()));
-                        System.out.println("ile to " + ile);
-                        for (int i = 0; i < ile; i++) {
+                        Thread t;
+//                        System.out.println("zaczynam runandwait");
+                        if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() < it.getCircle().getCenterX()) {//go right
+//                            System.out.println("go right bro!" + getCircle());
                             try {
                                 synchronized (this) {
                                     while (suspended) {
 //                                       wait();
                                         Thread.sleep(100);
-                                        System.out.println("koniec waitowania");
+//                                        System.out.println("koniec waitowania");
                                     }
-                                    if (stopped) 
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
+
                                         break;
+                                    }
                                 }
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            try {
-                                Thread.sleep(50);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            doStuffWhenWantsToEnterCrossroad(it);
-                            c=new Circle(circle.getCenterX()+1,circle.getCenterY(),radius);
-                            
-                            do{
-                                znalezione=false;
-                            for(Guy iterator: graph.guys){
-                                if(!stopped && iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()>=c.getCenterX() &&iterator.getCircle().getCenterY()==c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
-                                    try {
-                                        Thread.sleep(100);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                    znalezione=true;
-                                }
-                            }
-                            }while ( znalezione);
+
                             t = new Thread() {
                                 public void run() {
-                                    getCircle().setCenterX(getCircle().getCenterX() + 1);
-                                    //to jest przy wchodzeniu, potrzebuje jeszcze do opuszczania
+                                    getCircle().setCenterY(getCircle().getCenterY() + Graph.getRoadWidth() / 2);
+
                                 }
                             };
                             JavaFxGame.runAndWait(t);
+
+                            int ile = Math.abs((int) (getCircle().getCenterX() - it.getCircle().getCenterX()));
+//                            System.out.println("ile to " + ile);
+                            for (int i = 0; i < ile; i++) {
+                                try {
+                                    synchronized (this) {
+                                        while (suspended) {
+//                                       wait();
+                                            Thread.sleep(100);
+//                                            System.out.println("koniec waitowania");
+                                        }
+                                        if (stopped) {
+                                                                                            doStuffWhenWantsToEnterCrossroad(it);
+
+                                            break;
+                                        }
+                                    }
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                try {
+                                    Thread.sleep(50);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                doStuffWhenWantsToEnterCrossroad(it);
+                                checkIntersectionsWhileGoingRight();
+                                t = new Thread() {
+                                    public void run() {
+                                        getCircle().setCenterX(getCircle().getCenterX() + 1);
+                                        //to jest przy wchodzeniu, potrzebuje jeszcze do opuszczania
+                                    }
+                                };
+                                JavaFxGame.runAndWait(t);
 
 //                                    } 
-                        }
-                        try {
-                                synchronized (this) {
-                                    while (suspended) {
-//                                       wait();
-                                        Thread.sleep(100);
-                                        System.out.println("koniec waitowania");
-                                    }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                       
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterY(getCircle().getCenterY() - Graph.getRoadWidth() / 2);
-
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-                        //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
-                    } else if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() > it.getCircle().getCenterX()) {//go left
-                        try {
-                                synchronized (this) {
-                                    while (suspended) {
-//                                       wait();
-                                        Thread.sleep(100);
-                                        System.out.println("koniec waitowania");
-                                    }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterY(getCircle().getCenterY() - Graph.getRoadWidth() / 2);
-
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-                        int ile = Math.abs((int) (getCircle().getCenterX() - it.getCircle().getCenterX()));
-                        System.out.println("left ile: " + ile);
-                        for (int i = 0; i < ile; i++) {
                             try {
                                 synchronized (this) {
                                     while (suspended) {
 //                                       wait();
                                         Thread.sleep(100);
-                                        System.out.println("koniec waitowania");
+//                                        System.out.println("koniec waitowania");
                                     }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            c=new Circle(circle.getCenterX()-1,circle.getCenterY(),radius);
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
 
-                            do{
-                                znalezione=false;
-                            for(Guy iterator: graph.guys){
-                                if(!stopped &&iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()<=c.getCenterX() &&iterator.getCircle().getCenterY()==c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
-                                    try {
-                                        Thread.sleep(100);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                        break;
+                                    }
                                 }
-                                    znalezione=true;
-                                }
-                            }
-                            }while ( znalezione);
-                            try {
-                                Thread.sleep(50);
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            doStuffWhenWantsToEnterCrossroad(it);
+
                             t = new Thread() {
                                 public void run() {
-                                    getCircle().setCenterX(getCircle().getCenterX() - 1);
+                                    getCircle().setCenterY(getCircle().getCenterY() - Graph.getRoadWidth() / 2);
 
                                 }
                             };
                             JavaFxGame.runAndWait(t);
+                            //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
+                        } else if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() > it.getCircle().getCenterX()) {//go left
+                            try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
+                                        Thread.sleep(100);
+                                    }
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
+
+                                        break;
+                                    }
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            t = new Thread() {
+                                public void run() {
+                                    getCircle().setCenterY(getCircle().getCenterY() - Graph.getRoadWidth() / 2);
+
+                                }
+                            };
+                            JavaFxGame.runAndWait(t);
+                            int ile = Math.abs((int) (getCircle().getCenterX() - it.getCircle().getCenterX()));
+                            for (int i = 0; i < ile; i++) {
+                                try {
+                                    synchronized (this) {
+                                        while (suspended) {
+//                                       wait();
+                                            Thread.sleep(100);
+                                        }
+                                        if (stopped) {
+                                                                                            doStuffWhenWantsToEnterCrossroad(it);
+
+                                            break;
+                                        }
+                                    }
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                checkIntersectionsWhileGoingLeft();
+                                try {
+                                    Thread.sleep(50);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                doStuffWhenWantsToEnterCrossroad(it);
+                                t = new Thread() {
+                                    public void run() {
+                                        getCircle().setCenterX(getCircle().getCenterX() - 1);
+
+                                    }
+                                };
+                                JavaFxGame.runAndWait(t);
 
 //                                    
-                        }
-                        try {
-                                synchronized (this) {
-                                    while (suspended) {
-//                                       wait();
-                                        Thread.sleep(100);
-                                    }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterY(getCircle().getCenterY() + Graph.getRoadWidth() / 2);
-                                System.out.println("w lewo circle na koncu: " + getCircle());
-
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-                    } else if (getCircle().getCenterY() < it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go down
-                        try {
-                                synchronized (this) {
-                                    while (suspended) {
-//                                       wait();
-                                        Thread.sleep(100);
-                                    }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterX(getCircle().getCenterX() - Graph.getRoadWidth() / 2);
-
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-                        int ile = (int) Math.abs(getCircle().getCenterY() - it.getCircle().getCenterY());
-                        System.out.println("w dol ile: " + ile);
-
-                        for (int i = 0; i < ile; i++) {
                             try {
                                 synchronized (this) {
                                     while (suspended) {
 //                                       wait();
                                         Thread.sleep(100);
-                                        System.out.println("koniec waitowania");
                                     }
-                                    if (stopped) 
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
+
                                         break;
+                                    }
                                 }
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                                                        c=new Circle(circle.getCenterX(),circle.getCenterY()+1,radius);
+                            t = new Thread() {
+                                public void run() {
+                                    getCircle().setCenterY(getCircle().getCenterY() + Graph.getRoadWidth() / 2);
 
-                            do{
-                                znalezione=false;
-                            for(Guy iterator: graph.guys){
-                                if(!stopped &&iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()==c.getCenterX() &&iterator.getCircle().getCenterY()>=c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
-                                    try {
+                                }
+                            };
+                            JavaFxGame.runAndWait(t);
+                        } else if (getCircle().getCenterY() < it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go down
+                            try {
+                                synchronized (this) {
+                                    while (suspended) {
+//                                       wait();
                                         Thread.sleep(100);
+                                    }
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
+
+                                        break;
+                                    }
+                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            t = new Thread() {
+                                public void run() {
+                                    getCircle().setCenterX(getCircle().getCenterX() - Graph.getRoadWidth() / 2);
+
+                                }
+                            };
+                            JavaFxGame.runAndWait(t);
+                            int ile = (int) Math.abs(getCircle().getCenterY() - it.getCircle().getCenterY());
+
+                            for (int i = 0; i < ile; i++) {
+                                try {
+                                    synchronized (this) {
+                                        while (suspended) {
+//                                       wait();
+                                            Thread.sleep(100);
+                                        }
+                                        if (stopped) {
+                                                                                            doStuffWhenWantsToEnterCrossroad(it);
+
+                                            break;
+                                        }
+                                    }
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                    znalezione=true;
+                                checkIntersectionsWhileGoingDown();
+                                try {
+                                    Thread.sleep(50);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
+                                doStuffWhenWantsToEnterCrossroad(it);
+                                t = new Thread() {
+                                    public void run() {
+                                        getCircle().setCenterY(getCircle().getCenterY() + 1);
+
+                                    }
+
+                                };
+                                JavaFxGame.runAndWait(t);
+
                             }
-                            }while ( znalezione);
                             try {
-                                Thread.sleep(50);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            doStuffWhenWantsToEnterCrossroad(it);
-                            t = new Thread() {
-                                public void run() {
-                                    getCircle().setCenterY(getCircle().getCenterY() + 1);
-
-                                }
-
-                            };
-                            JavaFxGame.runAndWait(t);
-
-                        }
-                        try {
                                 synchronized (this) {
                                     while (suspended) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) 
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
+
                                         break;
+                                    }
                                 }
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterX(getCircle().getCenterX() + Graph.getRoadWidth() / 2);
+                            t = new Thread() {
+                                public void run() {
+                                    getCircle().setCenterX(getCircle().getCenterX() + Graph.getRoadWidth() / 2);
 
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-                        //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
+                                }
+                            };
+                            JavaFxGame.runAndWait(t);
+                            //System.out.println("X : "+circle.getCenterX()+ " Y: "+circle.getCenterY());
 //
 
-                    } else if (getCircle().getCenterY() > it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go up
-                        try {
-                                synchronized (this) {
-                                    while (suspended) {
-//                                       wait();
-                                        Thread.sleep(100);
-                                    }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterX(getCircle().getCenterX() + Graph.getRoadWidth() / 2);
-
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-                        int ile = (int) Math.abs(getCircle().getCenterY() - it.getCircle().getCenterY());
-                        for (int i = 0; i < ile; i++) {
+                        } else if (getCircle().getCenterY() > it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go up
                             try {
                                 synchronized (this) {
                                     while (suspended) {
 //                                       wait();
                                         Thread.sleep(100);
-                                        System.out.println("koniec waitowania");
                                     }
-                                    if (stopped) 
-                                        break;
-                                }
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            try {
-                                Thread.sleep(50);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                                                        c=new Circle(circle.getCenterX(),circle.getCenterY()-1,radius);
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
 
-                            do{
-                                znalezione=false;
-                            for(Guy iterator: graph.guys){
-                                if(!stopped &&iterator.getCircle()!=circle &&iterator.getCircle().getCenterX()==c.getCenterX() &&iterator.getCircle().getCenterY()<=c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())){
-                                    try {
-                                        Thread.sleep(100);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                        break;
+                                    }
                                 }
-                                    znalezione=true;
-                                }
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            }while ( znalezione);
-                            doStuffWhenWantsToEnterCrossroad(it);
                             t = new Thread() {
                                 public void run() {
-                                    getCircle().setCenterY(getCircle().getCenterY() - 1);
+                                    getCircle().setCenterX(getCircle().getCenterX() + Graph.getRoadWidth() / 2);
 
                                 }
                             };
                             JavaFxGame.runAndWait(t);
+                            int ile = (int) Math.abs(getCircle().getCenterY() - it.getCircle().getCenterY());
+                            for (int i = 0; i < ile; i++) {
+                                try {
+                                    synchronized (this) {
+                                        while (suspended) {
+//                                       wait();
+                                            Thread.sleep(100);
+                                        }
+                                        if (stopped) {
+//                                            if(wchodze && skrzyzowanie!=null)
+                                                doStuffWhenWantsToEnterCrossroad(it);
+                                            break;
+                                        }
+                                    }
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                try {
+                                    Thread.sleep(50);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                checkIntersectionsWhileGoingUp();
+                                doStuffWhenWantsToEnterCrossroad(it);
+                                t = new Thread() {
+                                    public void run() {
+                                        getCircle().setCenterY(getCircle().getCenterY() - 1);
+
+                                    }
+                                };
+                                JavaFxGame.runAndWait(t);
 //                                    
-                        }
-                        try {
+                            }
+                            try {
                                 synchronized (this) {
                                     while (suspended) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) 
+                                    if (stopped) {
+                                                                                        doStuffWhenWantsToEnterCrossroad(it);
+
                                         break;
+                                    }
                                 }
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        t = new Thread() {
-                            public void run() {
-                                getCircle().setCenterX(getCircle().getCenterX() - Graph.getRoadWidth() / 2);
+                            t = new Thread() {
+                                public void run() {
+                                    getCircle().setCenterX(getCircle().getCenterX() - Graph.getRoadWidth() / 2);
 
-                            }
-                        };
-                        JavaFxGame.runAndWait(t);
-                    } else {
-                        System.out.println("cos spieprzylem!");
-                    }
+                                }
+                            };
+                            JavaFxGame.runAndWait(t);
+                        } else {
+                            System.out.println("cos spieprzylem!");
+                        }
 //                            else spieprzone=true;
 
 //                       while(spieprzone);
 //                        if(it!=path.get(0))
 //                    while( circle.getCenterX()!=it.getCircle().getCenterX() || circle.getCenterY()!=it.getCircle().getCenterY()) {System.out.println("zablokowany!");};
 //                                        prev=it.getCircle();
-                    currentNode = path.lastElement();
-                    System.out.println("skonczylem!");
+                        currentNode = path.lastElement();
+//                        System.out.println("skonczylem!");
 
+                    }
+                    zajety = false;
                 }
-                zajety = false;
-            }
 
-            ;
+                ;
+
+                private void checkIntersectionsWhileGoingLeft() {
+                    c = new Circle(circle.getCenterX() - 1, circle.getCenterY(), radius);
+                    
+                    do {
+                        znalezione = false;
+                        for (Guy iterator : graph.getGuys()) {
+                            if (!stopped &&!iterator.stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() <= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                znalezione = true;
+                            }
+                        }
+                    } while (znalezione );
+                }
+
+                private void checkIntersectionsWhileGoingDown() {
+                    c = new Circle(circle.getCenterX(), circle.getCenterY() + 1, radius);
+                    
+                    do {
+                        znalezione = false;
+                        for (Guy iterator : graph.getGuys()) {
+                            if (!stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                znalezione = true;
+                            }
+                        }
+                    } while (znalezione);
+                }
+
+                private void checkIntersectionsWhileGoingUp() {
+                    c = new Circle(circle.getCenterX(), circle.getCenterY() - 1, radius);
+                    
+                    do {
+                        znalezione = false;
+                        for (Guy iterator : graph.getGuys()) {
+                            if (!stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                znalezione = true;
+                            }
+                        }
+                    } while (znalezione);
+                }
+
+                private void checkIntersectionsWhileGoingRight() {
+                    c = new Circle(circle.getCenterX() + 1, circle.getCenterY(), radius);
+                    
+                    do {
+                        znalezione = false;
+                        for (Guy iterator : graph.getGuys()) {
+                            if (!stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                znalezione = true;
+                            }
+                        }
+                    } while (znalezione);
+                }
 
 //                while (true) {
 //                    try {
@@ -476,30 +523,30 @@ Circle c;
 //            }
 
             private void doStuffWhenWantsToEnterCrossroad(Node it) {
-                //System.out.println("sleepuje");
-                if (!it.isCity() && !wchodze && getCircle().getBoundsInParent().intersects(it.getCircle().getBoundsInParent())) {
-                    System.out.println("Wszedlem na skrzyzowanie bro!!!");
-                    wchodze = true;//potrzebuje jeszcze wychodzenie
-                    skrzyzowanie = it;
-                    try {
-                        ((Crossroads) it).getSem().acquire();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                    //System.out.println("sleepuje");
+                    if (!it.isCity() && !wchodze && getCircle().getBoundsInParent().intersects(it.getCircle().getBoundsInParent())) {
+//                        System.out.println("Wszedlem na skrzyzowanie bro!!!");
+                        wchodze = true;//potrzebuje jeszcze wychodzenie
+                        skrzyzowanie = it;
+                        try {
+                            ((Crossroads) it).getSem().acquire();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if (wchodze & skrzyzowanie != null && !skrzyzowanie.isCity() && (!circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent()) || stopped)) {
+//                        System.out.println("opuszczam bro!");
+                        wchodze = false;
+                        ((Crossroads) skrzyzowanie).getSem().release();
+
+                        skrzyzowanie = null;
+
                     }
                 }
-                if (wchodze & skrzyzowanie != null && !skrzyzowanie.isCity() && !circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent())) {
-                    System.out.println("opuszczam bro!");
-                    wchodze = false;
-                    ((Crossroads) skrzyzowanie).getSem().release();
-
-                    skrzyzowanie = null;
-
-                }
-            }
-        };
+            };
 //        
-        renderer.setDaemon(true);
-        renderer.start();
+            renderer.setDaemon(true);
+            renderer.start();
         }
     }
 
@@ -557,6 +604,20 @@ Circle c;
      */
     public void setRunning(boolean running) {
         this.running = running;
+    }
+
+    /**
+     * @return the pane
+     */
+    public Pane getPane() {
+        return pane;
+    }
+
+    /**
+     * @param pane the pane to set
+     */
+    public void setPane(Pane pane) {
+        this.pane = pane;
     }
 
 }
