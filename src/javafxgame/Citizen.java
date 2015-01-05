@@ -27,6 +27,11 @@ public class Citizen extends Guy {
     public boolean isStoppable() {
         return true;
     }
+
+    @Override
+    public boolean isCitizen() {
+        return true;
+    }
     
     @Override
     public void run() {

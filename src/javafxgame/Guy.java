@@ -12,6 +12,13 @@ import javafx.scene.shape.Circle;
 
 public abstract class Guy extends Entity implements Runnable {
 
+    /**
+     * @return the radius
+     */
+    public static int getRadius() {
+        return radius;
+    }
+
     private int hp;
     private Circle circle;
     Thread thrd;
@@ -33,7 +40,7 @@ public abstract class Guy extends Entity implements Runnable {
         thrd = new Thread(this);
         thrd.setDaemon(true);
         thrd.start();
-        circle = new Circle(x, y, radius);
+        circle = new Circle(x, y, getRadius());
         circle.setFill(valueOf("blue"));
         pane.getChildren().add(circle);
         this.pane=pane;
@@ -52,7 +59,7 @@ public abstract class Guy extends Entity implements Runnable {
         });
                 
     }
-
+    public abstract boolean isCitizen();
     @Override
     public void run() {
 //        System.out.println("nowy watek hurra!" + toString());
@@ -451,7 +458,7 @@ public abstract class Guy extends Entity implements Runnable {
                 ;
 
                 private void checkIntersectionsWhileGoingLeft() {
-                    c = new Circle(circle.getCenterX() - 1, circle.getCenterY(), radius);
+                    c = new Circle(circle.getCenterX() - 1, circle.getCenterY(), getRadius());
                     
                     do {
                         znalezione = false;
@@ -472,7 +479,7 @@ public abstract class Guy extends Entity implements Runnable {
                 }
 
                 private void checkIntersectionsWhileGoingDown() {
-                    c = new Circle(circle.getCenterX(), circle.getCenterY() + 1, radius);
+                    c = new Circle(circle.getCenterX(), circle.getCenterY() + 1, getRadius());
                     
                     do {
                         znalezione = false;
@@ -480,7 +487,7 @@ public abstract class Guy extends Entity implements Runnable {
 //                        for (Guy iterator : graph.getGuys()) 
                         {
                             Guy iterator=iter.next();
-                            if (!isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                            if (!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException ex) {
@@ -493,7 +500,7 @@ public abstract class Guy extends Entity implements Runnable {
                 }
 
                 private void checkIntersectionsWhileGoingUp() {
-                    c = new Circle(circle.getCenterX(), circle.getCenterY() - 1, radius);
+                    c = new Circle(circle.getCenterX(), circle.getCenterY() - 1, getRadius());
                     
                     do {
                         znalezione = false;
@@ -501,7 +508,7 @@ public abstract class Guy extends Entity implements Runnable {
 //                        for (Guy iterator : graph.getGuys()) 
                         {
                             Guy iterator=iter.next();
-                            if (!isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                            if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException ex) {
@@ -514,7 +521,7 @@ public abstract class Guy extends Entity implements Runnable {
                 }
 
                 private void checkIntersectionsWhileGoingRight() {
-                    c = new Circle(circle.getCenterX() + 1, circle.getCenterY(), radius);
+                    c = new Circle(circle.getCenterX() + 1, circle.getCenterY(), getRadius());
                     
                     do {
                         znalezione = false;
@@ -522,7 +529,7 @@ public abstract class Guy extends Entity implements Runnable {
 //                        for (Guy iterator : graph.getGuys()) 
                         {
                             Guy iterator=iter.next();
-                            if (!isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                            if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException ex) {
