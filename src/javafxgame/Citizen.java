@@ -18,19 +18,8 @@ public class Citizen extends Guy {
         super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity);
 //        running = true;
         this.nativeCity = nativeCity;
-        thisEntity=this;
-       getCircle().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("kliknales mnie bro"+getCircle());
-                //myStop();
-                getGraph().displayEntity(thisEntity);
-//                if(!suspended) mySuspend();
-//                else {myResume();System.out.println("wznowilem bro!");}
-//                setRunning(false);
-//                thrd.stop();
-            }
-        });
+        
+       
       
     }
 

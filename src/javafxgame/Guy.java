@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
@@ -35,6 +37,19 @@ public abstract class Guy extends Entity implements Runnable {
         circle.setFill(valueOf("blue"));
         pane.getChildren().add(circle);
         this.pane=pane;
+        thisEntity=this;
+        getCircle().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("kliknales mnie bro"+getCircle());
+                //myStop();
+                getGraph().displayEntity(thisEntity);
+//                if(!suspended) mySuspend();
+//                else {myResume();System.out.println("wznowilem bro!");}
+//                setRunning(false);
+//                thrd.stop();
+            }
+        });
                 
     }
 
