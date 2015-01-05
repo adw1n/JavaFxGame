@@ -7,7 +7,8 @@ public class PowerSource extends Entity{
     private FightersAbility enhancedAbility;
     //zdolnosc ktora wzmacnia
 
-    public PowerSource(String name) {
+    public PowerSource(FightersAbility enhancedAbility) {
+        this.enhancedAbility=enhancedAbility;
 //        super(name);
         ID_count++;
         ID=ID_count;

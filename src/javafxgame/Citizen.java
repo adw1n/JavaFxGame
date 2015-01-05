@@ -84,14 +84,7 @@ public class Citizen extends Guy {
 //        }
                                 
 //               getGraph().getGuys().remove(this);// tu jest problem bo inne watki iteruja po tej liscie!
-        JavaFxGame.runAndWait( new Thread(){
-            public void run(){
-
-                getCircle().setCenterX(-100);
-                                                getPane().getChildren().remove(getCircle());
-
-            }
-        });
+        deleteFromPane();
  
 
         

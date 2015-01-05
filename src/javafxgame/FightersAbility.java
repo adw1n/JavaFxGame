@@ -4,7 +4,7 @@ package javafxgame;
 
 
 public class FightersAbility {
-    Ability ability;
+    private Ability ability;
     private float abilityAttribute;//jak bardzo jest rozwiniete / potencjal, skill lvl
 
     public FightersAbility(Ability ability,float abilityAttribute) {
@@ -30,6 +30,20 @@ public class FightersAbility {
     }
     public void decreaseAbilityAttribute(float difference){
         abilityAttribute-=Math.abs(difference);
+    }
+
+    /**
+     * @return the ability
+     */
+    public Ability getAbility() {
+        return ability;
+    }
+
+    /**
+     * @param ability the ability to set
+     */
+    public void setAbility(Ability ability) {
+        this.ability = ability;
     }
     
 }

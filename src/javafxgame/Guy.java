@@ -20,7 +20,7 @@ public abstract class Guy extends Entity implements Runnable {
         return radius;
     }
 
-    private int hp;
+    private float  hp;
     private Circle circle;
     Thread thrd;
     Node currentNode;
@@ -60,6 +60,17 @@ public abstract class Guy extends Entity implements Runnable {
         });
                 
     }
+    public void deleteFromPane(){
+        JavaFxGame.runAndWait( new Thread(){
+            public void run(){
+
+                getCircle().setCenterX(-100);
+                                                getPane().getChildren().remove(getCircle());
+
+            }
+        });
+    }
+    
     public abstract boolean isCitizen();
     @Override
     public void run() {
@@ -613,17 +624,19 @@ public abstract class Guy extends Entity implements Runnable {
     /**
      * @return the hp
      */
-    public int getHp() {
+    public float getHp() {
         return hp;
     }
 
     /**
      * @param hp the hp to set
      */
-    public void setHp(int hp) {
+    public void setHp(float hp) {
         this.hp = hp;
     }
-
+    public synchronized void takeDmg(float hp){
+        this.hp-=Math.abs(hp);
+    }
     /**
      * @return the graph
      */
