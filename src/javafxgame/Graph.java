@@ -13,7 +13,7 @@ import javafx.scene.shape.Line;
 
 public class Graph {
 
-    ArrayList<Node> nodes;
+    private ArrayList<Node> nodes;
     ArrayList<Line> roads;
     private ArrayList<Guy> guys;
     ArrayList<Integer> citiesNumbers;//potem trzeba bedzie usuwac
@@ -44,19 +44,19 @@ public class Graph {
     }
     public void addNode(Node node) {
         //if(node.isCity()) citiesNumbers.add(nodes.size());
-        node.setNodeNumber(nodes.size());
+        node.setNodeNumber(getNodes().size());
         node.setGraph(this);
-        nodes.add(node);
+        getNodes().add(node);
 
     }
 //tu moze byc blad bo na samym poczatku tworze miasto, ale jeszcze nie dodalem do nodes, miasto tworzy mieszkanca a on wywoluje ta fun i moze byc pusto
     public Node getRandomCity(Node n) {
         while (true) {
             Random randomGenerator = new Random();
-            if(nodes.size()<8) throw new TryLater();
-            int generatedNumber = randomGenerator.nextInt(nodes.size());
-            if (nodes.get(generatedNumber).isCity() && nodes.get(generatedNumber) != n) {
-                return nodes.get(generatedNumber);
+            if(getNodes().size()<8) throw new TryLater();
+            int generatedNumber = randomGenerator.nextInt(getNodes().size());
+            if (getNodes().get(generatedNumber).isCity() && getNodes().get(generatedNumber) != n&& !nodes.get(generatedNumber).isIsDefeated()) {
+                return getNodes().get(generatedNumber);
             }
         }
 //        for(Node it: nodes){
@@ -75,44 +75,44 @@ public class Graph {
         Line edge = new Line();
         adj[poczatek][koniec] = true;
         adj[koniec][poczatek] = true;
-        edge.setStartX(nodes.get(poczatek).getCircle().getCenterX());
-        edge.setStartY(nodes.get(poczatek).getCircle().getCenterY());
-        edge.setEndX(nodes.get(koniec).getCircle().getCenterX());
-        edge.setEndY(nodes.get(koniec).getCircle().getCenterY());
+        edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX());
+        edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY());
+        edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
+        edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
         roads.add(edge);
         pane.getChildren().add(edge);
 
-        if (nodes.get(poczatek).getCircle().getCenterX() == nodes.get(koniec).getCircle().getCenterX()) {
+        if (getNodes().get(poczatek).getCircle().getCenterX() == getNodes().get(koniec).getCircle().getCenterX()) {
             edge = new Line();
-            edge.setStartX(nodes.get(poczatek).getCircle().getCenterX() + roadWidth);
-            edge.setStartY(nodes.get(poczatek).getCircle().getCenterY());
-            edge.setEndX(nodes.get(koniec).getCircle().getCenterX() + roadWidth);
-            edge.setEndY(nodes.get(koniec).getCircle().getCenterY());
+            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX() + roadWidth);
+            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY());
+            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX() + roadWidth);
+            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
             roads.add(edge);
             pane.getChildren().add(edge);
 
             edge = new Line();
-            edge.setStartX(nodes.get(poczatek).getCircle().getCenterX() - roadWidth);
-            edge.setStartY(nodes.get(poczatek).getCircle().getCenterY());
-            edge.setEndX(nodes.get(koniec).getCircle().getCenterX() - roadWidth);
-            edge.setEndY(nodes.get(koniec).getCircle().getCenterY());
+            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX() - roadWidth);
+            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY());
+            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX() - roadWidth);
+            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
             roads.add(edge);
             pane.getChildren().add(edge);
 
         } else {
             edge = new Line();
-            edge.setStartX(nodes.get(poczatek).getCircle().getCenterX());
-            edge.setStartY(nodes.get(poczatek).getCircle().getCenterY() + roadWidth);
-            edge.setEndX(nodes.get(koniec).getCircle().getCenterX());
-            edge.setEndY(nodes.get(koniec).getCircle().getCenterY() + roadWidth);
+            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX());
+            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY() + roadWidth);
+            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
+            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY() + roadWidth);
             roads.add(edge);
             pane.getChildren().add(edge);
 
             edge = new Line();
-            edge.setStartX(nodes.get(poczatek).getCircle().getCenterX());
-            edge.setStartY(nodes.get(poczatek).getCircle().getCenterY() - roadWidth);
-            edge.setEndX(nodes.get(koniec).getCircle().getCenterX());
-            edge.setEndY(nodes.get(koniec).getCircle().getCenterY() - roadWidth);
+            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX());
+            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY() - roadWidth);
+            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
+            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY() - roadWidth);
             roads.add(edge);
             pane.getChildren().add(edge);
 
@@ -140,7 +140,7 @@ public class Graph {
         } else {
             for (int i = 0; i < 100; i++) {
                 if (i != wierzcholek.getNodeNumber() && visited[i] == false && adj[wierzcholek.getNodeNumber()][i] == true) {
-                    if (dfs(nodes.get(i), cel, sciezka, visited)) {
+                    if (dfs(getNodes().get(i), cel, sciezka, visited)) {
                         znaleziono = true;
                         break;
                     }
@@ -217,5 +217,19 @@ public class Graph {
      */
     public synchronized void setGuys(ArrayList<Guy> guys) {
         this.guys = guys;
+    }
+
+    /**
+     * @return the nodes
+     */
+    public synchronized ArrayList<Node> getNodes() {
+        return nodes;
+    }
+
+    /**
+     * @param nodes the nodes to set
+     */
+    public synchronized void setNodes(ArrayList<Node> nodes) {
+        this.nodes = nodes;
     }
 }

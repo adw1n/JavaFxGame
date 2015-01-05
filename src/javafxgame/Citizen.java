@@ -1,10 +1,10 @@
 package javafxgame;
 
+import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 public class Citizen extends Guy {
@@ -35,6 +35,11 @@ public class Citizen extends Guy {
     }
 
     @Override
+    public boolean isStoppable() {
+        return true;
+    }
+    
+    @Override
     public void run() {
         while (true) {
 
@@ -45,10 +50,10 @@ public class Citizen extends Guy {
                 };
 //                if(!isRunning()) { System.out.println("wybrejkowales mnie bro");break;}
                 synchronized(this){
-                    while(suspended){
+                    while(isSuspended()){
                         wait();
                     }
-                    if(stopped) break;
+                    if(isStopped()) break;
                 }
 //                System.out.println("niezajety! znow jade");
                 Random randomGenerator = new Random();
@@ -74,7 +79,17 @@ public class Citizen extends Guy {
             }
         }
         System.out.println("juz nie runnuje");
-//               getGraph().getGuys().remove(this); tu jest problem bo inne watki iteruja po tej liscie!
+//        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
+////                        for (Guy iterator : graph.getGuys()) 
+//                        {
+//                            Guy iterator=iter.next();
+//                            if(iterator==this){
+//                                iter.remove();
+//                                System.out.println("usunalem bro!");
+//                            }
+//        }
+                                
+//               getGraph().getGuys().remove(this);// tu jest problem bo inne watki iteruja po tej liscie!
         JavaFxGame.runAndWait( new Thread(){
             public void run(){
 

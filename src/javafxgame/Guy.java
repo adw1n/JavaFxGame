@@ -1,9 +1,9 @@
 package javafxgame;
 
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
@@ -18,8 +18,8 @@ public abstract class Guy extends Entity implements Runnable {
     boolean zajety;
     private static final int radius = 5;
     private volatile boolean running = true;
-    boolean suspended;
-    boolean stopped;
+    private boolean suspended;
+    private boolean stopped;
     private Pane pane;
     public Guy(int hp, double x, double y, Pane pane, Node currentNode) {
         zajety = false;
@@ -43,20 +43,20 @@ public abstract class Guy extends Entity implements Runnable {
 //        System.out.println("nowy watek hurra!" + toString());
         //goToCity();
     }
-
+    
     synchronized void myStop() {
-        stopped = true;
-        suspended = false;
+        setStopped(true);
+        setSuspended(false);
         notify();
     }
 
     synchronized void mySuspend() {
-        suspended = true;
+        setSuspended(true);
 //        notify();
     }
 
     synchronized void myResume() {
-        suspended = false;
+        setSuspended(false);
 
         notify();
 //        System.out.println("notifajnalem");
@@ -93,12 +93,12 @@ public abstract class Guy extends Entity implements Runnable {
 //                            System.out.println("go right bro!" + getCircle());
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
 //                                        System.out.println("koniec waitowania");
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -121,12 +121,12 @@ public abstract class Guy extends Entity implements Runnable {
                             for (int i = 0; i < ile; i++) {
                                 try {
                                     synchronized (this) {
-                                        while (suspended) {
+                                        while (isSuspended()) {
 //                                       wait();
                                             Thread.sleep(100);
 //                                            System.out.println("koniec waitowania");
                                         }
-                                        if (stopped) {
+                                        if (isStopped()) {
                                                                                             doStuffWhenWantsToEnterCrossroad(it);
 
                                             break;
@@ -154,12 +154,12 @@ public abstract class Guy extends Entity implements Runnable {
                             }
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
 //                                        System.out.println("koniec waitowania");
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -180,11 +180,11 @@ public abstract class Guy extends Entity implements Runnable {
                         } else if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() > it.getCircle().getCenterX()) {//go left
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -204,11 +204,11 @@ public abstract class Guy extends Entity implements Runnable {
                             for (int i = 0; i < ile; i++) {
                                 try {
                                     synchronized (this) {
-                                        while (suspended) {
+                                        while (isSuspended()) {
 //                                       wait();
                                             Thread.sleep(100);
                                         }
-                                        if (stopped) {
+                                        if (isStopped()) {
                                                                                             doStuffWhenWantsToEnterCrossroad(it);
 
                                             break;
@@ -236,11 +236,11 @@ public abstract class Guy extends Entity implements Runnable {
                             }
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -259,11 +259,11 @@ public abstract class Guy extends Entity implements Runnable {
                         } else if (getCircle().getCenterY() < it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go down
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -284,11 +284,11 @@ public abstract class Guy extends Entity implements Runnable {
                             for (int i = 0; i < ile; i++) {
                                 try {
                                     synchronized (this) {
-                                        while (suspended) {
+                                        while (isSuspended()) {
 //                                       wait();
                                             Thread.sleep(100);
                                         }
-                                        if (stopped) {
+                                        if (isStopped()) {
                                                                                             doStuffWhenWantsToEnterCrossroad(it);
 
                                             break;
@@ -316,11 +316,11 @@ public abstract class Guy extends Entity implements Runnable {
                             }
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -342,11 +342,11 @@ public abstract class Guy extends Entity implements Runnable {
                         } else if (getCircle().getCenterY() > it.getCircle().getCenterY() && getCircle().getCenterX() == it.getCircle().getCenterX()) {//go up
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -366,11 +366,11 @@ public abstract class Guy extends Entity implements Runnable {
                             for (int i = 0; i < ile; i++) {
                                 try {
                                     synchronized (this) {
-                                        while (suspended) {
+                                        while (isSuspended()) {
 //                                       wait();
                                             Thread.sleep(100);
                                         }
-                                        if (stopped) {
+                                        if (isStopped()) {
 //                                            if(wchodze && skrzyzowanie!=null)
                                                 doStuffWhenWantsToEnterCrossroad(it);
                                             break;
@@ -397,11 +397,11 @@ public abstract class Guy extends Entity implements Runnable {
                             }
                             try {
                                 synchronized (this) {
-                                    while (suspended) {
+                                    while (isSuspended()) {
 //                                       wait();
                                         Thread.sleep(100);
                                     }
-                                    if (stopped) {
+                                    if (isStopped()) {
                                                                                         doStuffWhenWantsToEnterCrossroad(it);
 
                                         break;
@@ -440,8 +440,11 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
-                        for (Guy iterator : graph.getGuys()) {
-                            if (!stopped &&!iterator.stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() <= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                        for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
+//                        for (Guy iterator : graph.getGuys()) 
+                        {
+                            Guy iterator=iter.next();
+                            if (!isStopped() &&!iterator.isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() <= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException ex) {
@@ -458,8 +461,11 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
-                        for (Guy iterator : graph.getGuys()) {
-                            if (!stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                        for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
+//                        for (Guy iterator : graph.getGuys()) 
+                        {
+                            Guy iterator=iter.next();
+                            if (!isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException ex) {
@@ -476,8 +482,11 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
-                        for (Guy iterator : graph.getGuys()) {
-                            if (!stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                        for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
+//                        for (Guy iterator : graph.getGuys()) 
+                        {
+                            Guy iterator=iter.next();
+                            if (!isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException ex) {
@@ -494,8 +503,11 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
-                        for (Guy iterator : graph.getGuys()) {
-                            if (!stopped && iterator.getCircle() != circle && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                        for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
+//                        for (Guy iterator : graph.getGuys()) 
+                        {
+                            Guy iterator=iter.next();
+                            if (!isStopped() && iterator.getCircle() != circle && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
                                 try {
                                     Thread.sleep(100);
                                 } catch (InterruptedException ex) {
@@ -534,7 +546,7 @@ public abstract class Guy extends Entity implements Runnable {
                             Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    if (wchodze & skrzyzowanie != null && !skrzyzowanie.isCity() && (!circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent()) || stopped)) {
+                    if (wchodze & skrzyzowanie != null && !skrzyzowanie.isCity() && (!circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent()) || isStopped())) {
 //                        System.out.println("opuszczam bro!");
                         wchodze = false;
                         ((Crossroads) skrzyzowanie).getSem().release();
@@ -618,6 +630,34 @@ public abstract class Guy extends Entity implements Runnable {
      */
     public void setPane(Pane pane) {
         this.pane = pane;
+    }
+
+    /**
+     * @return the suspended
+     */
+    public synchronized boolean isSuspended() {
+        return suspended;
+    }
+
+    /**
+     * @param suspended the suspended to set
+     */
+    public synchronized void setSuspended(boolean suspended) {
+        this.suspended = suspended;
+    }
+
+    /**
+     * @return the stopped
+     */
+    public synchronized boolean isStopped() {
+        return stopped;
+    }
+
+    /**
+     * @param stopped the stopped to set
+     */
+    public synchronized void setStopped(boolean stopped) {
+        this.stopped = stopped;
     }
 
 }

@@ -17,7 +17,9 @@ public abstract class Entity {
 //        return name;
 //    }
     abstract  void myStop() ;
-
+    public boolean isStoppable(){
+        return false;
+    }
     void mySuspend() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

@@ -14,7 +14,7 @@ public abstract class Node extends Entity {
     private Pane pane;
     private int nodeNumber;
     private Graph graph;
-
+    private boolean isDefeated;
     public Node(int x, int y, Pane pane, int radius, Graph graph) {
 //        edges = new ArrayList<>();
         this.nodeNumber = nodeNumber;
@@ -23,6 +23,7 @@ public abstract class Node extends Entity {
         circle = new Circle(x, y, radius);
         this.pane = pane;
         setGraph(graph);
+        isDefeated=false;
         pane.getChildren().add(circle);
         getCircle().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -80,6 +81,20 @@ public abstract class Node extends Entity {
      */
     public void setGraph(Graph graph) {
         this.graph = graph;
+    }
+
+    /**
+     * @return the isDefeated
+     */
+    public boolean isIsDefeated() {
+        return isDefeated;
+    }
+
+    /**
+     * @param isDefeated the isDefeated to set
+     */
+    public void setIsDefeated(boolean isDefeated) {
+        this.isDefeated = isDefeated;
     }
 
 }
