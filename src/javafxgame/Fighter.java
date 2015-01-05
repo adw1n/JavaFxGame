@@ -87,10 +87,12 @@ public abstract class Fighter extends Guy{
                 attacker[currentTurn^1].takeDmg(dmg[currentTurn]);
                 currentTurn^=1;
             }
+            attacker[0].myResume();
+            attacker[1].myResume();
             if(attacker[0].getHp()<=0) attacker[0].myStop();
-            else attacker[0].myResume();
+            
             if(attacker[1].getHp()<=0) attacker[1].myStop();
-            else attacker[1].myResume();
+          
             opponent.setOpponent(null);
             this.opponent=null;
             

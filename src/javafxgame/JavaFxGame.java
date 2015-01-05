@@ -69,8 +69,10 @@ public class JavaFxGame extends Application {
         Stack<Node> s = graf.findPathBetweenCities(c1, c2), s2;
         BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
         b2=new BadGuy(1000, 1200, 700, root, graf);
-        b1.fight(b2);
-        b2.fight(b1);
+        b2=new BadGuy(1000, 700, 700, root, graf);
+        b2=new BadGuy(1000, 1100, 700, root, graf);
+//        b1.fight(b2);
+//        b2.fight(b1);
         FightersAbility f=new FightersAbility(Ability.POWER, 10);
 //        Citizen c=new Citizen(c1);
 //        c.go(s);

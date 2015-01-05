@@ -6,30 +6,45 @@ import javafx.scene.layout.Pane;
 public class City extends Node { //city na razie ma tylko wiekszy promien
 
     private static final int radius = 32;
-    ArrayList<Citizen> citizens;
+//    ArrayList<Citizen> citizens;
     int numberOfCitizens;
-    
+    ArrayList<PowerSource> powerSources;
     static int ile = 0;
-
+    private boolean dead;
     public City(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, radius, graph);
-        
-        citizens = new ArrayList<>();
+        dead=false;
+//        citizens = new ArrayList<>();
         ile++;
 //        if (ile  == 1) 
         for(int i=0;i<5;i++)
             createCitizen();
 //        }
+        powerSources=new ArrayList<>();
+        powerSources.add(new PowerSource(new FightersAbility(Ability.POWER, 10)));
        
     }
     public City(int x, int y, Pane pane, Graph graph,int radius) {
         super(x, y, pane, radius, graph);
-        citizens = new ArrayList<>();
+        dead=false;
+//        citizens = new ArrayList<>();
+        ile++;
+//        citizens = new ArrayList<>();
         ile++;
 //        if (ile  == 1) 
         for(int i=0;i<3;i++)
             createCitizen();
+        powerSources=new ArrayList<>();
+        powerSources.add(new PowerSource(new FightersAbility(Ability.POWER, 10)));
 //        }
+    }
+    public synchronized void getDrained(float ammount){
+        int ammountOfDeadPowerSources=0;
+        for(PowerSource it: powerSources){
+            it.decreaseEnergy(ammount);
+            if(it.getEnergy()<=0) ammountOfDeadPowerSources++;
+        }
+        if(ammountOfDeadPowerSources==powerSources.size()) {setDead(true);setIsDefeated(true);}
     }
     public void createCitizen() {
 //        Citizen c=new Citizen(this);
@@ -46,6 +61,20 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     
     public boolean isCity() {
         return true;
+    }
+
+    /**
+     * @return the dead
+     */
+    public synchronized boolean isDead() {
+        return dead;
+    }
+
+    /**
+     * @param dead the dead to set
+     */
+    public synchronized void setDead(boolean dead) {
+        this.dead = dead;
     }
 
 }

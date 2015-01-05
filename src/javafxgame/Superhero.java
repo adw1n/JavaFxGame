@@ -1,48 +1,34 @@
+
+
 package javafxgame;
 
-import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import static javafx.scene.paint.Color.valueOf;
 
-public class Citizen extends Guy {
 
-    private String surname;
-    private City nativeCity;
-    private static final String colour = "blue";
-    private static final int hp = 10;
-    
-    public Citizen(City nativeCity) {
-        super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity);
-//        running = true;
-        this.nativeCity = nativeCity;
-        
-       
-      
-    }
+public class Superhero extends Fighter{
 
-    @Override
-    public boolean isStoppable() {
-        return true;
+   
+    public Superhero(int hp, Capital capital, Pane pane, Graph graph) {
+        super(hp, capital.getCircle().getCenterX(), capital.getCircle().getCenterY(), pane, null);
+        setGraph(graph);
+        currentNode=capital;
+        getCircle().setFill(valueOf("green"));
     }
 
     @Override
     public boolean isCitizen() {
-        return true;
+        return false;
     }
-    
     @Override
     public void run() {
         while (true) {
 
             try {
                 while (zajety) {
-                    synchronized(this){
-                    
-                    if(isStopped()) break;
-                }
                     thrd.sleep(1000);
 //            System.out.println("ludzik zajety bro!");
                 };
@@ -58,12 +44,6 @@ public class Citizen extends Guy {
                 Thread.sleep(randomGenerator.nextInt(10000)+10000);
                 boolean succeded=true;
                 do{
-                    synchronized(this){
-                    while(isSuspended()){
-                        wait();
-                    }
-                    if(isStopped()) break;
-                }
                     thrd.sleep(100);
                     try{
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
@@ -98,42 +78,5 @@ public class Citizen extends Guy {
  
 
         
-    }
-
-    /**
-     * @return the surname
-     */
-    public String getSurname() {
-        return surname;
-    }
-
-    /**
-     * @param surname the surname to set
-     */
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    /**
-     * @return the nativeCity
-     */
-    public City getNativeCity() {
-        //nativeCity might have been destroyed, add checking this l8er
-        return nativeCity;
-    }
-
-    void stop() {
-
-    }
-
-    City selectCityToGoTo() {
-        return null;
-    }
-
-    /**
-     * @param nativeCity the nativeCity to set
-     */
-    public void setNativeCity(City nativeCity) {
-        this.nativeCity = nativeCity;
     }
 }

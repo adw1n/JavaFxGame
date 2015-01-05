@@ -12,6 +12,7 @@ import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
 //dodac pole ileKilledCitizens i potem to wyswietlac w statystykach!!
 //raczej tez moze rzucic wyjatkiem Concurrent...
+//bad guys nachodza na siebie
 public class BadGuy extends Fighter {
 
     Node closest = null;
@@ -98,7 +99,102 @@ public class BadGuy extends Fighter {
                 
             }
             currentNode=closest;
-            
+            //while nie stopped
+            //drain city
+            if(currentNode!=null){
+                while(!isStopped() && !isSuspended()){
+                    while(zajety) try {
+                        Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                              
+                while(currentNode instanceof City &&!((City)currentNode).isDead()){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //check for collision with Superhero
+                    try {
+                                    synchronized (this) {
+                                        while (isSuspended()) {
+                                            Thread.sleep(100);
+                                        }
+                                        if (isStopped()) {
+                                            break;
+                                        }
+                                    }
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                    boolean znalezione=false;
+                    do {
+                        znalezione = false;
+                        try{
+                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
+                        {
+                            Guy iterator=iter.next();
+                            if (iterator instanceof Superhero &&!isStopped() &&!iterator.isStopped()  && getCircle().getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {                              
+                                fight((Superhero)iterator);
+                                System.out.println("Walka!");
+                            }
+                        }
+                        }
+                        catch(ConcurrentModificationException e){
+                            znalezione=true;
+                        }
+                    } while (znalezione);
+                    //drain city
+                    try {
+                                    synchronized (this) {
+                                        while (isSuspended()) {
+                                            Thread.sleep(100);
+                                        }
+                                        if (isStopped()) {
+                                            break;
+                                        }
+                                    }
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                    ((City)currentNode).getDrained((float)-0.1);
+                    boolean zabity=false;
+                    znalezione=false;
+                    //zabij citizena
+                    try {
+                                    synchronized (this) {
+                                        while (isSuspended()) {
+                                            Thread.sleep(100);
+                                        }
+                                        if (isStopped()) {
+                                            break;
+                                        }
+                                    }
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                    do {
+                        znalezione = false;
+                        try{
+                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
+                        {
+                            Guy iterator=iter.next();
+                            if (!zabity &&iterator instanceof Citizen &&!isStopped() &&!iterator.isStopped()  && getCircle().getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {                              
+                                iterator.myStop();
+                                zabity=true;
+                                
+                            }
+                        }
+                        }
+                        catch(ConcurrentModificationException e){
+                            znalezione=true;
+                        }
+                    } while (znalezione && !zabity);
+                    
+                }
+                System.out.println("miasto umarlo");
+            //go to the next city
             try{
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
                     }
@@ -106,7 +202,12 @@ public class BadGuy extends Fighter {
 //                        succeded=false;
                         System.out.println("polecial wyjatek bro!");
                     }
+            }
+            }
+            
         }
+        
+        System.out.println("umarl bad guy");
         deleteFromPane();
     }
         /**
@@ -404,11 +505,15 @@ public class BadGuy extends Fighter {
                         for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
                         {
                             Guy iterator=iter.next();
-                            if (iterator.isCitizen() && !isStopped() &&!iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() <= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                            if (!(iterator instanceof BadGuy) && !isStopped() &&!iterator.isStopped() && iterator.getCircle() != getCircle()   && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                if(iterator.isCitizen())
                                 iterator.myStop();
+                                else fight((Superhero)iterator);
                             }
-                            if (iterator.isCitizen() &&!isStopped() &&!iterator.isStopped() && iterator.getCircle() != getCircle() && Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2*Graph.getRoadWidth() ) {
+                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped() && iterator.getCircle() != getCircle() && Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2*Graph.getRoadWidth() ) {
+                                if(iterator.isCitizen())
                                 iterator.myStop();
+                                else fight((Superhero)iterator);
                             }
                         }
                         }
@@ -427,12 +532,16 @@ public class BadGuy extends Fighter {
                         for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
                         {
                             Guy iterator=iter.next();
-                            if (iterator.isCitizen() &&!isStopped() &&!iterator.isStopped()  && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {                              
+                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped()   &&iterator.getCircle() != getCircle()&& c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {                              
+                                if(iterator.isCitizen())
                                 iterator.myStop();
+                                else fight((Superhero)iterator);
    
                             }
-                            else if (iterator.isCitizen() &&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2*Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2 ) {
-                                                                iterator.myStop();
+                            else if (!(iterator instanceof BadGuy) &&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2*Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2 ) {
+                                                                if(iterator.isCitizen())
+                                iterator.myStop();
+                                else fight((Superhero)iterator);
                             }
                         }
                         }
@@ -451,11 +560,15 @@ public class BadGuy extends Fighter {
                         for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();) 
                         {
                             Guy iterator=iter.next();
-                            if (iterator.isCitizen() &&!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != getCircle() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                if(iterator.isCitizen())
                                 iterator.myStop();
+                                else fight((Superhero)iterator);
                             }
-                            else if (iterator.isCitizen() &&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2*Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2) {
+                            else if (!(iterator instanceof BadGuy)&&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2*Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2) {
+                                if(iterator.isCitizen())
                                 iterator.myStop();
+                                else fight((Superhero)iterator);
                             }  
                         }
                     }
@@ -474,11 +587,15 @@ public class BadGuy extends Fighter {
                         for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
                         {
                             Guy iterator=iter.next();
-                            if (iterator.isCitizen() &&!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != getCircle()  && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                if(iterator.isCitizen())
                                 iterator.myStop();
+                                else fight((Superhero)iterator);
                             }
-                            else if (iterator.isCitizen() &&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2*Graph.getRoadWidth() ) {
+                            else if (!(iterator instanceof BadGuy) &&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2*Graph.getRoadWidth() ) {
+                                if(iterator.isCitizen())
                                 iterator.myStop();
+                                else fight((Superhero)iterator);
                             }
                         }
                     }

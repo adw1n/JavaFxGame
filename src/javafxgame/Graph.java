@@ -50,6 +50,8 @@ public class Graph {
 
     }
 //tu moze byc blad bo na samym poczatku tworze miasto, ale jeszcze nie dodalem do nodes, miasto tworzy mieszkanca a on wywoluje ta fun i moze byc pusto
+    //moze byc tak ze nie ma juz niepokonnanego miasta wtedy na samym koncu mam 200% cpu ale to nie jest wielki problem
+    //dorobic nowy exception ze nie ma wiecej miast
     public Node getRandomCity(Node n) {
         while (true) {
             Random randomGenerator = new Random();

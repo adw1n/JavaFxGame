@@ -42,14 +42,11 @@ public class PowerSource extends Entity{
     public void increaseEnergy(float energy){
         enhancedAbility.increaseAbilityAttribute(energy);
     }
-    public float decreaseEnergy(float energy){
+    public void decreaseEnergy(float energy){
         if(energy>enhancedAbility.getAbilityAttribute()) {
-            energy=enhancedAbility.getAbilityAttribute();
             enhancedAbility.setAbilityAttribute(0);
         }
         else enhancedAbility.decreaseAbilityAttribute(energy);
-        return energy;
-        //if(energy<=0) destroy
     }
     /**
      * @return the enhancedAbility

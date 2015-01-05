@@ -95,6 +95,12 @@ public abstract class Node extends Entity {
      */
     public void setIsDefeated(boolean isDefeated) {
         this.isDefeated = isDefeated;
+        JavaFxGame.runAndWait(new Thread(){
+            public void run(){
+                circle.setFill(valueOf("brown"));
+            }
+        }
+        );
     }
 
 }
