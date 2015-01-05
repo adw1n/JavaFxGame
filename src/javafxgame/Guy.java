@@ -1,5 +1,6 @@
 package javafxgame;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -83,7 +84,8 @@ public abstract class Guy extends Entity implements Runnable {
         notify();
 //        System.out.println("notifajnalem");
     }
-
+    //warto by bylo zrobic kopie przy forowaniu, zeby nie lapac concurrent.... albo zrobic synchronized jak
+    //http://stackoverflow.com/questions/11320310/how-can-java-util-concurrentmodificationexception-be-avoided-when-using-osc
     /**
      * @return true if you have safely arrived to the destination to be
      * implemented
@@ -462,6 +464,7 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
+                        try{
                         for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
 //                        for (Guy iterator : graph.getGuys()) 
                         {
@@ -475,6 +478,11 @@ public abstract class Guy extends Entity implements Runnable {
                                 znalezione = true;
                             }
                         }
+                        }
+                        catch(ConcurrentModificationException e){
+                            System.out.println("zlapalem dupka");
+                            znalezione=true;
+                        }
                     } while (znalezione );
                 }
 
@@ -483,6 +491,7 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
+                        try{
                         for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
 //                        for (Guy iterator : graph.getGuys()) 
                         {
@@ -496,6 +505,11 @@ public abstract class Guy extends Entity implements Runnable {
                                 znalezione = true;
                             }
                         }
+                        }
+                        catch(ConcurrentModificationException e){
+                            System.out.println("zlapalem dupka");
+                            znalezione=true;
+                        }
                     } while (znalezione);
                 }
 
@@ -504,6 +518,7 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
+                        try{
                         for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
 //                        for (Guy iterator : graph.getGuys()) 
                         {
@@ -517,6 +532,11 @@ public abstract class Guy extends Entity implements Runnable {
                                 znalezione = true;
                             }
                         }
+                        }
+                        catch(ConcurrentModificationException e){
+                            System.out.println("zlapalem dupka");
+                            znalezione=true;
+                        }
                     } while (znalezione);
                 }
 
@@ -525,6 +545,7 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
+                        try{
                         for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
 //                        for (Guy iterator : graph.getGuys()) 
                         {
@@ -537,6 +558,11 @@ public abstract class Guy extends Entity implements Runnable {
                                 }
                                 znalezione = true;
                             }
+                        }
+                        }
+                        catch(ConcurrentModificationException e){
+                            System.out.println("zlapalem dupka");
+                            znalezione=true;
                         }
                     } while (znalezione);
                 }

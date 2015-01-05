@@ -14,9 +14,9 @@ import javafx.scene.layout.VBox;
 public class ControlPanel {
     Label label;
     Entity currentEntity;
-    Button btnStop,btnSuspend,btnResume;
+    Button btnStop,btnSuspend,btnResume,btnCreateCitizen,btnCreateSuperhero;
     VBox vBox;
-    HBox buttons;
+    HBox guyButtons,cityButtons;
     public ControlPanel(Pane pane) {
         btnStop=new Button("Delete");
         btnStop.setOnAction(new EventHandler<ActionEvent>() {
@@ -29,9 +29,7 @@ public class ControlPanel {
         btnStop.setDisable(true);
         btnSuspend.setDisable(true);
                 }
-            }
-            
-            
+            }            
         });
         btnSuspend=new Button("suspend");
         btnSuspend.setOnAction(new EventHandler<ActionEvent>() {
@@ -57,14 +55,36 @@ public class ControlPanel {
                 }
             }
         });
-        buttons=new HBox();
-        buttons.getChildren().addAll(btnSuspend,btnResume,btnStop);
+        btnCreateCitizen=new Button("create citizen");
+        btnCreateCitizen.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(currentEntity!=null){//if its a City
+                    if(currentEntity instanceof City)
+                        ((City)currentEntity).createCitizen();//moze rzucac wyjatkami concurrent modification i trzeba lapac
+                }
+            }            
+        });
+        btnCreateSuperhero=new Button("create superhero");
+        btnCreateSuperhero.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(currentEntity!=null){//if its a Capital
+                    if(currentEntity instanceof Capital);
+                        
+                }
+            }            
+        });
+        guyButtons=new HBox();
+        guyButtons.getChildren().addAll(btnSuspend,btnResume,btnStop);
+        cityButtons=new HBox();
+        cityButtons.getChildren().addAll(btnCreateCitizen,btnCreateSuperhero);
         label=new Label("click on an entity to see info");
         btnResume.setDisable(true);
         btnStop.setDisable(true);
         btnSuspend.setDisable(true);
         vBox=new VBox();
-        vBox.getChildren().addAll(label,buttons);
+        vBox.getChildren().addAll(label,guyButtons,cityButtons);
         vBox.setLayoutX(900);
         vBox.setLayoutY(200);
         pane.getChildren().add(vBox);
@@ -77,6 +97,8 @@ public class ControlPanel {
         btnStop.setDisable(!option);
         btnSuspend.setDisable(!option);
         btnResume.setDisable(!option);
+        btnCreateCitizen.setDisable(option);
+        btnCreateSuperhero.setDisable(option);
         if(option){
              Citizen g=(Citizen) e;
             btnSuspend.setDisable(g.isSuspended());
