@@ -17,7 +17,10 @@ public class NameGetter {
         num=0;
         names=new ArrayList<>();
         try {
-            for(String name : Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/src/javafxgame/femaleNames.txt")))
+//            /Users/Przemyslaw/Java/JavaFxGame/src/javafxgame
+                                for(String name : Files.readAllLines(Paths.get("/Users/Przemyslaw/Java/JavaFxGame/src/javafxgame/femaleNames.txt")))
+
+//            for(String name : Files.readAllLines(Paths.get(System.getProperty("user.dir")+"/src/javafxgame/femaleNames.txt")))
                 names.add(name);
         } catch (IOException ex) {
             Logger.getLogger(NameGetter.class.getName()).log(Level.SEVERE, null, ex);

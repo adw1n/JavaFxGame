@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 public class City extends Node { //city na razie ma tylko wiekszy promien
 
     private static final int radius = 32;
+    private boolean badGuyIsGoingToThisCity;
 //    ArrayList<Citizen> citizens;
     int numberOfCitizens;
     ArrayList<PowerSource> powerSources;
@@ -14,6 +15,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     public City(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, radius, graph);
         dead=false;
+        badGuyIsGoingToThisCity=false;
 //        citizens = new ArrayList<>();
         ile++;
 //        if (ile  == 1) 
@@ -75,6 +77,20 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
      */
     public synchronized void setDead(boolean dead) {
         this.dead = dead;
+    }
+
+    /**
+     * @return the badGuyIsGoingToThisCity
+     */
+    public synchronized boolean isBadGuyIsGoingToThisCity() {
+        return badGuyIsGoingToThisCity;
+    }
+
+    /**
+     * @param badGuyIsGoingToThisCity the badGuyIsGoingToThisCity to set
+     */
+    public synchronized void setBadGuyIsGoingToThisCity(boolean badGuyIsGoingToThisCity) {
+        this.badGuyIsGoingToThisCity = badGuyIsGoingToThisCity;
     }
 
 }

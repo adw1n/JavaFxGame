@@ -83,7 +83,7 @@ public abstract class Guy extends Entity implements Runnable {
         setSuspended(false);
         notify();
     }
-
+    
     synchronized void mySuspend() {
         setSuspended(true);
 //        notify();

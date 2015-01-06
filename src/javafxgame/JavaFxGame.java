@@ -1,14 +1,13 @@
 package javafxgame;
 
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 /**
@@ -73,11 +72,18 @@ public class JavaFxGame extends Application {
 //        b2=new BadGuy(1000, 1100, 700, root, graf);
 //        b1.fight(b2);
 //        b2.fight(b1);
-        FightersAbility f=new FightersAbility(Ability.POWER, 10);
+//        FightersAbility f=new FightersAbility(Ability.POWER, 10);
+//        URL location = JavaFxGame.class.getProtectionDomain().getCodeSource().getLocation();
+//        System.out.println(location.getFile());
 //        System.out.println(System.getProperty("user.dir")+"src/javafxgame/femaleNames.txt");
+//        InputStream imputStream;
+//        imputStream=JavaFxGame.class.getResourceAsStream("femaleNames.txt").;
+//        FileReader fileReader=new FileReader("feamleNames.txt");
+        
+        
 //        NameGetter n=new NameGetter();
 //        for(int i=0;i<10;i++)
-//        System.out.println(n.getFemaleName()); 
+//        n.getFemaleName(); 
 //        Citizen c=new Citizen(c1);
 //        c.go(s);
 //        Citizen cc=new Citizen((City) c2);

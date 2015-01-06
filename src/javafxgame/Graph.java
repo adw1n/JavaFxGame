@@ -107,7 +107,16 @@ public class Graph {
 //        }
 //        return null;
     }
-
+    public Node getCityForSuperhero(Node n){
+        for(Node it: getNodes()){
+            if(it instanceof City){
+                if(((City)it).isBadGuyIsGoingToThisCity() && !((City)it).isIsDefeated()){
+                    return it;
+                }
+            }
+        }
+        return getRandomCity(n);
+    }
     //creates road lanes
 
     public void addEdge(int poczatek, int koniec) {

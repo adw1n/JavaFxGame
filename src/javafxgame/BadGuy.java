@@ -55,8 +55,7 @@ public class BadGuy extends Fighter {
         }
         if (minDistance != inf) {
             //go to the closest
-//        Thread t=new Thread(){
-//            public void run(){
+            if(closest instanceof City) ((City)closest).setBadGuyIsGoingToThisCity(true);
             int addX, addY;
             if (getCircle().getCenterX() < closest.getCircle().getCenterX()) {
                 addX = 1;
@@ -102,6 +101,7 @@ public class BadGuy extends Fighter {
             //while nie stopped
             //drain city
             if(currentNode!=null){
+                
                 while(!isStopped() && !isSuspended()){
                     while(zajety) try {
                         Thread.sleep(1000);
@@ -195,7 +195,9 @@ public class BadGuy extends Fighter {
                     } while (znalezione && !zabity);
                     
                 }
+                if(currentNode instanceof City) ((City)currentNode).setBadGuyIsGoingToThisCity(false);
                 System.out.println("miasto umarlo");
+               
             //go to the next city
             try{
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
@@ -221,7 +223,10 @@ public class BadGuy extends Fighter {
         //jezeli jestem w srodku miasta
         if (!path.empty()) {
             currentNode = path.get(0);
+            if(currentNode instanceof City) ((City)currentNode).setBadGuyIsGoingToThisCity(false);
+            if(path.lastElement() instanceof City) ((City)path.lastElement()).setBadGuyIsGoingToThisCity(true);
             path.remove(0);
+            
             Thread renderer;
             renderer = new Thread() {
                 boolean znalezione = false;
@@ -495,6 +500,7 @@ public class BadGuy extends Fighter {
                             System.out.println("cos spieprzylem!");
                         }
                         currentNode = path.lastElement();
+                        
                     }
                     zajety = false;
                 }

@@ -55,7 +55,7 @@ public class Superhero extends Fighter{
                     thrd.sleep(100);
                     try{
                         //powinien isc do tego miasta co jest zloczynca...
-                go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
+                go(getGraph().findPathBetweenCities(currentNode, getGraph().getCityForSuperhero(currentNode)));
                     }
                     catch(TryLater e){
                         succeded=false;
