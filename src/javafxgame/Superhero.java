@@ -11,11 +11,13 @@ import static javafx.scene.paint.Color.valueOf;
 
 public class Superhero extends Fighter{
 
-   
+   Capital capital;
     public Superhero(int hp, Capital capital, Pane pane, Graph graph) {
         super(hp, capital.getCircle().getCenterX(), capital.getCircle().getCenterY(), pane, null);
         setGraph(graph);
         currentNode=capital;
+        
+        this.capital=capital;
         getCircle().setFill(valueOf("green"));
     }
 
@@ -42,10 +44,17 @@ public class Superhero extends Fighter{
 //                System.out.println("niezajety! znow jade");
                 Random randomGenerator = new Random();
                 Thread.sleep(randomGenerator.nextInt(10000)+10000);
+                synchronized(this){
+                    while(isSuspended()){
+                        wait();
+                    }
+                    if(isStopped()) break;
+                }
                 boolean succeded=true;
                 do{
                     thrd.sleep(100);
                     try{
+                        //powinien isc do tego miasta co jest zloczynca...
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
                     }
                     catch(TryLater e){

@@ -2,6 +2,7 @@
 
 package javafxgame;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -12,12 +13,14 @@ import javafx.scene.layout.VBox;
 
 
 public class ControlPanel {
-    Label label;
+    Label label,numOfCitiesAlive;
     Entity currentEntity;
     Button btnStop,btnSuspend,btnResume,btnCreateCitizen,btnCreateSuperhero;
     VBox vBox;
     HBox guyButtons,cityButtons;
-    public ControlPanel(Pane pane) {
+    Graph graph;
+    public ControlPanel(Pane pane,Graph graph) {
+        this.graph=graph;
         btnStop=new Button("Delete");
         btnStop.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -71,6 +74,7 @@ public class ControlPanel {
             public void handle(ActionEvent event) {
                 if(currentEntity!=null){//if its a Capital
                     if(currentEntity instanceof Capital);
+                    ((Capital)currentEntity).createSuperhero();
                         
                 }
             }            
@@ -80,14 +84,24 @@ public class ControlPanel {
         cityButtons=new HBox();
         cityButtons.getChildren().addAll(btnCreateCitizen,btnCreateSuperhero);
         label=new Label("click on an entity to see info");
+        numOfCitiesAlive=new Label("num of cities alive"+graph.getNumOfCitiesAlive());
         btnResume.setDisable(true);
         btnStop.setDisable(true);
         btnSuspend.setDisable(true);
         vBox=new VBox();
-        vBox.getChildren().addAll(label,guyButtons,cityButtons);
+        vBox.getChildren().addAll(numOfCitiesAlive,label,guyButtons,cityButtons);
         vBox.setLayoutX(900);
         vBox.setLayoutY(200);
         pane.getChildren().add(vBox);
+    }
+    public void updateNumOfCitiesAlive(int num){
+         Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                           numOfCitiesAlive.setText("Num of cities alive: "+num);
+                        }
+                    });
+        
     }
     public synchronized void displayEntity(Entity e){
         currentEntity=e;
@@ -97,12 +111,15 @@ public class ControlPanel {
         btnStop.setDisable(!option);
         btnSuspend.setDisable(!option);
         btnResume.setDisable(!option);
-        btnCreateCitizen.setDisable(option);
-        btnCreateSuperhero.setDisable(option);
+        btnCreateCitizen.setDisable(true);
+        if(e instanceof City)
+            if(!((City)e).isIsDefeated())       
+            btnCreateCitizen.setDisable(false);
+        btnCreateSuperhero.setDisable(!(e instanceof Capital));
         if(option){
              Citizen g=(Citizen) e;
             btnSuspend.setDisable(g.isSuspended());
-        btnResume.setDisable(!g.isSuspended());
+         btnResume.setDisable(!g.isSuspended());
         }
     }
     

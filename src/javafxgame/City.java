@@ -44,7 +44,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
             it.decreaseEnergy(ammount);
             if(it.getEnergy()<=0) ammountOfDeadPowerSources++;
         }
-        if(ammountOfDeadPowerSources==powerSources.size()) {setDead(true);setIsDefeated(true);}
+        if(ammountOfDeadPowerSources==powerSources.size()) {setDead(true);setIsDefeated(true);getGraph().decreaseNumOfCitiesAlive();}
     }
     public void createCitizen() {
 //        Citizen c=new Citizen(this);

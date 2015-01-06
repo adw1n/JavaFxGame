@@ -35,6 +35,7 @@ public class Citizen extends Guy {
     
     @Override
     public void run() {
+        boolean inNativeCity=true;
         while (true) {
 
             try {
@@ -65,8 +66,21 @@ public class Citizen extends Guy {
                     if(isStopped()) break;
                 }
                     thrd.sleep(100);
+                    
                     try{
+                        if(inNativeCity){
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
+                inNativeCity=false;
+                        }
+                        else{
+                            
+                            if(nativeCity.isIsDefeated() && (currentNode instanceof City)){
+                                nativeCity=(City)currentNode;
+                            }
+                            go(getGraph().findPathBetweenCities(currentNode, nativeCity));
+                            inNativeCity=true;
+                            
+                        }
                     }
                     catch(TryLater e){
                         succeded=false;

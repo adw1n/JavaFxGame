@@ -12,7 +12,7 @@ import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
 //dodac pole ileKilledCitizens i potem to wyswietlac w statystykach!!
 //raczej tez moze rzucic wyjatkiem Concurrent...
-//bad guys nachodza na siebie
+//bad guys nachodza na siebie!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class BadGuy extends Fighter {
 
     Node closest = null;
@@ -159,6 +159,8 @@ public class BadGuy extends Fighter {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                     ((City)currentNode).getDrained((float)-0.1);
+                    //zwieksz zdolnosci o 0.1
+                    increaseAbilities((float)0.1);
                     boolean zabity=false;
                     znalezione=false;
                     //zabij citizena

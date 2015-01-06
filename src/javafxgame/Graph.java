@@ -14,6 +14,7 @@ import javafx.scene.shape.Line;
 public class Graph {
 
     private ArrayList<Node> nodes;
+    private int numOfCitizensAlive;
     ArrayList<Line> roads;
     private ArrayList<Guy> guys;
     ArrayList<Integer> citiesNumbers;//potem trzeba bedzie usuwac
@@ -22,7 +23,10 @@ public class Graph {
     private boolean visited[];//for dfs
     private static final int roadWidth = 16;
     private ControlPanel controlPanel;
+    private int numOfCitiesAlive;
     public Graph(Pane pane) {
+        numOfCitiesAlive=0;
+        numOfCitizensAlive=0;
 //        stosProcesow=new Stack<>();
         this.pane = pane;
         nodes = new ArrayList<>();
@@ -34,7 +38,7 @@ public class Graph {
                 a = false;
             }
         }
-        controlPanel=new ControlPanel(pane);
+        controlPanel=new ControlPanel(pane,this);
     }
     public synchronized void displayEntity(Entity e){
         getControlPanel().displayEntity(e);
@@ -43,12 +47,33 @@ public class Graph {
         getGuys().add(guy);
     }
     public void addNode(Node node) {
+        if(node instanceof City) increaseNumOfCitiesAlive();
         //if(node.isCity()) citiesNumbers.add(nodes.size());
         node.setNodeNumber(getNodes().size());
         node.setGraph(this);
         getNodes().add(node);
 
     }
+    private synchronized void increaseNumOfCitiesAlive(){
+        numOfCitiesAlive++;
+        controlPanel.updateNumOfCitiesAlive(numOfCitiesAlive);
+    }
+    public synchronized void decreaseNumOfCitiesAlive(){
+        numOfCitiesAlive--;
+        numOfCitiesAlive=Math.max(0,numOfCitiesAlive);
+        controlPanel.updateNumOfCitiesAlive(numOfCitiesAlive);
+//        Platform.runLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//if(numOfCitiesAlive==8) pane.getChildren().clear();                        }
+//                    });
+        
+        
+    }
+    
+    public synchronized int getNumOfCitiesAlive(){
+        return numOfCitiesAlive;
+    };
 //tu moze byc blad bo na samym poczatku tworze miasto, ale jeszcze nie dodalem do nodes, miasto tworzy mieszkanca a on wywoluje ta fun i moze byc pusto
     //moze byc tak ze nie ma juz niepokonnanego miasta wtedy na samym koncu mam 200% cpu ale to nie jest wielki problem
     //dorobic nowy exception ze nie ma wiecej miast
@@ -56,10 +81,23 @@ public class Graph {
         while (true) {
             Random randomGenerator = new Random();
             if(getNodes().size()<8) throw new TryLater();
+            //if all cities are defeated
+            int numOfDefeated=0;
+            int numOfCities=0;
+            for(Node it: getNodes()){
+                if(it instanceof City){
+                    if(it.isIsDefeated()) numOfDefeated++;
+                    numOfCities++;
+                }
+            }
+            
             int generatedNumber = randomGenerator.nextInt(getNodes().size());
-            if (getNodes().get(generatedNumber).isCity() && getNodes().get(generatedNumber) != n&& !nodes.get(generatedNumber).isIsDefeated()) {
+            
+            if (getNodes().get(generatedNumber).isCity() && getNodes().get(generatedNumber) != n)
+                if( !nodes.get(generatedNumber).isIsDefeated() || numOfCities==numOfDefeated) {
                 return getNodes().get(generatedNumber);
             }
+             
         }
 //        for(Node it: nodes){
 //            if(it!=n && it.isCity()){

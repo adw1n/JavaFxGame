@@ -114,7 +114,10 @@ public abstract class Fighter extends Guy{
     public synchronized void setOpponent(Fighter opponent) {
         this.opponent = opponent;
     }
-
+    public void increaseAbilities(float num){
+        for(FightersAbility it: abilities)
+            it.increaseAbilityAttribute(num);
+    }
     /**
      * @return the abilities
      */

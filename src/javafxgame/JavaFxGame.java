@@ -23,12 +23,12 @@ public class JavaFxGame extends Application {
     public void start(Stage primaryStage) {
 
         Pane root = new Pane();
-
+        
         Scene scene = new Scene(root, 1200, 700);
 //        City c=new City(100,100,root);
 //        c.createCitizen();
 //        Citizen citizen=new Citizen(c);
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("adwin_ JavaFxGame");
         primaryStage.setScene(scene);
         primaryStage.show();
         graf = new Graph(root);
@@ -68,9 +68,9 @@ public class JavaFxGame extends Application {
         graf.addEdge(6, 15); 
         Stack<Node> s = graf.findPathBetweenCities(c1, c2), s2;
         BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
-        b2=new BadGuy(1000, 1200, 700, root, graf);
-        b2=new BadGuy(1000, 700, 700, root, graf);
-        b2=new BadGuy(1000, 1100, 700, root, graf);
+//        b2=new BadGuy(1000, 1200, 700, root, graf);
+//        b2=new BadGuy(1000, 700, 700, root, graf);
+//        b2=new BadGuy(1000, 1100, 700, root, graf);
 //        b1.fight(b2);
 //        b2.fight(b1);
         FightersAbility f=new FightersAbility(Ability.POWER, 10);
