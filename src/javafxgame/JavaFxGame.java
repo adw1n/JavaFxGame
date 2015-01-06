@@ -74,6 +74,10 @@ public class JavaFxGame extends Application {
 //        b1.fight(b2);
 //        b2.fight(b1);
         FightersAbility f=new FightersAbility(Ability.POWER, 10);
+//        System.out.println(System.getProperty("user.dir")+"src/javafxgame/femaleNames.txt");
+//        NameGetter n=new NameGetter();
+//        for(int i=0;i<10;i++)
+//        System.out.println(n.getFemaleName()); 
 //        Citizen c=new Citizen(c1);
 //        c.go(s);
 //        Citizen cc=new Citizen((City) c2);

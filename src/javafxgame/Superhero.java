@@ -81,8 +81,8 @@ public class Superhero extends Fighter{
 //                                System.out.println("usunalem bro!");
 //                            }
 //        }
-                                
-//               getGraph().getGuys().remove(this);// tu jest problem bo inne watki iteruja po tej liscie!
+                                getGraph().getGuys().remove(this);// tu jest problem bo inne watki iteruja po tej liscie!
+               System.out.println("ilosc ludzikow to: "+getGraph().getGuys().size());
         deleteFromPane();
  
 
