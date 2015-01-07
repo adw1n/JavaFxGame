@@ -68,7 +68,10 @@ public class Citizen extends Guy {
                     thrd.sleep(100);
                     
                     try{
-                        if(inNativeCity){
+                        if(inNativeCity){//to nie zadziala, bo koles bedzie kombinowal zeby uniknac
+                            if(isChangeDirection() &&getDestination()!=null)
+                                go(getGraph().findPathBetweenCities(currentNode, getDestination()));
+                            else
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
                 inNativeCity=false;
                         }

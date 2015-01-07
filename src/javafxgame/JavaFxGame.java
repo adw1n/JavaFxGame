@@ -66,7 +66,7 @@ public class JavaFxGame extends Application {
         graf.addNode(new Capital(750, 300, root, graf));
         graf.addEdge(6, 15); 
         Stack<Node> s = graf.findPathBetweenCities(c1, c2), s2;
-        BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
+//        BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
 //        b2=new BadGuy(1000, 1200, 700, root, graf);
 //        b2=new BadGuy(1000, 700, 700, root, graf);
 //        b2=new BadGuy(1000, 1100, 700, root, graf);

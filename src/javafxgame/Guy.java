@@ -31,8 +31,16 @@ public abstract class Guy extends Entity implements Runnable {
     private boolean suspended;
     private boolean stopped;
     private Pane pane;
+    private boolean changeDirection;
+    private Node destination;
+    boolean znalezione = false;
+                Circle c;
+                Node skrzyzowanie = null;
+                boolean wchodze = false;
     public Guy(int hp, double x, double y, Pane pane, Node currentNode) {
+        changeDirection=false;
         zajety = false;
+        destination=null;
 //        super(name);
         suspended = false;
         stopped = false;
@@ -102,6 +110,9 @@ public abstract class Guy extends Entity implements Runnable {
      * implemented
      */
     void go(Stack<Node> path) {
+        setChangeDirection(false);
+        destination=null;
+        
         zajety = true;
         //jezeli jestem w srodku miasta
         if (!path.empty()) {
@@ -109,14 +120,16 @@ public abstract class Guy extends Entity implements Runnable {
             path.remove(0);
             Thread renderer;
             renderer = new Thread() {
-                boolean znalezione = false;
-                Circle c;
-                Node skrzyzowanie = null;
-                boolean wchodze = false;
+//                boolean znalezione = false;
+//                Circle c;
+//                Node skrzyzowanie = null;
+//                boolean wchodze = false;
 
                 @Override
                 public void run() {
                     for (Node it : path) {
+                        //beta
+                        if(isChangeDirection()) {System.out.println("na prawde zmienilem direction"); break;}//trzeba zwolnic skrzyzowanie albo i nie, samo sie moze zwolni
 
 //                    final Circle previous ;
 //                    previous=circle;
@@ -461,11 +474,18 @@ public abstract class Guy extends Entity implements Runnable {
 //                        if(it!=path.get(0))
 //                    while( circle.getCenterX()!=it.getCircle().getCenterX() || circle.getCenterY()!=it.getCircle().getCenterY()) {System.out.println("zablokowany!");};
 //                                        prev=it.getCircle();
-                        currentNode = path.lastElement();
+//                        currentNode = path.lastElement();
+                        currentNode=it;
 //                        System.out.println("skonczylem!");
 
                     }
+                    if(!isChangeDirection() 
+                           // || destination==null //consider this bro
+                            )
                     zajety = false;
+                    else { System.out.println("change direction to: "+isChangeDirection() + "A destination to "+destination);
+                        go(graph.findPathBetweenCities(currentNode, getDestination()));
+                    }
                 }
 
                 ;
@@ -605,7 +625,7 @@ public abstract class Guy extends Entity implements Runnable {
                             Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    if (wchodze & skrzyzowanie != null && !skrzyzowanie.isCity() && (!circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent()) || isStopped())) {
+                    if (wchodze & skrzyzowanie != null && !skrzyzowanie.isCity() && (!circle.getBoundsInParent().intersects(skrzyzowanie.getCircle().getBoundsInParent()) || isStopped() )) {
 //                        System.out.println("opuszczam bro!");
                         wchodze = false;
                         ((Crossroads) skrzyzowanie).getSem().release();
@@ -719,6 +739,35 @@ public abstract class Guy extends Entity implements Runnable {
      */
     public synchronized void setStopped(boolean stopped) {
         this.stopped = stopped;
+    }
+
+    /**
+     * @return the changeDirection
+     */
+    public synchronized boolean isChangeDirection() {
+        return changeDirection;
+    }
+
+    /**
+     * @param changeDirection the changeDirection to set
+     */
+    public synchronized void setChangeDirection(boolean changeDirection) {
+        this.changeDirection = changeDirection;
+    }
+
+    /**
+     * @return the destination
+     */
+    public Node getDestination() {
+        return destination;
+    }
+
+    /**
+     * @param destination the destination to set
+     */
+    public synchronized void setDestination(Node destination) {
+        setChangeDirection(true);
+        this.destination = destination;
     }
 
 }

@@ -19,8 +19,8 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
 //        citizens = new ArrayList<>();
         ile++;
 //        if (ile  == 1) 
-        for(int i=0;i<5;i++)
-            createCitizen();
+//        for(int i=0;i<5;i++)
+//            createCitizen();
 //        }
         powerSources=new ArrayList<>();
         powerSources.add(new PowerSource(new FightersAbility(Ability.POWER, 10)));
@@ -34,19 +34,22 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
 //        citizens = new ArrayList<>();
         ile++;
 //        if (ile  == 1) 
-        for(int i=0;i<3;i++)
-            createCitizen();
+//        for(int i=0;i<3;i++)
+//            createCitizen();
         powerSources=new ArrayList<>();
         powerSources.add(new PowerSource(new FightersAbility(Ability.POWER, 10)));
 //        }
     }
     public synchronized void getDrained(float ammount){
         int ammountOfDeadPowerSources=0;
+        if(!isIsDefeated()){
         for(PowerSource it: powerSources){
             it.decreaseEnergy(ammount);
             if(it.getEnergy()<=0) ammountOfDeadPowerSources++;
         }
-        if(ammountOfDeadPowerSources==powerSources.size()) {setDead(true);setIsDefeated(true);getGraph().decreaseNumOfCitiesAlive();}
+        if(ammountOfDeadPowerSources==powerSources.size()) {setDead(true);System.out.println("miasto umarlo");setIsDefeated(true);getGraph().decreaseNumOfCitiesAlive();}
+        }
+        
     }
     public void createCitizen() {
 //        Citizen c=new Citizen(this);

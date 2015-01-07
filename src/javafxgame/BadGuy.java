@@ -196,7 +196,7 @@ public class BadGuy extends Fighter {
                     
                 }
                 if(currentNode instanceof City) ((City)currentNode).setBadGuyIsGoingToThisCity(false);
-                System.out.println("miasto umarlo");
+                
                
             //go to the next city
             try{
