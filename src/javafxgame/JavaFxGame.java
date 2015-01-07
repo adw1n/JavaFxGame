@@ -81,9 +81,9 @@ public class JavaFxGame extends Application {
 //        FileReader fileReader=new FileReader("feamleNames.txt");
         
         
-//        NameGetter n=new NameGetter();
-//        for(int i=0;i<10;i++)
-//        n.getFemaleName(); 
+        NameGetter n=new NameGetter();
+        for(int i=0;i<10;i++)
+        System.out.println(n.getFemaleName()); 
 //        Citizen c=new Citizen(c1);
 //        c.go(s);
 //        Citizen cc=new Citizen((City) c2);

@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 
 
 public class ControlPanel {
-    Label label,numOfCitiesAlive;
+    Label entityInfoLabel,numOfCitiesAlive,numOfGuysAlive;
     Entity currentEntity;
     Button btnStop,btnSuspend,btnResume,btnCreateCitizen,btnCreateSuperhero,btnChangeDestination;
     VBox vBox;
@@ -30,7 +30,7 @@ public class ControlPanel {
             public void handle(ActionEvent event) {
                 if(currentEntity!=null){
                     currentEntity.myStop();
-                    label.setText("click on an entity to see info");
+                    entityInfoLabel.setText("click on an entity to see info");
                     btnResume.setDisable(true);
         btnStop.setDisable(true);
         btnSuspend.setDisable(true);
@@ -127,7 +127,7 @@ public class ControlPanel {
         guyButtons.getChildren().addAll(btnSuspend,btnResume,btnStop);
         cityButtons=new HBox();
         cityButtons.getChildren().addAll(btnCreateCitizen,btnCreateSuperhero);
-        label=new Label("click on an entity to see info");
+        entityInfoLabel=new Label("click on an entity to see info");
         numOfCitiesAlive=new Label("num of cities alive"+graph.getNumOfCitiesAlive());
         btnResume.setDisable(true);
         btnStop.setDisable(true);
@@ -135,7 +135,7 @@ public class ControlPanel {
         changingDestinationButtons=new HBox();
         changingDestinationButtons.getChildren().addAll(citiesComboBox,btnChangeDestination);
         vBox=new VBox();
-        vBox.getChildren().addAll(numOfCitiesAlive,label,guyButtons,cityButtons,changingDestinationButtons);
+        vBox.getChildren().addAll(numOfCitiesAlive,entityInfoLabel,guyButtons,cityButtons,changingDestinationButtons);
         vBox.setLayoutX(900);
         vBox.setLayoutY(200);
         pane.getChildren().add(vBox);
@@ -151,7 +151,7 @@ public class ControlPanel {
     }
     public synchronized void displayEntity(Entity e){
         currentEntity=e;
-        label.setText(e.toString());
+        entityInfoLabel.setText(e.toString());
         boolean option=e.isStoppable();
        
         btnStop.setDisable(!option);
