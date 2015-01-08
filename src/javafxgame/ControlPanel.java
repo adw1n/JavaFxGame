@@ -24,6 +24,7 @@ public class ControlPanel {
     
     public ControlPanel(Pane pane,Graph graph) {
         this.graph=graph;
+        
         currentEntity=null;
         btnStop=new Button("Delete");
         btnStop.setOnAction(new EventHandler<ActionEvent>() {
@@ -39,46 +40,8 @@ public class ControlPanel {
             }            
         });
         citiesComboBox=new ComboBox();
-        citiesComboBox.getItems().addAll("City 1",
-                "City 2","City 3","City 4","City 5","City 6","City 7","City 8","City 9","Capital");
+        
         btnChangeDestination=new Button("Change destination");
-        btnChangeDestination.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(currentEntity!=null){
-                    if(citiesComboBox.getValue()!=null){
-                        Node destination=null;
-                        if(citiesComboBox.getValue().equals("Capital")){
-                            for(Node it: graph.getNodes())
-                                 if(it instanceof Capital)
-                            destination=it;
-                        }
-                        else{
-                            for(int i=1;i<10;i++)
-                            if(citiesComboBox.getValue().equals("City "+i)){
-                             
-                                int numOfCities=0;
-                                for(Node it: graph.getNodes()){
-                                    if((it instanceof City) && !(it instanceof Capital)
-                                            ){
-                                        numOfCities++;
-                                        if(numOfCities==i)
-                                        {
-                                            destination=it;
-                                            System.err.println("City "+i+" ma wsp: "+destination.getCircle());
-                                            break;
-                                        }
-                                        
-                                    }
-                                }
-                            }
-                        }
-                        if(destination!=null)
-                    ((Guy)currentEntity).setDestination(destination);
-                    }
-                }
-            }            
-        });
         btnSuspend=new Button("suspend");
         btnSuspend.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -138,8 +101,34 @@ public class ControlPanel {
         vBox=new VBox();
         vBox.getChildren().addAll(numOfCitiesAlive,entityInfoLabel,guyButtons,cityButtons,changingDestinationButtons);
         vBox.setLayoutX(900);
-        vBox.setLayoutY(200);
+        vBox.setLayoutY(20);
         pane.getChildren().add(vBox);
+    }
+    public void setCities(){
+        for(Node it: graph.getNodes()){
+            if(it instanceof City)
+                citiesComboBox.getItems().add(it.getName());
+        }
+        
+        btnChangeDestination.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(currentEntity!=null){
+                    if(citiesComboBox.getValue()!=null){
+                        Node destination=null;
+                        for(Node it: graph.getNodes())
+                            if(it.getName().equals(citiesComboBox.getValue()))
+                            {
+                                destination=it;
+                                break;
+                            }
+                        
+                        if(destination!=null)
+                    ((Guy)currentEntity).setDestination(destination);
+                    }
+                }
+            }            
+        });
     }
     public void updateNumOfCitiesAlive(int num){
          Platform.runLater(new Runnable() {
@@ -159,7 +148,7 @@ public class ControlPanel {
         currentEntity=e;
         System.out.println("curr ent: "+e.toString());
         entityInfoLabel.setText(e.toString());
-        boolean option=e.isStoppable();
+        boolean option=(e instanceof Citizen || e instanceof Superhero);
        
         btnStop.setDisable(!option);
         btnSuspend.setDisable(!option);
@@ -171,11 +160,7 @@ public class ControlPanel {
         btnCreateSuperhero.setDisable(!(e instanceof Capital));
         btnChangeDestination.setDisable(!(e instanceof Citizen) && !(e instanceof Superhero));
         citiesComboBox.setDisable(!(e instanceof Citizen) && !(e instanceof Superhero));
-        if(option){
-             Citizen g=(Citizen) e;
-            btnSuspend.setDisable(g.isSuspended());
-         btnResume.setDisable(!g.isSuspended());
-        }
+        
     }
     
 }
