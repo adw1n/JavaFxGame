@@ -24,15 +24,11 @@ public class JavaFxGame extends Application {
         Pane root = new Pane();
         
         Scene scene = new Scene(root, 1200, 700);
-//        City c=new City(100,100,root);
-//        c.createCitizen();
-//        Citizen citizen=new Citizen(c);
         primaryStage.setTitle("adwin_ JavaFxGame");
         primaryStage.setScene(scene);
         primaryStage.show();
         graf = new Graph(root);
         City c1 = new City(50, 300, root, graf);
-        c1.setGraph(graf);
         graf.addNode(c1);
         graf.addNode(new Crossroads(200, 300, root, graf));
         graf.addNode(new Crossroads(200, 100, root, graf));
@@ -65,7 +61,6 @@ public class JavaFxGame extends Application {
         graf.addEdge(12, 14); 
         graf.addNode(new Capital(750, 300, root, graf));
         graf.addEdge(6, 15); 
-        Stack<Node> s = graf.findPathBetweenCities(c1, c2), s2;
         BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
         b2=new BadGuy(1000, 1200, 700, root, graf);
         b2=new BadGuy(1000, 700, 700, root, graf);
@@ -141,7 +136,7 @@ public class JavaFxGame extends Application {
     /**
      * Runs the specified {@link Runnable} on the JavaFX application thread and
      * waits for completion.
-     * autor:http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/
+     * @autor:http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/
      *
      * @param action the {@link Runnable} to run
      * @throws NullPointerException if {@code action} is {@code null}

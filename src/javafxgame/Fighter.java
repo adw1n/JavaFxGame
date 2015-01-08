@@ -29,6 +29,22 @@ public abstract class Fighter extends Guy{
         abilities.add(new FightersAbility(Ability.STAMINA, generatedNumber));
         
     }
+
+    @Override
+    public String toString() {
+        
+        String ans="";
+        if(this instanceof Superhero)
+            ans="Superhero: "+super.toString();
+        else if(this instanceof BadGuy) ans="BadGuy "+super.toString();
+                    ans+="\nHP: "+getHp();
+                ans+="\nAbilities: \n";
+        for(FightersAbility it: abilities)
+            ans+=it;
+        
+        return ans; //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public synchronized void fight(Fighter opponent){
         if(this.getOpponent()==null && opponent.getOpponent()==null){
             

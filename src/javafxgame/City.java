@@ -3,14 +3,17 @@ package javafxgame;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
 public class City extends Node { //city na razie ma tylko wiekszy promien
 
     private static final int radius = 32;
     private boolean badGuyIsGoingToThisCity;
+    final int maxInitFightersAbilityAttributeValue=10;
 //    ArrayList<Citizen> citizens;
     int numberOfCitizens;
     ArrayList<PowerSource> powerSources;
@@ -25,12 +28,33 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
         dead=false;
         badGuyIsGoingToThisCity=false;
         ile++;
-        powerSources=new ArrayList<>();
-        PowerSource p=new PowerSource(new FightersAbility(Ability.POWER, 10),graph);
-        powerSources.add(p);
+       initializePowerSources();
         System.out.println("power Sources size: "+powerSources.size()+powerSources.get(0));
     }
-
+    private void initializePowerSources(){
+        
+        powerSources=new ArrayList<>();
+        Random randomGenerator = new Random();
+        int numOfPowerSourcesInTheCity=randomGenerator.nextInt(4)+1;
+        
+        for(int numOfPowerSource=0;numOfPowerSource<numOfPowerSourcesInTheCity;++numOfPowerSource){
+            Ability a=Ability.SWIFTNESS;
+            switch(randomGenerator.nextInt(5)){
+                case 0: a=Ability.ENERGY;
+                    break;
+                case 1: a=Ability.FIGHTINGSKILLS;
+                    break;
+                case 2: a=Ability.INTELLIGENCE;
+                    break;
+                case 3: a=Ability.POWER;
+                    break;
+                case 4: a=Ability.STAMINA;
+                    break;
+            }
+            powerSources.add(new PowerSource(new FightersAbility(a,randomGenerator.nextInt(maxInitFightersAbilityAttributeValue)+1),getGraph() ));
+                    
+        }
+    }
     @Override
     public String toString() {
         String ans="City: ";

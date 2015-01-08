@@ -24,11 +24,7 @@ public class BadGuy extends Fighter {
         getCircle().setFill(valueOf("red"));
     }
 
-    @Override
-    public String toString() {
-        return "Bad guy "+super.toString(); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public boolean isStoppable() {
         return false;
@@ -165,7 +161,7 @@ public class BadGuy extends Fighter {
                                 }
                     ((City)currentNode).getDrained((float)-0.1);
                     //zwieksz zdolnosci o 0.1
-                    increaseAbilities((float)0.1);
+                    increaseAbilities((float)0.1*(float)0.1);
                     boolean zabity=false;
                     znalezione=false;
                     //zabij citizena

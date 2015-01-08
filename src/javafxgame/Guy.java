@@ -91,11 +91,6 @@ public abstract class Guy extends Entity implements Runnable {
     }
     
     public abstract boolean isCitizen();
-    @Override
-    public void run() {
-//        System.out.println("nowy watek hurra!" + toString());
-        //goToCity();
-    }
     
     synchronized void myStop() {
         setStopped(true);

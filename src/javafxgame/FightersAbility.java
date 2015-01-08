@@ -2,6 +2,8 @@
 
 package javafxgame;
 
+import static java.lang.Math.max;
+
 
 public class FightersAbility {
     private Ability ability;
@@ -29,12 +31,14 @@ public class FightersAbility {
      */
     public void setAbilityAttribute(float abilityAttribute) {
         this.abilityAttribute = abilityAttribute;
+        this.abilityAttribute=max(this.abilityAttribute,0);
     }
     public void increaseAbilityAttribute(float difference){
         abilityAttribute+=Math.abs(difference);
     }
     public void decreaseAbilityAttribute(float difference){
         abilityAttribute-=Math.abs(difference);
+        abilityAttribute=max(abilityAttribute,0);
     }
 
     /**
