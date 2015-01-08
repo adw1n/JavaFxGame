@@ -84,7 +84,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
                             foundException=true;
                         }
                     } while (foundException );
-        ans+="\nNumber of citizens: "+numOfCitizens;
+        ans+="\nNumber of your guys: "+numOfCitizens;
         for(PowerSource it: powerSources)
             ans+="\n"+it;
         return ans; //To change body of generated methods, choose Tools | Templates.

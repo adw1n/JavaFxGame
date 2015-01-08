@@ -25,10 +25,7 @@ public class BadGuy extends Fighter {
     }
 
     
-    @Override
-    public boolean isStoppable() {
-        return false;
-    }
+    
 
     @Override
     public boolean isCitizen() {

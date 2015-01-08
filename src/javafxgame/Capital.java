@@ -10,8 +10,8 @@ public class Capital extends City{
 
     public Capital(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, graph,radius,graph.getNameGetter().getCapitalName());
-        for(int i=0;i<2;i++)
-        createSuperhero();
+//        for(int i=0;i<2;i++)
+//        createSuperhero();
     }
     public Superhero createSuperhero(){
        

@@ -40,7 +40,55 @@ public class Graph {
                 a = false;
             }
         }
+        
+//        initializeGraph(pane);
         controlPanel=new ControlPanel(pane,this);
+    }
+
+    public void initializeGraph() {
+        addNode(new City(50, 300, pane, this));
+        addNode(new Crossroads(200, 300, pane, this));
+        addNode(new Crossroads(200, 100, pane, this));
+        addNode(new Crossroads(200, 500, pane, this));
+        addEdge(1, 2);
+        addEdge(1, 3);
+        addEdge(0, 1);
+        addNode(new City(350, 500, pane, this));
+        addEdge(3, 4);
+        addNode(new City(350, 100, pane, this));
+        addEdge(2, 5);
+        addNode(new Crossroads(600, 300, pane, this));
+        addEdge(6, 1);
+        addNode(new Crossroads(600, 100, pane, this));
+        addEdge(6, 7);
+        addNode(new City(450, 100, pane, this));
+        addEdge(7, 8);
+        addNode(new City(750, 100, pane, this));
+        addEdge(7, 9);
+        addNode(new City(50, 500, pane, this));
+        addEdge(3, 10);
+        addNode(new City(50, 100, pane, this));
+        addEdge(2, 11);
+        addNode(new Crossroads(600, 500, pane, this));
+        addEdge(6, 12);
+        addNode(new City(450, 500, pane, this));
+        addEdge(12, 13);
+        addNode(new City(750, 500, pane, this));
+        addEdge(12, 14);
+        addNode(new Capital(750, 300, pane, this));
+        addEdge(6, 15);
+        Random randomGenerator = new Random();
+        for(Node it: getNodes())
+        {
+            if(it instanceof Capital)
+                ((Capital)it).createSuperhero();
+            else if(it instanceof City){
+                for(int numOfCitizen=0;numOfCitizen<randomGenerator.nextInt(3);numOfCitizen++)
+                    ((City)it).createCitizen();
+            }
+                
+        }
+        controlPanel.setCities();
     }
     public synchronized void displayEntity(Entity e){
         getControlPanel().displayEntity(e);

@@ -30,10 +30,7 @@ public class Citizen extends Guy {
         return "Citizen "+super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public boolean isStoppable() {
-        return true;
-    }
+    
 
     @Override
     public boolean isCitizen() {
