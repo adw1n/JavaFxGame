@@ -10,8 +10,8 @@ import javafx.scene.layout.Pane;
 public abstract class Fighter extends Guy{
     private Fighter opponent;
     private ArrayList<FightersAbility> abilities;
-    public Fighter(int hp, double x, double y, Pane pane, Node currentNode) {
-        super(hp, x, y, pane, currentNode);
+    public Fighter(int hp, double x, double y, Pane pane, Node currentNode,String name) {
+        super(hp, x, y, pane, currentNode,name);
         opponent=null;
         abilities=new ArrayList<>();
         Random randomGenerator = new Random();

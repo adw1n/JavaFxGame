@@ -13,12 +13,19 @@ public class Superhero extends Fighter{
 
    Capital capital;
     public Superhero(int hp, Capital capital, Pane pane, Graph graph) {
-        super(hp, capital.getCircle().getCenterX(), capital.getCircle().getCenterY(), pane, null);
+        super(hp, capital.getCircle().getCenterX(), capital.getCircle().getCenterY(), pane, null,graph.getNameGetter().getFemaleName());
         setGraph(graph);
         currentNode=capital;
         
         this.capital=capital;
         getCircle().setFill(valueOf("green"));
+        graph.getControlPanel().displayEntity();
+        updateCityInfo();
+    }
+
+    @Override
+    public String toString() {
+        return "Superhero " + super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

@@ -19,6 +19,11 @@ public class FightersAbility {
         return abilityAttribute;
     }
 
+    @Override
+    public String toString() {
+        return ability.name()+"\nability attribute: "+abilityAttribute+"\n"; //To change body of generated methods, choose Tools | Templates.
+    }
+
     /**
      * @param abilityAttribute the abilityAttribute to set
      */

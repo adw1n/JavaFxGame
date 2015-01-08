@@ -24,6 +24,7 @@ public class ControlPanel {
     
     public ControlPanel(Pane pane,Graph graph) {
         this.graph=graph;
+        currentEntity=null;
         btnStop=new Button("Delete");
         btnStop.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -149,8 +150,14 @@ public class ControlPanel {
                     });
         
     }
+    public synchronized void displayEntity(){
+        if(currentEntity!=null){
+        displayEntity(currentEntity);
+        }
+    }
     public synchronized void displayEntity(Entity e){
         currentEntity=e;
+        System.out.println("curr ent: "+e.toString());
         entityInfoLabel.setText(e.toString());
         boolean option=e.isStoppable();
        

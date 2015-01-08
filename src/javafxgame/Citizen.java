@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
@@ -14,13 +15,19 @@ public class Citizen extends Guy {
     private static final String colour = "blue";
     private static final int hp = 10;
     
-    public Citizen(City nativeCity) {
-        super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity);
+    public Citizen(City nativeCity,Graph graph) {
+        super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity,graph.getNameGetter().getFemaleName());
 //        running = true;
         this.nativeCity = nativeCity;
+        updateCityInfo();
         
        
       
+    }
+
+    @Override
+    public String toString() {
+        return "Citizen "+super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

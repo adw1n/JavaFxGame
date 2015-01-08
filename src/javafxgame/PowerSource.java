@@ -7,11 +7,18 @@ public class PowerSource extends Entity{
     private FightersAbility enhancedAbility;
     //zdolnosc ktora wzmacnia
 
-    public PowerSource(FightersAbility enhancedAbility) {
+    public PowerSource(FightersAbility enhancedAbility,Graph graph) {
+        super(graph.getNameGetter().getPowerSourceName());
         this.enhancedAbility=enhancedAbility;
 //        super(name);
         ID_count++;
         ID=ID_count;
+    }
+
+    @Override
+    public String toString() {
+        return "Power source: "+super.toString()+"\nenchanced ability:"
+                +"\n"+enhancedAbility; //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

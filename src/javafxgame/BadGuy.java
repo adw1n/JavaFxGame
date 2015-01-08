@@ -19,9 +19,14 @@ public class BadGuy extends Fighter {
     static final private int inf = 1000000;
 //wywalic z konstruktora hp - zbedne....
     public BadGuy(int hp, double x, double y, Pane pane, Graph graph) {
-        super(hp, x, y, pane, null);
+        super(hp, x, y, pane, null,graph.getNameGetter().getFemaleName());
         setGraph(graph);
         getCircle().setFill(valueOf("red"));
+    }
+
+    @Override
+    public String toString() {
+        return "Bad guy "+super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

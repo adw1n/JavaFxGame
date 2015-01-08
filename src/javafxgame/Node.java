@@ -15,7 +15,8 @@ public abstract class Node extends Entity {
     private int nodeNumber;
     private Graph graph;
     private boolean isDefeated;
-    public Node(int x, int y, Pane pane, int radius, Graph graph) {
+    public Node(int x, int y, Pane pane, int radius, Graph graph,String name) {
+        super(name);
 //        edges = new ArrayList<>();
         this.nodeNumber = nodeNumber;
         this.x = x;
@@ -39,8 +40,8 @@ public abstract class Node extends Entity {
         });
     }
 
-    public Node(int x, int y, Pane pane, int radius, String color, Graph graph) {
-        this(x, y, pane, radius, graph);
+    public Node(int x, int y, Pane pane, int radius, String color, Graph graph,String name) {
+        this(x, y, pane, radius, graph,name);
         circle.setFill(valueOf(color));
     }
 //    void addEdge(int koniec){

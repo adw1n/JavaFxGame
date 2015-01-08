@@ -9,7 +9,7 @@ public class Crossroads extends Node {
     private boolean isBeingUsed=false;
     private Semaphore sem;
     Crossroads(int x, int y, Pane pane, Graph graph) {
-        super(x, y, pane, radius, graph);
+        super(x, y, pane, radius, graph,graph.getNameGetter().getCrossroadsName());
         sem=new Semaphore(1,true);
     }
 

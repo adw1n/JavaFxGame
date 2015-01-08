@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -37,7 +38,8 @@ public abstract class Guy extends Entity implements Runnable {
                 Circle c;
                 Node skrzyzowanie = null;
                 boolean wchodze = false;
-    public Guy(int hp, double x, double y, Pane pane, Node currentNode) {
+    public Guy(int hp, double x, double y, Pane pane, Node currentNode, String name) {
+        super(name);
         changeDirection=false;
         zajety = false;
         destination=null;
@@ -67,6 +69,15 @@ public abstract class Guy extends Entity implements Runnable {
             }
         });
                 
+    }
+    protected void updateCityInfo(){
+        Platform.runLater(new Runnable() {
+
+            @Override
+            public void run() {
+                getGraph().getControlPanel().displayEntity();
+            }
+        });
     }
     public void deleteFromPane(){
         JavaFxGame.runAndWait( new Thread(){
@@ -495,6 +506,7 @@ public abstract class Guy extends Entity implements Runnable {
                     
                     do {
                         znalezione = false;
+                        
                         try{
                         for(Iterator<Guy> iter=graph.getGuys().iterator();iter.hasNext();)
 //                        for (Guy iterator : graph.getGuys()) 

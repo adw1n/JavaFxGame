@@ -1,6 +1,10 @@
 package javafxgame;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.layout.Pane;
 
 public class City extends Node { //city na razie ma tylko wiekszy promien
@@ -13,32 +17,58 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     static int ile = 0;
     private boolean dead;
     public City(int x, int y, Pane pane, Graph graph) {
-        super(x, y, pane, radius, graph);
+        super(x, y, pane, radius, graph,graph.getNameGetter().getCityName());
+        initializeVariables(graph);
+    }
+
+    private void initializeVariables(Graph graph) {
         dead=false;
         badGuyIsGoingToThisCity=false;
-//        citizens = new ArrayList<>();
         ile++;
-//        if (ile  == 1) 
-//        for(int i=0;i<5;i++)
-//            createCitizen();
-//        }
         powerSources=new ArrayList<>();
-        powerSources.add(new PowerSource(new FightersAbility(Ability.POWER, 10)));
-       
+        PowerSource p=new PowerSource(new FightersAbility(Ability.POWER, 10),graph);
+        powerSources.add(p);
+        System.out.println("power Sources size: "+powerSources.size()+powerSources.get(0));
     }
-    public City(int x, int y, Pane pane, Graph graph,int radius) {
-        super(x, y, pane, radius, graph);
-        dead=false;
-//        citizens = new ArrayList<>();
-        ile++;
-//        citizens = new ArrayList<>();
-        ile++;
-//        if (ile  == 1) 
-//        for(int i=0;i<3;i++)
-//            createCitizen();
-        powerSources=new ArrayList<>();
-        powerSources.add(new PowerSource(new FightersAbility(Ability.POWER, 10)));
-//        }
+
+    @Override
+    public String toString() {
+        String ans="City: ";
+        if(this instanceof Capital)
+            ans="Captial: ";
+        ans+=super.toString();
+        ans+="\nStatus: ";
+        if(isIsDefeated()) ans+="defeated";
+        else ans+="city alive";
+        int numOfCitizens=0;
+        boolean foundException;
+        do {
+                        foundException = false;
+                        
+                        try{
+                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
+//                        for (Guy iterator : graph.getGuys()) 
+                        {
+                            Guy iterator=iter.next();
+                            if (!iterator.isStopped() && getCircle().getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                numOfCitizens++;
+                            }
+                        }
+                        }
+                        catch(ConcurrentModificationException e){
+                            System.out.println("zlapalem dupka w city");
+                            foundException=true;
+                        }
+                    } while (foundException );
+        ans+="\nNumber of citizens: "+numOfCitizens;
+        for(PowerSource it: powerSources)
+            ans+="\n"+it;
+        return ans; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public City(int x, int y, Pane pane, Graph graph,int radius,String name) {
+        super(x, y, pane, radius, graph,name);
+        initializeVariables(graph);
     }
     public synchronized void getDrained(float ammount){
         int ammountOfDeadPowerSources=0;
@@ -53,7 +83,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     }
     public void createCitizen() {
 //        Citizen c=new Citizen(this);
-        Citizen c = new Citizen(this);
+        Citizen c = new Citizen(this,getGraph());
         c.setGraph(getGraph());
 //        citizens.add(c);
         getGraph().addGuy(c);

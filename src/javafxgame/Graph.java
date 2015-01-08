@@ -16,6 +16,7 @@ public class Graph {
     private ArrayList<Node> nodes;
     private int numOfCitizensAlive;
     ArrayList<Line> roads;
+    private NameGetter nameGetter;
     private ArrayList<Guy> guys;
     ArrayList<Integer> citiesNumbers;//potem trzeba bedzie usuwac
     private Pane pane;
@@ -27,6 +28,7 @@ public class Graph {
     public Graph(Pane pane) {
         numOfCitiesAlive=0;
         numOfCitizensAlive=0;
+        nameGetter=new NameGetter();
 //        stosProcesow=new Stack<>();
         this.pane = pane;
         nodes = new ArrayList<>();
@@ -54,6 +56,7 @@ public class Graph {
         getNodes().add(node);
 
     }
+    
     private synchronized void increaseNumOfCitiesAlive(){
         numOfCitiesAlive++;
         controlPanel.updateNumOfCitiesAlive(numOfCitiesAlive);
@@ -280,5 +283,19 @@ public class Graph {
      */
     public synchronized void setNodes(ArrayList<Node> nodes) {
         this.nodes = nodes;
+    }
+
+    /**
+     * @return the nameGetter
+     */
+    public NameGetter getNameGetter() {
+        return nameGetter;
+    }
+
+    /**
+     * @param nameGetter the nameGetter to set
+     */
+    public void setNameGetter(NameGetter nameGetter) {
+        this.nameGetter = nameGetter;
     }
 }

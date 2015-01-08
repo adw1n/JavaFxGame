@@ -66,10 +66,10 @@ public class JavaFxGame extends Application {
         graf.addNode(new Capital(750, 300, root, graf));
         graf.addEdge(6, 15); 
         Stack<Node> s = graf.findPathBetweenCities(c1, c2), s2;
-//        BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
-//        b2=new BadGuy(1000, 1200, 700, root, graf);
-//        b2=new BadGuy(1000, 700, 700, root, graf);
-//        b2=new BadGuy(1000, 1100, 700, root, graf);
+        BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
+        b2=new BadGuy(1000, 1200, 700, root, graf);
+        b2=new BadGuy(1000, 700, 700, root, graf);
+        b2=new BadGuy(1000, 1100, 700, root, graf);
 //        b1.fight(b2);
 //        b2.fight(b1);
 //        FightersAbility f=new FightersAbility(Ability.POWER, 10);
@@ -81,9 +81,14 @@ public class JavaFxGame extends Application {
 //        FileReader fileReader=new FileReader("feamleNames.txt");
         
         
-        NameGetter n=new NameGetter();
-        for(int i=0;i<10;i++)
-        System.out.println(n.getFemaleName()); 
+//        NameGetter n=new NameGetter();
+//        for(int i=0;i<200;i++){
+//            System.out.println(n.getFemaleName()); 
+//            System.out.println(n.getCrossroadsName());
+//            System.out.println(n.getCityName());
+//            System.out.println(n.getCapitalName());
+//            System.out.println(n.getPowerSourceName());
+//        }
 //        Citizen c=new Citizen(c1);
 //        c.go(s);
 //        Citizen cc=new Citizen((City) c2);

@@ -5,10 +5,18 @@ public abstract class Entity {
     public Entity(){
         thisEntity=this;
     }
-//    private String name;
-//    public Entity(String name) {
-//        this.name = name;
-//    }
+    private String name;
+    public Entity(String name) {
+        this();
+        this.name = name;
+        System.out.println(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+    
 //
 //    /**
 //     * @return the name
