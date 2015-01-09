@@ -684,7 +684,7 @@ private final int numberOfUpdates=20;
     }
 
     public void randomSuspend() {
-        if(randomGenerator.nextInt(10000)==luckyStopValue) mySuspend();
+        if( this instanceof Citizen && randomGenerator.nextInt(10000)==luckyStopValue) mySuspend();
     }
 
     /**

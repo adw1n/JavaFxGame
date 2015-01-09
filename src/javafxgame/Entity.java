@@ -1,11 +1,21 @@
 package javafxgame;
-
+/**
+ * 
+ * @author adwin_
+ */
 public abstract class Entity {
     Entity thisEntity;
+    /**
+     * Constructs and initializes an Entity object.
+     */
     public Entity(){
         thisEntity=this;
     }
     private String name;
+    /**
+     * Constructs and initializes an Entity object.
+     * @param name 
+     */
     public Entity(String name) {
         this();
         this.name = name;

@@ -213,7 +213,7 @@ public class ControlPanel {
                            
                         }
                     });
-                    stage.setTitle("serializacja");
+                    stage.setTitle("Best 5 scores");
                     stage.setScene(scene);
 
                     stage.show();
@@ -293,8 +293,12 @@ public class ControlPanel {
             boolean option = (e instanceof Citizen || e instanceof Superhero);
 
             btnStop.setDisable(!option);
-            btnSuspend.setDisable(!option);
-            btnResume.setDisable(!option);
+            if(option && ((Guy)e).isSuspended())
+            btnSuspend.setDisable(true);
+            else btnSuspend.setDisable(!option);
+            if(option&& ((Guy)e).isSuspended() )
+            btnResume.setDisable(false);
+            else  btnResume.setDisable(true);
             btnCreateCitizen.setDisable(true);
             if (e instanceof City) {
                 if (!((City) e).isIsDefeated()) {

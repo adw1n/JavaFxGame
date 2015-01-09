@@ -1,6 +1,7 @@
 package javafxgame;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Random;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -19,6 +20,7 @@ public class Graph {
     ArrayList<Line> roads;
     private NameGetter nameGetter;
     private ArrayList<Guy> guys;
+    private ArrayList<BadGuy> badGuys;
     ArrayList<Integer> citiesNumbers;//potem trzeba bedzie usuwac
     private Pane pane;
     private boolean adj[][];
@@ -44,6 +46,7 @@ public class Graph {
             }
         }
         startTime=System.nanoTime();
+        badGuys=new ArrayList<>();
 //        initializeGraph(pane);
         controlPanel=new ControlPanel(pane,this);
     }
@@ -97,8 +100,12 @@ public class Graph {
     public synchronized void displayEntity(Entity e){
         getControlPanel().displayEntity(e);
     }
-    public void addGuy(Guy guy){
+    public synchronized void addGuy(Guy guy){
         getGuys().add(guy);
+    }
+    public synchronized void addBadGuy(BadGuy guy){
+        try{getBadGuys().add(guy);}
+        catch(ConcurrentModificationException e){};//not gonna happen
     }
     public void addNode(Node node) {
         if(node instanceof City) increaseNumOfCitiesAlive();
@@ -363,5 +370,12 @@ public class Graph {
      */
     public long getStartTime() {
         return startTime;
+    }
+
+    /**
+     * @return the badGuys
+     */
+    public synchronized ArrayList<BadGuy> getBadGuys() {
+        return badGuys;
     }
 }

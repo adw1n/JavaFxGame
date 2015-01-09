@@ -62,11 +62,11 @@ public class BadGuysCreator implements Runnable{
                 @Override
                 public void run() {
                     BadGuy b;
-                    for(int i=0;i<=20;i++){
+//                    for(int i=0;i<=20;i++){
 //                    
                    b=new BadGuy(randomGenerator.nextInt(BadGuy.getMaxHP()), x, y, graph.getPane(), graph);
                    b.startThread();
-                    }
+//                    }
                 }
             });
             }
