@@ -94,6 +94,8 @@ private final int numberOfUpdates=20;
     public void sleepAndUpdatePowerSources() throws InterruptedException {
       
         int timeToSpendInTheCity=randomGenerator.nextInt(20000)+1000;
+        if(this instanceof Superhero) //sleep much shorter
+            timeToSpendInTheCity=randomGenerator.nextInt(2000)+1000;
         if(currentNode!=null){
         if(!currentNode.isIsDefeated()){
             for(int numOfTimeToUpdatePowerSources=0;numOfTimeToUpdatePowerSources<numberOfUpdates;numOfTimeToUpdatePowerSources++){
@@ -105,6 +107,7 @@ private final int numberOfUpdates=20;
         }
         else System.out.println("null bro"+this);
     }
+   
     protected void updateCityInfo(){
         Platform.runLater(new Runnable() {
 

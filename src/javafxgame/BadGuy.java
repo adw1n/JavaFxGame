@@ -3,10 +3,10 @@ package javafxgame;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
@@ -15,7 +15,7 @@ import javafx.scene.shape.Circle;
 //bad guys nachodza na siebie!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class BadGuy extends Fighter {
     private static final int maxHP=1000;
-
+    private City destination;
     /**
      * @return the maxHP
      */
@@ -202,8 +202,12 @@ public class BadGuy extends Fighter {
                     
                 }
                 if(currentNode instanceof City) ((City)currentNode).setBadGuyIsGoingToThisCity(false);
-                
-               
+               Random randomGenerator= new Random();
+                    try {
+                        Thread.sleep(randomGenerator.nextInt(400));
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
+                    }
             //go to the next city
             try{
                 go(getGraph().findPathBetweenCities(currentNode, getGraph().getRandomCity(currentNode)));
@@ -216,7 +220,10 @@ public class BadGuy extends Fighter {
             }
             
         }
-        
+        if(destination!=null){
+            System.err.println("zly nie idzie tam jednak");
+            destination.setBadGuyIsGoingToThisCity(false);
+        }
         System.out.println("umarl bad guy");
         getGraph().getBadGuys().remove(this);
         deleteFromPane();
@@ -231,7 +238,9 @@ public class BadGuy extends Fighter {
         if (!path.empty()) {
             currentNode = path.get(0);
             if(currentNode instanceof City) ((City)currentNode).setBadGuyIsGoingToThisCity(false);
-            if(path.lastElement() instanceof City) ((City)path.lastElement()).setBadGuyIsGoingToThisCity(true);
+            if(path.lastElement() instanceof City){ ((City)path.lastElement()).setBadGuyIsGoingToThisCity(true);
+            destination=(City)path.lastElement();
+            }
             path.remove(0);
             
             Thread renderer;

@@ -48,10 +48,11 @@ public class Graph {
         startTime=System.nanoTime();
         badGuys=new ArrayList<>();
 //        initializeGraph(pane);
-        controlPanel=new ControlPanel(pane,this);
+        
     }
 
     public void initializeGraph() {
+        controlPanel=new ControlPanel(pane,this);
         addNode(new City(50, 300, getPane(), this));
         addNode(new Crossroads(200, 300, getPane(), this));
         addNode(new Crossroads(200, 100, getPane(), this));
@@ -94,11 +95,15 @@ public class Graph {
             }
                 
         }
+        
         controlPanel.setCities();
         badGuysCreator=new BadGuysCreator(this);
     }
     public synchronized void displayEntity(Entity e){
         getControlPanel().displayEntity(e);
+    }
+    public synchronized  void displayEntity(){
+        getControlPanel().displayEntity();
     }
     public synchronized void addGuy(Guy guy){
         getGuys().add(guy);

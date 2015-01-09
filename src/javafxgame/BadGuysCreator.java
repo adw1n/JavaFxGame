@@ -5,6 +5,7 @@ package javafxgame;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
 
@@ -33,7 +34,18 @@ public class BadGuysCreator implements Runnable{
             x=0;y=0;
             howManyBadGuysCreatedSoFar++;
             try {
-                Thread.sleep(randomGenerator.nextInt(maxSleepingTime)+maxSleepingTime);
+                int sleepingTime=(randomGenerator.nextInt(maxSleepingTime)+maxSleepingTime/4)/50;
+                for(int i=0;i<100;i++){
+                Thread.sleep(sleepingTime);
+                    Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                         graph.displayEntity();
+                    }
+                });
+               
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(BadGuysCreator.class.getName()).log(Level.SEVERE, null, ex);
             }

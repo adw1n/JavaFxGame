@@ -25,7 +25,7 @@ public class JavaFxGame extends Application {
         Pane root = new Pane();
         
         Scene scene = new Scene(root, 1200, getDownScreenEdge());
-        primaryStage.setTitle("adwin_ JavaFxGame");
+        primaryStage.setTitle("JavaFxGame powered by adwin_");
         primaryStage.setScene(scene);
         primaryStage.show();
         graf = new Graph(root);

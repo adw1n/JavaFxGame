@@ -37,9 +37,11 @@ public class ControlPanel {
     HBox guyButtons, cityButtons, changingDestinationButtons;
     Graph graph;
     ComboBox citiesComboBox;
-
+    private long timeOfLastGuyCreation;
+    static final double minEnergyToCreateAHero=80;
     public ControlPanel(Pane pane, Graph graph) {
         this.graph = graph;
+        timeOfLastGuyCreation=graph.getStartTime();
         sumOfPowerSources = new Label();
         currentEntity = null;
         btnStop = new Button("Delete");
@@ -88,6 +90,7 @@ public class ControlPanel {
             public void handle(ActionEvent event) {
                 if (currentEntity != null) {//if its a City
                     if (currentEntity instanceof City) {
+                        timeOfLastGuyCreation=System.nanoTime();
                         ((City) currentEntity).createCitizen();//moze rzucac wyjatkami concurrent modification i trzeba lapac
                     }
                 }
@@ -98,8 +101,11 @@ public class ControlPanel {
             @Override
             public void handle(ActionEvent event) {
                 if (currentEntity != null) {//if its a Capital
-                    if (currentEntity instanceof Capital);
+                    if (currentEntity instanceof Capital){
                     ((Capital) currentEntity).createSuperhero();
+                    timeOfLastGuyCreation=System.nanoTime();
+                    displayEntity();
+                    }
 
                 }
             }
@@ -260,8 +266,11 @@ public class ControlPanel {
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    int i=0;
                     for (Wynik w : listaWynikow) {
+                        if(i>=5) break;
                         e.writeObject(w);
+                        i++;
                     }
                     e.close();
                 }
@@ -300,12 +309,29 @@ public class ControlPanel {
             btnResume.setDisable(false);
             else  btnResume.setDisable(true);
             btnCreateCitizen.setDisable(true);
+            btnCreateSuperhero.setDisable(true);
+            double seconds=((double)(System.nanoTime()-timeOfLastGuyCreation))/1e9;
+            if(seconds>8)
             if (e instanceof City) {
                 if (!((City) e).isIsDefeated()) {
                     btnCreateCitizen.setDisable(false);
                 }
             }
-            btnCreateSuperhero.setDisable(!(e instanceof Capital));
+            if(seconds>15){
+                if(e instanceof Capital){
+                    //sum all PowerSources
+                    double powerSourcesEnergy=0;
+                    for(Node it:graph.getNodes()){
+                        if(it instanceof City){
+                            for(PowerSource p: ((City)it).getPowerSources())
+                                powerSourcesEnergy+=p.getEnergy();
+                        }
+                    }
+                    System.err.println("power sources ene is "+powerSourcesEnergy);
+                    btnCreateSuperhero.setDisable(powerSourcesEnergy+seconds<minEnergyToCreateAHero && powerSourcesEnergy>10);
+                }
+            }
+            
             btnChangeDestination.setDisable(!(e instanceof Citizen) && !(e instanceof Superhero));
             citiesComboBox.setDisable(!(e instanceof Citizen) && !(e instanceof Superhero));
         }

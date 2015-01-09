@@ -14,6 +14,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     private boolean badGuyIsGoingToThisCity;
     final int maxInitFightersAbilityAttributeValue=10;
 //    ArrayList<Citizen> citizens;
+    private int numOfBadGuysGoingToThisCity;
     int numberOfCitizens;
     private Label cityNameLabel;
     private ArrayList<PowerSource> powerSources;
@@ -22,6 +23,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     public City(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, radius, graph,graph.getNameGetter().getCityName());
         initializeVariables(graph);
+        numOfBadGuysGoingToThisCity=0;
         
     }
 
@@ -164,7 +166,9 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
      * @param badGuyIsGoingToThisCity the badGuyIsGoingToThisCity to set
      */
     public synchronized void setBadGuyIsGoingToThisCity(boolean badGuyIsGoingToThisCity) {
-        this.badGuyIsGoingToThisCity = badGuyIsGoingToThisCity;
+        if(badGuyIsGoingToThisCity) numOfBadGuysGoingToThisCity++;
+        else numOfBadGuysGoingToThisCity--;
+        this.badGuyIsGoingToThisCity = numOfBadGuysGoingToThisCity>0;
     }
 
     /**
