@@ -1,8 +1,5 @@
 package javafxgame;
 
-import java.io.FileReader;
-import java.io.InputStream;
-import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -46,7 +43,7 @@ public class JavaFxGame extends Application {
     /**
      * Runs the specified {@link Runnable} on the JavaFX application thread and
      * waits for completion.
-     * @autor http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/ (not me!!!)
+     * @author http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/ (not me!!!)
      *
      * @param action the {@link Runnable} to run
      * @throws NullPointerException if {@code action} is {@code null}

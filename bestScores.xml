@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_11" class="java.beans.XMLDecoder">
+ <object class="javafxgame.Wynik">
+  <void property="czasRozgrywki">
+   <double>324.839873</double>
+  </void>
+  <void property="imieGracza">
+   <string>przegrana</string>
+  </void>
+ </object>
+ <object class="javafxgame.Wynik">
+  <void property="czasRozgrywki">
+   <double>296.085335</double>
+  </void>
+  <void property="imieGracza">
+   <string>heja</string>
+  </void>
+ </object>
+ <object class="javafxgame.Wynik">
+  <void property="czasRozgrywki">
+   <double>281.58971</double>
+  </void>
+  <void property="imieGracza">
+   <string>jaaaa</string>
+  </void>
+ </object>
+ <object class="javafxgame.Wynik">
+  <void property="czasRozgrywki">
+   <double>269.981166</double>
+  </void>
+  <void property="imieGracza">
+   <string>no to ja</string>
+  </void>
+ </object>
+ <object class="javafxgame.Wynik">
+  <void property="czasRozgrywki">
+   <double>251.582352</double>
+  </void>
+  <void property="imieGracza">
+   <string>meonhacks</string>
+  </void>
+ </object>
+</java>
