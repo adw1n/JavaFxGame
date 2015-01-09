@@ -29,6 +29,7 @@ public class BadGuy extends Fighter {
         super(hp, x, y, pane, null,graph.getNameGetter().getFemaleName());
         setGraph(graph);
         getCircle().setFill(valueOf("red"));
+        
     }
 
     

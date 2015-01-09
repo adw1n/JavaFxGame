@@ -14,8 +14,7 @@ public class Citizen extends Guy {
     private City nativeCity;
     private static final String colour = "blue";
     private static final int hp = 10;
-    private final int numberOfUpdates=20;
-    private final float factor=0.0001f;
+    
     public Citizen(City nativeCity,Graph graph) {
         super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity,graph.getNameGetter().getFemaleName());
 //        running = true;
@@ -57,15 +56,7 @@ public class Citizen extends Guy {
                     }
                     if(isStopped()) break;
                 }
-                Random randomGenerator = new Random();
-                int timeToSpendInTheCity=randomGenerator.nextInt(20000)+1000;
-                if(!currentNode.isIsDefeated()){
-                for(int numOfTimeToUpdatePowerSources=0;numOfTimeToUpdatePowerSources<numberOfUpdates;numOfTimeToUpdatePowerSources++){
-                    thrd.sleep(timeToSpendInTheCity/numberOfUpdates);
-                    if(currentNode instanceof City)
-                    updatePowerSources((City)currentNode, (timeToSpendInTheCity/numberOfUpdates)*factor);
-                }
-                }
+                sleepAndUpdatePowerSources();
                 boolean succeded=true;
                 do{
                     synchronized(this){
@@ -126,6 +117,8 @@ public class Citizen extends Guy {
 
         
     }
+
+    
 
     /**
      * @return the surname

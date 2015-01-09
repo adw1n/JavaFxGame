@@ -15,6 +15,7 @@ public class Graph {
 
     private ArrayList<Node> nodes;
     private int numOfCitizensAlive;
+    private long startTime;
     ArrayList<Line> roads;
     private NameGetter nameGetter;
     private ArrayList<Guy> guys;
@@ -42,7 +43,7 @@ public class Graph {
                 a = false;
             }
         }
-        
+        startTime=System.nanoTime();
 //        initializeGraph(pane);
         controlPanel=new ControlPanel(pane,this);
     }
@@ -355,5 +356,12 @@ public class Graph {
      */
     public Pane getPane() {
         return pane;
+    }
+
+    /**
+     * @return the startTime
+     */
+    public long getStartTime() {
+        return startTime;
     }
 }

@@ -125,6 +125,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
 //        Citizen c=new Citizen(this);
         Citizen c = new Citizen(this,getGraph());
         c.setGraph(getGraph());
+        c.startThread();
 //        citizens.add(c);
         getGraph().addGuy(c);
     }

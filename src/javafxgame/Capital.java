@@ -19,7 +19,7 @@ public class Capital extends City{
        
 //        Citizen c=new Citizen(this);
         Superhero c = new Superhero(randomGenerator.nextInt(BadGuy.getMaxHP()), this, getPane(), getGraph());
-        
+        c.startThread();
 //        citizens.add(c);
         getGraph().addGuy(c);
     return c;

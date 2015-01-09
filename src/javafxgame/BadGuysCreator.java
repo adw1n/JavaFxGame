@@ -29,6 +29,7 @@ public class BadGuysCreator implements Runnable{
     public void run() {
         
         while(true){
+            
             x=0;y=0;
             howManyBadGuysCreatedSoFar++;
             try {
@@ -36,6 +37,7 @@ public class BadGuysCreator implements Runnable{
             } catch (InterruptedException ex) {
                 Logger.getLogger(BadGuysCreator.class.getName()).log(Level.SEVERE, null, ex);
             }
+            for(int i=0;i<=howManyBadGuysCreatedSoFar/20;i++){
             int option=randomGenerator.nextInt(4);
             if(option==0){//enemy comes from the top of the screen
                 //y=0, x=random from <0,rightScreenEdge
@@ -60,11 +62,14 @@ public class BadGuysCreator implements Runnable{
                 @Override
                 public void run() {
                     BadGuy b;
-                    for(int i=0;i<=howManyBadGuysCreatedSoFar/20;i++)
+                    for(int i=0;i<=20;i++){
+//                    
                    b=new BadGuy(randomGenerator.nextInt(BadGuy.getMaxHP()), x, y, graph.getPane(), graph);
+                   b.startThread();
+                    }
                 }
             });
-            
+            }
         }
                 
     }

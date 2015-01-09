@@ -2,6 +2,7 @@ package javafxgame;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,11 +21,13 @@ public abstract class Guy extends Entity implements Runnable {
     public static int getRadius() {
         return radius;
     }
-
+private final int numberOfUpdates=20;
+    private final float factor=0.0001f;
     private float  hp;
     private Circle circle;
     Thread thrd;
     Node currentNode;
+    private static final int luckyStopValue=1337;
     private Graph graph;
     boolean zajety;
     private static final int radius = 5;
@@ -38,6 +41,7 @@ public abstract class Guy extends Entity implements Runnable {
                 Circle c;
                 Node skrzyzowanie = null;
                 boolean wchodze = false;
+         private     Random randomGenerator ; 
     public Guy(int hp, double x, double y, Pane pane, Node currentNode, String name) {
         super(name);
         changeDirection=false;
@@ -50,7 +54,7 @@ public abstract class Guy extends Entity implements Runnable {
         this.currentNode = currentNode;
         thrd = new Thread(this);
         thrd.setDaemon(true);
-        thrd.start();
+        randomGenerator= new Random(); 
         circle = new Circle(x, y, getRadius());
         circle.setFill(valueOf("blue"));
         pane.getChildren().add(circle);
@@ -70,6 +74,9 @@ public abstract class Guy extends Entity implements Runnable {
         });
                 
     }
+    public void startThread(){
+        thrd.start();
+    }
     public void updatePowerSources(City city,float howMuch){
         if(!city.isIsDefeated()){
         for(PowerSource it: city.getPowerSources()){
@@ -83,6 +90,20 @@ public abstract class Guy extends Entity implements Runnable {
             }
         });
         }
+    }
+    public void sleepAndUpdatePowerSources() throws InterruptedException {
+      
+        int timeToSpendInTheCity=randomGenerator.nextInt(20000)+1000;
+        if(currentNode!=null){
+        if(!currentNode.isIsDefeated()){
+            for(int numOfTimeToUpdatePowerSources=0;numOfTimeToUpdatePowerSources<numberOfUpdates;numOfTimeToUpdatePowerSources++){
+                thrd.sleep(timeToSpendInTheCity/numberOfUpdates);
+                if(currentNode instanceof City)
+                    updatePowerSources((City)currentNode, (timeToSpendInTheCity/numberOfUpdates)*factor);
+            }
+        }
+        }
+        else System.out.println("null bro"+this);
     }
     protected void updateCityInfo(){
         Platform.runLater(new Runnable() {
@@ -512,7 +533,7 @@ public abstract class Guy extends Entity implements Runnable {
 
                 private void checkIntersectionsWhileGoingLeft() {
                     c = new Circle(circle.getCenterX() - 1, circle.getCenterY(), getRadius());
-                    
+                    randomSuspend();
                     do {
                         znalezione = false;
                         
@@ -540,7 +561,7 @@ public abstract class Guy extends Entity implements Runnable {
 
                 private void checkIntersectionsWhileGoingDown() {
                     c = new Circle(circle.getCenterX(), circle.getCenterY() + 1, getRadius());
-                    
+                    randomSuspend();
                     do {
                         znalezione = false;
                         try{
@@ -567,7 +588,7 @@ public abstract class Guy extends Entity implements Runnable {
 
                 private void checkIntersectionsWhileGoingUp() {
                     c = new Circle(circle.getCenterX(), circle.getCenterY() - 1, getRadius());
-                    
+                    randomSuspend();
                     do {
                         znalezione = false;
                         try{
@@ -594,7 +615,7 @@ public abstract class Guy extends Entity implements Runnable {
 
                 private void checkIntersectionsWhileGoingRight() {
                     c = new Circle(circle.getCenterX() + 1, circle.getCenterY(), getRadius());
-                    
+                    randomSuspend();
                     do {
                         znalezione = false;
                         try{
@@ -660,6 +681,10 @@ public abstract class Guy extends Entity implements Runnable {
             renderer.setDaemon(true);
             renderer.start();
         }
+    }
+
+    public void randomSuspend() {
+        if(randomGenerator.nextInt(10000)==luckyStopValue) mySuspend();
     }
 
     /**

@@ -12,6 +12,7 @@ import static javafx.scene.paint.Color.valueOf;
 public class Superhero extends Fighter{
 
    Capital capital;
+
     public Superhero(int hp, Capital capital, Pane pane, Graph graph) {
         super(hp, capital.getCircle().getCenterX(), capital.getCircle().getCenterY(), pane, null,graph.getNameGetter().getFemaleName());
         setGraph(graph);
@@ -21,6 +22,7 @@ public class Superhero extends Fighter{
         getCircle().setFill(valueOf("green"));
         graph.getControlPanel().displayEntity();
         updateCityInfo();
+        
     }
 
     @Override
@@ -37,7 +39,7 @@ public class Superhero extends Fighter{
         while (true) {
 
             try {
-                while (zajety) {
+                while (zajety ) {
                     thrd.sleep(1000);
 //            System.out.println("ludzik zajety bro!");
                 };
@@ -49,8 +51,7 @@ public class Superhero extends Fighter{
                     if(isStopped()) break;
                 }
 //                System.out.println("niezajety! znow jade");
-                Random randomGenerator = new Random();
-                Thread.sleep(randomGenerator.nextInt(10000)+10000);
+                sleepAndUpdatePowerSources();
                 synchronized(this){
                     while(isSuspended()){
                         wait();
