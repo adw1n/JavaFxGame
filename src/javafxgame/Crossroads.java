@@ -2,22 +2,36 @@ package javafxgame;
 
 import java.util.concurrent.Semaphore;
 import javafx.scene.layout.Pane;
-
+/**
+ * Connects roads between Nodes/Cities. Only one citizen can enter a Crossroad at a time.
+ * @author adwin_
+ */
 public class Crossroads extends Node {
 
     private static final int radius = 16;
     private boolean isBeingUsed=false;
     private Semaphore sem;
+    /**
+     * Creates a Crossroad
+     * @param x
+     * @param y
+     * @param pane
+     * @param graph 
+     */
     Crossroads(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, radius, graph,graph.getNameGetter().getCrossroadsName());
         sem=new Semaphore(1,true);
     }
-
+    /**
+     * Informs that this object is not a city.
+     * @return 
+     */
     public boolean isCity() {
         return false;
     }
 
     /**
+     * 
      * @return the isBeingUsed
      */
     public synchronized boolean isIsBeingUsed() {
@@ -32,6 +46,7 @@ public class Crossroads extends Node {
     }
 
     /**
+     * Returns the semaphore, that is responible that only one citizen can enter the crossroads at the time.
      * @return the sem
      */
     public Semaphore getSem() {

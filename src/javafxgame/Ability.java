@@ -3,7 +3,7 @@
 package javafxgame;
 
 /**
- * Enumerates all possible abilities for class Fighter
+ * Enumerates all possible abilities that a Fighter can have.
  * @author adwin_
  */
 public enum Ability {

@@ -8,7 +8,10 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
-
+/**
+ * Class responsible for spawning enemies, over time spawning more and more of them.
+ * @author adwin_
+ */
 public class BadGuysCreator implements Runnable{
     private final Random randomGenerator ;
 
@@ -17,6 +20,10 @@ public class BadGuysCreator implements Runnable{
     private int x,y;
     private int howManyBadGuysCreatedSoFar;
     private static final int maxSleepingTime=10000;//10s
+    /**
+     * Constructs an object of class BadGuy
+     * @param graph 
+     */
     public BadGuysCreator(Graph graph) {
         randomGenerator= new Random();
         this.graph=graph;
@@ -25,7 +32,9 @@ public class BadGuysCreator implements Runnable{
         thrd.setDaemon(true);
         thrd.start();
     }
-    
+    /**
+     * Creates new enemies, and refreashes ControlPanel.
+     */
     @Override
     public void run() {
         
@@ -34,8 +43,9 @@ public class BadGuysCreator implements Runnable{
             x=0;y=0;
             howManyBadGuysCreatedSoFar++;
             try {
-                int sleepingTime=(randomGenerator.nextInt(maxSleepingTime)+maxSleepingTime/4)/50;
-                for(int i=0;i<100;i++){
+                final int numOfParts=50;
+                int sleepingTime=(randomGenerator.nextInt(maxSleepingTime)+maxSleepingTime/4)/numOfParts;
+                for(int i=0;i<numOfParts;i++){
                 Thread.sleep(sleepingTime);
                     Platform.runLater(new Runnable() {
 
@@ -77,6 +87,7 @@ public class BadGuysCreator implements Runnable{
 //                    for(int i=0;i<=20;i++){
 //                    
                    b=new BadGuy(randomGenerator.nextInt(BadGuy.getMaxHP()), x, y, graph.getPane(), graph);
+                   graph.addBadGuy(b);
                    b.startThread();
 //                    }
                 }

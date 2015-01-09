@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -25,26 +24,56 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
-
+/**
+ * Class responsible for the interaction with the user, displaying info about game entities, showing options and stuff like that.
+ * @author adwin_
+ */
 public class ControlPanel {
 
-    Label entityInfoLabel, numOfCitiesAlive, numOfGuysAlive, sumOfPowerSources;
-    Entity currentEntity;
-    Button btnStop, btnSuspend, btnResume, btnCreateCitizen, btnCreateSuperhero, btnChangeDestination;
-    VBox vBox;
-    HBox guyButtons, cityButtons, changingDestinationButtons;
-    Graph graph;
-    ComboBox citiesComboBox;
+    private final  Label entityInfoLabel, numOfCitiesAlive,  sumOfPowerSources;
+    private Label numOfGuysAlive;
+    private Entity currentEntity;
+    private final Button btnStop, btnSuspend, btnResume, btnCreateCitizen, btnCreateSuperhero, btnChangeDestination,btnMute;
+    private final VBox vBox;
+    private final HBox guyButtons, cityButtons, changingDestinationButtons;
+    private final Graph graph;
+    private boolean mute;
+    private ComboBox citiesComboBox;
+    private AudioClip soundEffect;
     private long timeOfLastGuyCreation;
     static final double minEnergyToCreateAHero=80;
+    /**
+     * Creates a control panel at a fixed position on the pane.
+     * @param pane
+     * @param graph 
+     */
     public ControlPanel(Pane pane, Graph graph) {
         this.graph = graph;
+        mute=false;
+        btnMute=new Button("Mute");
+        btnMute.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+               if(mute){
+                   btnMute.setText("mute");
+                   mute=false;
+               }
+               else{
+                   mute=true;
+                   btnMute.setText("unmute");
+                           
+               }
+            }
+        });
         timeOfLastGuyCreation=graph.getStartTime();
         sumOfPowerSources = new Label();
         currentEntity = null;
         btnStop = new Button("Delete");
+        soundEffect=new AudioClip(Paths.get("soundEffect.wav").toUri().toString());
+//        AudioClip sound = new AudioClip("laser.mp3");
         btnStop.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -92,6 +121,7 @@ public class ControlPanel {
                     if (currentEntity instanceof City) {
                         timeOfLastGuyCreation=System.nanoTime();
                         ((City) currentEntity).createCitizen();//moze rzucac wyjatkami concurrent modification i trzeba lapac
+                        if(!mute)soundEffect.play();
                     }
                 }
             }
@@ -104,6 +134,7 @@ public class ControlPanel {
                     if (currentEntity instanceof Capital){
                     ((Capital) currentEntity).createSuperhero();
                     timeOfLastGuyCreation=System.nanoTime();
+                    if(!mute)soundEffect.play();
                     displayEntity();
                     }
 
@@ -120,12 +151,14 @@ public class ControlPanel {
         changingDestinationButtons = new HBox();
         changingDestinationButtons.getChildren().addAll(citiesComboBox, btnChangeDestination);
         vBox = new VBox();
-        vBox.getChildren().addAll(numOfCitiesAlive, entityInfoLabel, guyButtons, cityButtons, changingDestinationButtons);
+        vBox.getChildren().addAll(numOfCitiesAlive, entityInfoLabel, guyButtons, cityButtons, changingDestinationButtons,btnMute);
         vBox.setLayoutX(900);
         vBox.setLayoutY(20);
         pane.getChildren().add(vBox);
     }
-
+    /**
+     * Makes buttons not 'clickable'.
+     */
     private void setButtonsDisabled() {
         btnResume.setDisable(true);
         btnStop.setDisable(true);
@@ -135,7 +168,9 @@ public class ControlPanel {
         btnCreateSuperhero.setDisable(true);
         entityInfoLabel.setText("click on an entity to see info");
     }
-
+    /**
+     * Initializes a combobox with cities names.
+     */
     public void setCities() {
         for (Node it : graph.getNodes()) {
             if (it instanceof City) {
@@ -164,7 +199,11 @@ public class ControlPanel {
             }
         });
     }
-
+    /**
+     * Updates the number of cities still not defeated and displayes it to the user.
+     * Also responsible for ending the game, showing best scores and saving user stats.
+     * @param num number of cities still alive - with working power sources
+     */
     public void updateNumOfCitiesAlive(int num) {
         Platform.runLater(new Runnable() {
             @Override
@@ -202,7 +241,7 @@ public class ControlPanel {
                     Scene scene = new Scene(root, 600, 350);
                     ArrayList<Wynik> listaWynikow = new ArrayList<>();
                     
-                        odczytajXML(listaWynikow);
+                        readXML(listaWynikow);
                         
                     
                     btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -214,7 +253,7 @@ public class ControlPanel {
 
                             
                                 zapiszXML(listaWynikow);
-                                odczytajXML(listaWynikow);
+                                readXML(listaWynikow);
                                 btn.setDisable(true);
                            
                         }
@@ -224,8 +263,11 @@ public class ControlPanel {
 
                     stage.show();
                 }
-
-                private void odczytajXML(ArrayList<Wynik> listaWynikow)  {
+                /**
+                 * Loads to the param best scores.
+                 * @param listaWynikow 
+                 */
+                private void readXML(ArrayList<Wynik> listaWynikow)  {
         
         try {
             d = new XMLDecoder(
@@ -246,7 +288,7 @@ public class ControlPanel {
                         }
                          }
                         catch(ArrayIndexOutOfBoundsException e){
-                                System.out.println("koniec wczytywania bro");
+                                
                                 }
                          Collections.sort(listaWynikow);
                          int ile=0;
@@ -280,13 +322,18 @@ public class ControlPanel {
         }
 
     }
-
+/**
+ * Updates the info about the current entity
+ */
     public synchronized void displayEntity() {
         if (currentEntity != null) {
             displayEntity(currentEntity);
         }
     }
-
+    /**
+     * Sets the currentEntity to new entity and displays info about it and provides an interface for user to communicate with the currentEntity, or blocks the ability to communicate with it.
+     * @param e 
+     */
     public synchronized void displayEntity(Entity e) {
         currentEntity = e;
         boolean flag = true;
@@ -327,7 +374,6 @@ public class ControlPanel {
                                 powerSourcesEnergy+=p.getEnergy();
                         }
                     }
-                    System.err.println("power sources ene is "+powerSourcesEnergy);
                     btnCreateSuperhero.setDisable(powerSourcesEnergy+seconds<minEnergyToCreateAHero && powerSourcesEnergy>10);
                 }
             }

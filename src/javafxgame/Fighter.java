@@ -7,7 +7,10 @@ import java.util.Random;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
-
+/**
+ * Class that implements some of the fighting abilities.
+ * @author adwin_
+ */
 public abstract class Fighter extends Guy{
     private Fighter opponent;
     private ArrayList<FightersAbility> abilities;
@@ -45,20 +48,18 @@ public abstract class Fighter extends Guy{
         
         return ans; //To change body of generated methods, choose Tools | Templates.
     }
-    
+    /**
+     * Makes two guys fight each other. 
+     * @param opponent 
+     */
     public synchronized void fight(Fighter opponent){
         if(this.getOpponent()==null && opponent.getOpponent()==null){
             
             opponent.setOpponent(this);
             this.setOpponent(opponent);
-            //zatrzymuje w miejscu
             if(!isStopped() && !opponent.isStopped()){
-                
-                System.out.println("walka bro!");
             mySuspend();
             opponent.mySuspend();
-            //i teraz walcza
-            //zaczyna ten z wieksza szybkoscia
             float mySwiftness=0,opponentsSwiftness=0,myFightingSkills=0,opponentsFightingSkills=0,myMultiplier=0,opponentsMultiplier=0,myStamina=0,opponentsStamina=0;
             float myDmg,opponentsDmg;
             for(FightersAbility ab: getAbilities()){
@@ -112,8 +113,6 @@ public abstract class Fighter extends Guy{
           
             opponent.setOpponent(null);
             this.opponent=null;
-            
-            System.out.println("koniec!"+getHp()+"przeciwnika" + opponent.getHp()+"jestem zastopowany?"+isStopped());
             }
         }
     }
@@ -131,6 +130,11 @@ public abstract class Fighter extends Guy{
     public synchronized void setOpponent(Fighter opponent) {
         this.opponent = opponent;
     }
+    /**
+     * Increases the specific ability's power.
+     * @param num the ammount you should increase the ability by
+     * @param ab the ability of the fighter to increase
+     */
     public void increaseAbility(float num,Ability ab){
         for(FightersAbility it: abilities)
             if(it.getAbility().equals(ab)){

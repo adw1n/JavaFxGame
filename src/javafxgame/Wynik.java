@@ -4,7 +4,10 @@ package javafxgame;
 
 import java.io.Serializable;
 
-
+/**
+ * Przechowuje wynik gracza.
+ * @author adwin_
+ */
 public class Wynik implements Comparable<Wynik>,  Serializable{
     
     static final long serialVersionUID = 1L;
@@ -13,20 +16,35 @@ public class Wynik implements Comparable<Wynik>,  Serializable{
     private int liczbaPokonanychZloczyncow;
     private double czasRozgrywki;
     private String imieGracza;
-
+    /**
+     * Tworzy wynik
+     */
     public Wynik() {
-//        System.out.println("Wywolanie bezparam konstrukt");
     }
-    
+    /**
+     * Tworzy wynik
+     * @param imieGracza
+     * @param liczbaPokonanychZloczyncow
+     * @param czasRozgrywki 
+     */
     public Wynik(String imieGracza,int liczbaPokonanychZloczyncow,double czasRozgrywki){
         this.idWyniku=licznik++;
         this.liczbaPokonanychZloczyncow=liczbaPokonanychZloczyncow;
         this.imieGracza=imieGracza;
         this.czasRozgrywki=czasRozgrywki;
     }
+    /**
+     * Zwraca dane gracza jako String
+     * @return 
+     */
     public String toString(){
        return imieGracza+", "+"time: "+czasRozgrywki;
     }
+    /**
+     * Przyrownuje
+     * @param o
+     * @return 
+     */
     @Override
     public int compareTo(Wynik o) {
         if(getCzasRozgrywki()>o.getCzasRozgrywki()) return -1;

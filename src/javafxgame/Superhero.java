@@ -8,15 +8,25 @@ import java.util.logging.Logger;
 import javafx.scene.layout.Pane;
 import static javafx.scene.paint.Color.valueOf;
 
-
+/**
+ * Superhero - the only man brave enough to fight against BadGuys. Think of him, as a cop.
+ * @author adwin_
+ */
 public class Superhero extends Fighter{
 
-   Capital capital;
-
+   private final Capital capital;
+   /**
+    * Creates a superhero.
+    * @param hp
+    * @param capital
+    * @param pane
+    * @param graph 
+    */
     public Superhero(int hp, Capital capital, Pane pane, Graph graph) {
         super(hp, capital.getCircle().getCenterX(), capital.getCircle().getCenterY(), pane, null,graph.getNameGetter().getFemaleName());
         setGraph(graph);
-        currentNode=capital;
+        setCurrentNode(capital);
+//        currentNode=capital;
         
         this.capital=capital;
         getCircle().setFill(valueOf("green"));
@@ -34,23 +44,23 @@ public class Superhero extends Fighter{
     public boolean isCitizen() {
         return false;
     }
+    /**
+     * Makes the superhero fight BadGuys.
+     */
     @Override
     public void run() {
         while (true) {
 
             try {
-                while (zajety ) {
-                    thrd.sleep(1000);
-//            System.out.println("ludzik zajety bro!");
+                while (isBusyCuzWorking() ) {
+                    getThrd().sleep(1000);
                 };
-//                if(!isRunning()) { System.out.println("wybrejkowales mnie bro");break;}
                 synchronized(this){
                     while(isSuspended()){
                         wait();
                     }
                     if(isStopped()) break;
                 }
-//                System.out.println("niezajety! znow jade");
                 sleepAndUpdatePowerSources();
                 synchronized(this){
                     while(isSuspended()){
@@ -60,37 +70,20 @@ public class Superhero extends Fighter{
                 }
                 boolean succeded=true;
                 do{
-                    thrd.sleep(100);
+                    getThrd().sleep(100);
                     try{
-                        //powinien isc do tego miasta co jest zloczynca...
-                go(getGraph().findPathBetweenCities(currentNode, getGraph().getCityForSuperhero(currentNode)));
+                go(getGraph().findPathBetweenCities(getCurrentNode(), getGraph().getCityForSuperhero(getCurrentNode())));
                     }
                     catch(TryLater e){
                         succeded=false;
-                        System.out.println("polecial wyjatek bro!");
                     }
                 }
                 while (!succeded);
-                
-//                System.out.println("wysleepowalem sie");
-//            //goToCity();
-//            }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Citizen.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println("juz nie runnuje");
-//        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
-////                        for (Guy iterator : graph.getGuys()) 
-//                        {
-//                            Guy iterator=iter.next();
-//                            if(iterator==this){
-//                                iter.remove();
-//                                System.out.println("usunalem bro!");
-//                            }
-//        }
-                                getGraph().getGuys().remove(this);// tu jest problem bo inne watki iteruja po tej liscie!
-               System.out.println("ilosc ludzikow to: "+getGraph().getGuys().size());
+                                getGraph().getGuys().remove(this);
         deleteFromPane();
  
 

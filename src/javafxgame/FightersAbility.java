@@ -4,11 +4,18 @@ package javafxgame;
 
 import static java.lang.Math.max;
 
-
+/**
+ * Stores all the info about an ability / a skill. How developed it is, and what does it do and stuff like that.
+ * @author adwin_
+ */
 public class FightersAbility {
     private Ability ability;
-    private float abilityAttribute;//jak bardzo jest rozwiniete / potencjal, skill lvl
-
+    private float abilityAttribute;
+    /** 
+     * Creates an ability
+     * @param ability
+     * @param abilityAttribute 
+     */
     public FightersAbility(Ability ability,float abilityAttribute) {
         this.ability=ability;
         this.abilityAttribute=abilityAttribute;
@@ -33,9 +40,17 @@ public class FightersAbility {
         this.abilityAttribute = abilityAttribute;
         this.abilityAttribute=max(this.abilityAttribute,0);
     }
+    /**
+     * Makes the ability stronger.
+     * @param difference 
+     */
     public void increaseAbilityAttribute(float difference){
         abilityAttribute+=Math.abs(difference);
     }
+    /**
+     * Makes the ability weaker.
+     * @param difference 
+     */
     public void decreaseAbilityAttribute(float difference){
         abilityAttribute-=Math.abs(difference);
         abilityAttribute=max(abilityAttribute,0);

@@ -11,24 +11,31 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Line;
-
+/**
+ * Creates all the Cities, connects them, creates citizens, displays info about stuff.
+ * @author adwin_
+ */
 public class Graph {
 
     private ArrayList<Node> nodes;
-    private int numOfCitizensAlive;
-    private long startTime;
-    ArrayList<Line> roads;
+    private final int numOfCitizensAlive;
+    private final long startTime;
+    private final ArrayList<Line> roads;
     private NameGetter nameGetter;
     private ArrayList<Guy> guys;
-    private ArrayList<BadGuy> badGuys;
-    ArrayList<Integer> citiesNumbers;//potem trzeba bedzie usuwac
-    private Pane pane;
-    private boolean adj[][];
+    private final ArrayList<BadGuy> badGuys;
+    private ArrayList<Integer> citiesNumbers;
+    private final Pane pane;
+    private final boolean adj[][];
     private boolean visited[];//for dfs
     private static final int roadWidth = 16;
     private ControlPanel controlPanel;
     private int numOfCitiesAlive;
     private BadGuysCreator badGuysCreator;
+    /**
+     * Creates a graph, and starts a game by doing it.
+     * @param pane 
+     */
     public Graph(Pane pane) {
         numOfCitiesAlive=0;
         numOfCitizensAlive=0;
@@ -50,7 +57,9 @@ public class Graph {
 //        initializeGraph(pane);
         
     }
-
+    /**
+     * Initializes all the needed variables.
+     */
     public void initializeGraph() {
         controlPanel=new ControlPanel(pane,this);
         addNode(new City(50, 300, getPane(), this));
@@ -99,19 +108,38 @@ public class Graph {
         controlPanel.setCities();
         badGuysCreator=new BadGuysCreator(this);
     }
+    /**
+     * Forwards the request to display an entity.
+     * @param e 
+     */
     public synchronized void displayEntity(Entity e){
         getControlPanel().displayEntity(e);
     }
+    /**
+     * Makes all the info in the user control panel to be updated.
+     */
     public synchronized  void displayEntity(){
         getControlPanel().displayEntity();
     }
+    /**
+     * Adds a guy to the list.
+     * @param guy 
+     */
     public synchronized void addGuy(Guy guy){
         getGuys().add(guy);
     }
+    /**
+     * Adds a bad guy to the list of bad guys.
+     * @param guy 
+     */
     public synchronized void addBadGuy(BadGuy guy){
         try{getBadGuys().add(guy);}
         catch(ConcurrentModificationException e){};//not gonna happen
     }
+    /**
+     * Adds a node in the graph.
+     * @param node 
+     */
     public void addNode(Node node) {
         if(node instanceof City) increaseNumOfCitiesAlive();
         //if(node.isCity()) citiesNumbers.add(nodes.size());
@@ -120,30 +148,35 @@ public class Graph {
         getNodes().add(node);
 
     }
-    
+    /**
+     * Increases the displayed number of cities still alive.
+     */
     private synchronized void increaseNumOfCitiesAlive(){
         numOfCitiesAlive++;
         controlPanel.updateNumOfCitiesAlive(numOfCitiesAlive);
     }
+    /**
+     * Decreases the displayed number of cities still alive.
+     */
     public synchronized void decreaseNumOfCitiesAlive(){
         numOfCitiesAlive--;
         numOfCitiesAlive=Math.max(0,numOfCitiesAlive);
         controlPanel.updateNumOfCitiesAlive(numOfCitiesAlive);
-//        Platform.runLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//if(numOfCitiesAlive==8) pane.getChildren().clear();                        }
-//                    });
         
         
     }
-    
+    /**
+     * Returns the number of cities with still working PowerSources.
+     * @return 
+     */
     public synchronized int getNumOfCitiesAlive(){
         return numOfCitiesAlive;
     };
-//tu moze byc blad bo na samym poczatku tworze miasto, ale jeszcze nie dodalem do nodes, miasto tworzy mieszkanca a on wywoluje ta fun i moze byc pusto
-    //moze byc tak ze nie ma juz niepokonnanego miasta wtedy na samym koncu mam 200% cpu ale to nie jest wielki problem
-    //dorobic nowy exception ze nie ma wiecej miast
+    /**
+     * Returns a random City form the graph.
+     * @param n
+     * @return 
+     */
     public Node getRandomCity(Node n) {
         while (true) {
             Random randomGenerator = new Random();
@@ -166,14 +199,12 @@ public class Graph {
             }
              
         }
-//        for(Node it: nodes){
-//            if(it!=n && it.isCity()){
-//                System.out.println(it.getCircle());
-//                return it;
-//            }
-//        }
-//        return null;
     }
+    /**
+     * Provides a City for the superhero to go to. Hopefully a bad guy is near that city.
+     * @param n
+     * @return 
+     */
     public Node getCityForSuperhero(Node n){
         for(Node it: getNodes()){
             if(it instanceof City){
@@ -184,57 +215,65 @@ public class Graph {
         }
         return getRandomCity(n);
     }
-    //creates road lanes
-
-    public void addEdge(int poczatek, int koniec) {
+    /**
+     * Creates roads adds them to the internal adjacency matrix.
+     * @param begin
+     * @param end 
+     */
+    public void addEdge(int begin, int end) {
 
         Line edge = new Line();
-        adj[poczatek][koniec] = true;
-        adj[koniec][poczatek] = true;
-        edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX());
-        edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY());
-        edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
-        edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
+        adj[begin][end] = true;
+        adj[end][begin] = true;
+        edge.setStartX(getNodes().get(begin).getCircle().getCenterX());
+        edge.setStartY(getNodes().get(begin).getCircle().getCenterY());
+        edge.setEndX(getNodes().get(end).getCircle().getCenterX());
+        edge.setEndY(getNodes().get(end).getCircle().getCenterY());
         roads.add(edge);
         getPane().getChildren().add(edge);
 
-        if (getNodes().get(poczatek).getCircle().getCenterX() == getNodes().get(koniec).getCircle().getCenterX()) {
+        if (getNodes().get(begin).getCircle().getCenterX() == getNodes().get(end).getCircle().getCenterX()) {
             edge = new Line();
-            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX() + roadWidth);
-            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY());
-            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX() + roadWidth);
-            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
+            edge.setStartX(getNodes().get(begin).getCircle().getCenterX() + roadWidth);
+            edge.setStartY(getNodes().get(begin).getCircle().getCenterY());
+            edge.setEndX(getNodes().get(end).getCircle().getCenterX() + roadWidth);
+            edge.setEndY(getNodes().get(end).getCircle().getCenterY());
             roads.add(edge);
             getPane().getChildren().add(edge);
 
             edge = new Line();
-            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX() - roadWidth);
-            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY());
-            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX() - roadWidth);
-            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
+            edge.setStartX(getNodes().get(begin).getCircle().getCenterX() - roadWidth);
+            edge.setStartY(getNodes().get(begin).getCircle().getCenterY());
+            edge.setEndX(getNodes().get(end).getCircle().getCenterX() - roadWidth);
+            edge.setEndY(getNodes().get(end).getCircle().getCenterY());
             roads.add(edge);
             getPane().getChildren().add(edge);
 
         } else {
             edge = new Line();
-            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX());
-            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY() + roadWidth);
-            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
-            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY() + roadWidth);
+            edge.setStartX(getNodes().get(begin).getCircle().getCenterX());
+            edge.setStartY(getNodes().get(begin).getCircle().getCenterY() + roadWidth);
+            edge.setEndX(getNodes().get(end).getCircle().getCenterX());
+            edge.setEndY(getNodes().get(end).getCircle().getCenterY() + roadWidth);
             roads.add(edge);
             getPane().getChildren().add(edge);
 
             edge = new Line();
-            edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX());
-            edge.setStartY(getNodes().get(poczatek).getCircle().getCenterY() - roadWidth);
-            edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
-            edge.setEndY(getNodes().get(koniec).getCircle().getCenterY() - roadWidth);
+            edge.setStartX(getNodes().get(begin).getCircle().getCenterX());
+            edge.setStartY(getNodes().get(begin).getCircle().getCenterY() - roadWidth);
+            edge.setEndX(getNodes().get(end).getCircle().getCenterX());
+            edge.setEndY(getNodes().get(end).getCircle().getCenterY() - roadWidth);
             roads.add(edge);
             getPane().getChildren().add(edge);
 
         }
     }
-
+    /**
+     * Performs a dfs and returns a stack of the nodes to visit to get from the begin Node to the end Node.
+     * @param begin
+     * @param end
+     * @return 
+     */
     public Stack<Node> findPathBetweenCities(Node begin, Node end) {//przerobic na city
         Stack<Node> path = new Stack<>();
         visited = new boolean[100];
@@ -244,11 +283,16 @@ public class Graph {
         dfs(begin, end, path, visited);
         return path;
     }
-
+    /**
+     * Does a recursive dfs.
+     * @param wierzcholek
+     * @param cel
+     * @param sciezka
+     * @param visited
+     * @return 
+     */
     private boolean dfs(Node wierzcholek, Node cel, Stack<Node> sciezka, boolean visited[]) {
-//        System.out.println("wielkosc " + sciezka.size());
         sciezka.push(wierzcholek);
-//        System.out.println("udalo sie");
         visited[wierzcholek.getNodeNumber()] = true;
         boolean znaleziono = false;
         if (wierzcholek.getNodeNumber() == cel.getNodeNumber()) {
@@ -268,7 +312,12 @@ public class Graph {
         }
         return znaleziono;
     }
-
+    /**
+     * An overloaded func working on intigers instead of Node references. 
+     * @param begin
+     * @param end
+     * @return returns the nodes numbers to visit
+     */
     public Stack<Integer> findPathBetweenCities(int begin, int end) {
         Stack<Integer> path = new Stack<>();
         visited = new boolean[100];
@@ -278,11 +327,16 @@ public class Graph {
         dfs(begin, end, path, visited);
         return path;
     }
-
+    /**
+     * Does recursive dfs.
+     * @param wierzcholek
+     * @param cel
+     * @param sciezka
+     * @param visited
+     * @return 
+     */
     private boolean dfs(int wierzcholek, int cel, Stack<Integer> sciezka, boolean visited[]) {
-        System.out.println("wielkosc " + sciezka.size());
         sciezka.push(wierzcholek);
-        System.out.println("udalo sie");
         visited[wierzcholek] = true;
         boolean znaleziono = false;
         if (wierzcholek == cel) {
@@ -302,7 +356,10 @@ public class Graph {
         }
         return znaleziono;
     }
-
+    /**
+     * 
+     * @return the road width
+     */
     public static int getRoadWidth() {
         return roadWidth;
     }

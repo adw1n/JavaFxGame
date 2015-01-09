@@ -7,37 +7,50 @@ import java.util.Random;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-
+/**
+ * City, big black Circle, where citizens live, where superheroes sometimes come and where villains come to try to destroy it.
+ * It has mystical PowerSources that are needed to create superheroes.
+ * @author adwin_
+ */
 public class City extends Node { //city na razie ma tylko wiekszy promien
 
     private static final int radius = 32;
     private boolean badGuyIsGoingToThisCity;
-    final int maxInitFightersAbilityAttributeValue=10;
-//    ArrayList<Citizen> citizens;
+    private final int maxInitFightersAbilityAttributeValue=10;
+
     private int numOfBadGuysGoingToThisCity;
-    int numberOfCitizens;
     private Label cityNameLabel;
     private ArrayList<PowerSource> powerSources;
-    static int ile = 0;
     private boolean dead;
+    /**
+     * Initializes a city
+     * @param x
+     * @param y
+     * @param pane
+     * @param graph 
+     */
     public City(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, radius, graph,graph.getNameGetter().getCityName());
         initializeVariables(graph);
         numOfBadGuysGoingToThisCity=0;
         
     }
-
+    /**
+     * Initializes the required variables.
+     * @param graph 
+     */
     private void initializeVariables(Graph graph) {
         dead=false;
-        badGuyIsGoingToThisCity=false;
-        ile++;
+        badGuyIsGoingToThisCity=false;      
        initializePowerSources();
-        System.out.println("power Sources size: "+getPowerSources().size()+getPowerSources().get(0));
         cityNameLabel=new Label(getName());
         cityNameLabel.setLayoutX(Math.max(getCircle().getCenterX()-getCircle().getRadius(),0));
         cityNameLabel.setLayoutY(Math.max(getCircle().getCenterY()+getCircle().getRadius(), 0));
         getPane().getChildren().add(cityNameLabel);
     }
+    /**
+     * Creates a random number of powerSources and initialzes the required PowerSources with random values.
+     */
     private void initializePowerSources(){
         
         powerSources=new ArrayList<>();
@@ -62,6 +75,10 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
                     
         }
     }
+    /**
+     * Provides a feedback of the city, by returning a String that carries all the needed info.
+     * @return 
+     */
     @Override
     public String toString() {
         String ans="City: ";
@@ -87,20 +104,32 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
                         }
                         }
                         catch(ConcurrentModificationException e){
-                            System.out.println("zlapalem dupka w city");
                             foundException=true;
                         }
                     } while (foundException );
         ans+="\nNumber of your guys in the City: "+numOfCitizens;
         for(PowerSource it: getPowerSources())
             ans+="\n"+it;
-        return ans; //To change body of generated methods, choose Tools | Templates.
+        return ans; 
     }
-    
+    /**
+     * Creates a city.
+     * @param x
+     * @param y
+     * @param pane
+     * @param graph
+     * @param radius
+     * @param name 
+     */
     public City(int x, int y, Pane pane, Graph graph,int radius,String name) {
         super(x, y, pane, radius, graph,name);
         initializeVariables(graph);
     }
+    /**
+     * Weakens one of the PowerSources in the City. When all PowerSources are destroyed, sets a flag that the city is dead.
+     * @param ammount
+     * @return returns the ability of the drained power source.
+     */
     public synchronized Ability getDrained(float ammount){
         int ammountOfDeadPowerSources=0;
         if(!isIsDefeated()){
@@ -123,6 +152,9 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
         }
         return null;
     }
+    /**
+     * Creates a citizen.
+     */
     public void createCitizen() {
 //        Citizen c=new Citizen(this);
         Citizen c = new Citizen(this,getGraph());
@@ -136,7 +168,10 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     void myStop() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+    /**
+     * Sometimes usefull and faster than (this instanceof City).
+     * @return 
+     */
     public boolean isCity() {
         return true;
     }
