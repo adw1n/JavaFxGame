@@ -70,6 +70,20 @@ public abstract class Guy extends Entity implements Runnable {
         });
                 
     }
+    public void updatePowerSources(City city,float howMuch){
+        if(!city.isIsDefeated()){
+        for(PowerSource it: city.getPowerSources()){
+            it.increaseEnergy(howMuch);
+        }
+        JavaFxGame.runAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+                graph.getControlPanel().displayEntity();
+            }
+        });
+        }
+    }
     protected void updateCityInfo(){
         Platform.runLater(new Runnable() {
 

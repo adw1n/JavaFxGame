@@ -17,13 +17,14 @@ import javafx.stage.Stage;
 public class JavaFxGame extends Application {
 
     Graph graf;
-
+    private static final int rightScreenEdge=850;
+    private static final int downScreenEdge=700;
     @Override
     public void start(Stage primaryStage) {
 
         Pane root = new Pane();
         
-        Scene scene = new Scene(root, 1200, 700);
+        Scene scene = new Scene(root, 1200, getDownScreenEdge());
         primaryStage.setTitle("adwin_ JavaFxGame");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -62,10 +63,10 @@ public class JavaFxGame extends Application {
 //        graf.addEdge(12, 14); 
 //        graf.addNode(new Capital(750, 300, root, graf));
 //        graf.addEdge(6, 15); 
-        BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
-        b2=new BadGuy(1000, 1200, 700, root, graf);
-        b2=new BadGuy(1000, 700, 700, root, graf);
-        b2=new BadGuy(1000, 1100, 700, root, graf);
+//        BadGuy b1=new BadGuy(1000, 100, 20, root, graf),b2;
+//        b2=new BadGuy(1000, 1200, 700, root, graf);
+//        b2=new BadGuy(1000, 700, 700, root, graf);
+//        b2=new BadGuy(1000, 1100, 700, root, graf);
 //        b1.fight(b2);
 //        b2.fight(b1);
 //        FightersAbility f=new FightersAbility(Ability.POWER, 10);
@@ -168,6 +169,20 @@ public class JavaFxGame extends Application {
         } catch (InterruptedException e) {
             // ignore exception
         }
+    }
+
+    /**
+     * @return the rightScreenEdge
+     */
+    public static int getRightScreenEdge() {
+        return rightScreenEdge;
+    }
+
+    /**
+     * @return the downScreenEdge
+     */
+    public static int getDownScreenEdge() {
+        return downScreenEdge;
     }
 
 }

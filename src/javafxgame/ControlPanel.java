@@ -93,9 +93,7 @@ public class ControlPanel {
         cityButtons.getChildren().addAll(btnCreateCitizen,btnCreateSuperhero);
         entityInfoLabel=new Label("click on an entity to see info");
         numOfCitiesAlive=new Label("num of cities alive"+graph.getNumOfCitiesAlive());
-        btnResume.setDisable(true);
-        btnStop.setDisable(true);
-        btnSuspend.setDisable(true);
+        setButtonsDisabled();
         changingDestinationButtons=new HBox();
         changingDestinationButtons.getChildren().addAll(citiesComboBox,btnChangeDestination);
         vBox=new VBox();
@@ -104,6 +102,17 @@ public class ControlPanel {
         vBox.setLayoutY(20);
         pane.getChildren().add(vBox);
     }
+
+    private void setButtonsDisabled() {
+        btnResume.setDisable(true);
+        btnStop.setDisable(true);
+        btnSuspend.setDisable(true);
+        btnChangeDestination.setDisable(true);
+        btnCreateCitizen.setDisable(true);
+        btnCreateSuperhero.setDisable(true);
+        entityInfoLabel.setText("click on an entity to see info");
+    }
+    
     public void setCities(){
         for(Node it: graph.getNodes()){
             if(it instanceof City)
@@ -146,7 +155,15 @@ public class ControlPanel {
     }
     public synchronized void displayEntity(Entity e){
         currentEntity=e;
-        System.out.println("curr ent: "+e.toString());
+        boolean flag=true;
+        if(currentEntity instanceof Guy)
+            if(((Guy) currentEntity).isStopped())
+            {
+                setButtonsDisabled();
+                flag=false;
+                }
+            
+            if(flag){
         entityInfoLabel.setText(e.toString());
         boolean option=(e instanceof Citizen || e instanceof Superhero);
        
@@ -160,7 +177,7 @@ public class ControlPanel {
         btnCreateSuperhero.setDisable(!(e instanceof Capital));
         btnChangeDestination.setDisable(!(e instanceof Citizen) && !(e instanceof Superhero));
         citiesComboBox.setDisable(!(e instanceof Citizen) && !(e instanceof Superhero));
-        
+            }
     }
     
 }

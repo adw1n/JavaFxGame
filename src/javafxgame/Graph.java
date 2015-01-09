@@ -25,6 +25,7 @@ public class Graph {
     private static final int roadWidth = 16;
     private ControlPanel controlPanel;
     private int numOfCitiesAlive;
+    private BadGuysCreator badGuysCreator;
     public Graph(Pane pane) {
         numOfCitiesAlive=0;
         numOfCitizensAlive=0;
@@ -33,6 +34,7 @@ public class Graph {
         this.pane = pane;
         nodes = new ArrayList<>();
         roads = new ArrayList<>();
+        
         guys=new ArrayList<>();
         adj = new boolean[100][100];
         for (boolean[] adj1 : adj) {
@@ -46,36 +48,36 @@ public class Graph {
     }
 
     public void initializeGraph() {
-        addNode(new City(50, 300, pane, this));
-        addNode(new Crossroads(200, 300, pane, this));
-        addNode(new Crossroads(200, 100, pane, this));
-        addNode(new Crossroads(200, 500, pane, this));
+        addNode(new City(50, 300, getPane(), this));
+        addNode(new Crossroads(200, 300, getPane(), this));
+        addNode(new Crossroads(200, 100, getPane(), this));
+        addNode(new Crossroads(200, 500, getPane(), this));
         addEdge(1, 2);
         addEdge(1, 3);
         addEdge(0, 1);
-        addNode(new City(350, 500, pane, this));
+        addNode(new City(350, 500, getPane(), this));
         addEdge(3, 4);
-        addNode(new City(350, 100, pane, this));
+        addNode(new City(350, 100, getPane(), this));
         addEdge(2, 5);
-        addNode(new Crossroads(600, 300, pane, this));
+        addNode(new Crossroads(600, 300, getPane(), this));
         addEdge(6, 1);
-        addNode(new Crossroads(600, 100, pane, this));
+        addNode(new Crossroads(600, 100, getPane(), this));
         addEdge(6, 7);
-        addNode(new City(450, 100, pane, this));
+        addNode(new City(450, 100, getPane(), this));
         addEdge(7, 8);
-        addNode(new City(750, 100, pane, this));
+        addNode(new City(750, 100, getPane(), this));
         addEdge(7, 9);
-        addNode(new City(50, 500, pane, this));
+        addNode(new City(50, 500, getPane(), this));
         addEdge(3, 10);
-        addNode(new City(50, 100, pane, this));
+        addNode(new City(50, 100, getPane(), this));
         addEdge(2, 11);
-        addNode(new Crossroads(600, 500, pane, this));
+        addNode(new Crossroads(600, 500, getPane(), this));
         addEdge(6, 12);
-        addNode(new City(450, 500, pane, this));
+        addNode(new City(450, 500, getPane(), this));
         addEdge(12, 13);
-        addNode(new City(750, 500, pane, this));
+        addNode(new City(750, 500, getPane(), this));
         addEdge(12, 14);
-        addNode(new Capital(750, 300, pane, this));
+        addNode(new Capital(750, 300, getPane(), this));
         addEdge(6, 15);
         Random randomGenerator = new Random();
         for(Node it: getNodes())
@@ -89,6 +91,7 @@ public class Graph {
                 
         }
         controlPanel.setCities();
+        badGuysCreator=new BadGuysCreator(this);
     }
     public synchronized void displayEntity(Entity e){
         getControlPanel().displayEntity(e);
@@ -180,7 +183,7 @@ public class Graph {
         edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
         edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
         roads.add(edge);
-        pane.getChildren().add(edge);
+        getPane().getChildren().add(edge);
 
         if (getNodes().get(poczatek).getCircle().getCenterX() == getNodes().get(koniec).getCircle().getCenterX()) {
             edge = new Line();
@@ -189,7 +192,7 @@ public class Graph {
             edge.setEndX(getNodes().get(koniec).getCircle().getCenterX() + roadWidth);
             edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
             roads.add(edge);
-            pane.getChildren().add(edge);
+            getPane().getChildren().add(edge);
 
             edge = new Line();
             edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX() - roadWidth);
@@ -197,7 +200,7 @@ public class Graph {
             edge.setEndX(getNodes().get(koniec).getCircle().getCenterX() - roadWidth);
             edge.setEndY(getNodes().get(koniec).getCircle().getCenterY());
             roads.add(edge);
-            pane.getChildren().add(edge);
+            getPane().getChildren().add(edge);
 
         } else {
             edge = new Line();
@@ -206,7 +209,7 @@ public class Graph {
             edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
             edge.setEndY(getNodes().get(koniec).getCircle().getCenterY() + roadWidth);
             roads.add(edge);
-            pane.getChildren().add(edge);
+            getPane().getChildren().add(edge);
 
             edge = new Line();
             edge.setStartX(getNodes().get(poczatek).getCircle().getCenterX());
@@ -214,7 +217,7 @@ public class Graph {
             edge.setEndX(getNodes().get(koniec).getCircle().getCenterX());
             edge.setEndY(getNodes().get(koniec).getCircle().getCenterY() - roadWidth);
             roads.add(edge);
-            pane.getChildren().add(edge);
+            getPane().getChildren().add(edge);
 
         }
     }
@@ -345,5 +348,12 @@ public class Graph {
      */
     public void setNameGetter(NameGetter nameGetter) {
         this.nameGetter = nameGetter;
+    }
+
+    /**
+     * @return the pane
+     */
+    public Pane getPane() {
+        return pane;
     }
 }

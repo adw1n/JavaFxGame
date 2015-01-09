@@ -4,6 +4,7 @@ package javafxgame;
 
 import java.util.ArrayList;
 import java.util.Random;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
 
@@ -130,9 +131,18 @@ public abstract class Fighter extends Guy{
     public synchronized void setOpponent(Fighter opponent) {
         this.opponent = opponent;
     }
-    public void increaseAbilities(float num){
+    public void increaseAbility(float num,Ability ab){
         for(FightersAbility it: abilities)
+            if(it.getAbility().equals(ab)){
             it.increaseAbilityAttribute(num);
+                Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    getGraph().getControlPanel().displayEntity();
+                }
+            });
+            }
     }
     /**
      * @return the abilities

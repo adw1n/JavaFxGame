@@ -14,7 +14,14 @@ import javafx.scene.shape.Circle;
 //raczej tez moze rzucic wyjatkiem Concurrent...
 //bad guys nachodza na siebie!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class BadGuy extends Fighter {
+    private static final int maxHP=1000;
 
+    /**
+     * @return the maxHP
+     */
+    public static int getMaxHP() {
+        return maxHP;
+    }
     Node closest = null;
     static final private int inf = 1000000;
 //wywalic z konstruktora hp - zbedne....
@@ -25,7 +32,7 @@ public class BadGuy extends Fighter {
     }
 
     
-    
+    final int timeInterval=100;
 
     @Override
     public boolean isCitizen() {
@@ -102,14 +109,14 @@ public class BadGuy extends Fighter {
                 
                 while(!isStopped() && !isSuspended()){
                     while(zajety) try {
-                        Thread.sleep(1000);
+                        Thread.sleep(timeInterval*10);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
                         }
                               
                 while(currentNode instanceof City &&!((City)currentNode).isDead()){
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(timeInterval);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -117,7 +124,7 @@ public class BadGuy extends Fighter {
                     try {
                                     synchronized (this) {
                                         while (isSuspended()) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(timeInterval);
                                         }
                                         if (isStopped()) {
                                             break;
@@ -147,7 +154,7 @@ public class BadGuy extends Fighter {
                     try {
                                     synchronized (this) {
                                         while (isSuspended()) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(timeInterval);
                                         }
                                         if (isStopped()) {
                                             break;
@@ -156,16 +163,16 @@ public class BadGuy extends Fighter {
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                    ((City)currentNode).getDrained((float)-0.1);
+                    ;
                     //zwieksz zdolnosci o 0.1
-                    increaseAbilities((float)0.1*(float)0.1);
+                    increaseAbility((float)0.1*(float)0.1,((City)currentNode).getDrained((float)-0.1));
                     boolean zabity=false;
                     znalezione=false;
                     //zabij citizena
                     try {
                                     synchronized (this) {
                                         while (isSuspended()) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(timeInterval);
                                         }
                                         if (isStopped()) {
                                             break;
@@ -240,7 +247,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;
@@ -260,7 +267,7 @@ public class BadGuy extends Fighter {
                                 try {
                                     synchronized (this) {
                                         while (isSuspended()) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(timeInterval);
                                         }
                                         if (isStopped()) {
                                             break;
@@ -285,7 +292,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;
@@ -304,7 +311,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;
@@ -324,7 +331,7 @@ public class BadGuy extends Fighter {
                                 try {
                                     synchronized (this) {
                                         while (isSuspended()) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(timeInterval);
                                         }
                                         if (isStopped()) {
                                             break;
@@ -349,7 +356,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;
@@ -368,7 +375,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;
@@ -389,7 +396,7 @@ public class BadGuy extends Fighter {
                                 try {
                                     synchronized (this) {
                                         while (isSuspended()) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(timeInterval);
                                         }
                                         if (isStopped()) {
                                             break;
@@ -414,7 +421,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;
@@ -433,7 +440,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;
@@ -454,7 +461,7 @@ public class BadGuy extends Fighter {
                                 try {
                                     synchronized (this) {
                                         while (isSuspended()) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(timeInterval);
                                         }
                                         if (isStopped()) {
                                             break;
@@ -479,7 +486,7 @@ public class BadGuy extends Fighter {
                             try {
                                 synchronized (this) {
                                     while (isSuspended()) {
-                                        Thread.sleep(100);
+                                        Thread.sleep(timeInterval);
                                     }
                                     if (isStopped()) {
                                         break;

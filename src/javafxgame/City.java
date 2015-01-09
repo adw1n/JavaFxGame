@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.input.KeyCode;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 public class City extends Node { //city na razie ma tylko wiekszy promien
@@ -16,12 +15,14 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     final int maxInitFightersAbilityAttributeValue=10;
 //    ArrayList<Citizen> citizens;
     int numberOfCitizens;
-    ArrayList<PowerSource> powerSources;
+    private Label cityNameLabel;
+    private ArrayList<PowerSource> powerSources;
     static int ile = 0;
     private boolean dead;
     public City(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, radius, graph,graph.getNameGetter().getCityName());
         initializeVariables(graph);
+        
     }
 
     private void initializeVariables(Graph graph) {
@@ -29,7 +30,11 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
         badGuyIsGoingToThisCity=false;
         ile++;
        initializePowerSources();
-        System.out.println("power Sources size: "+powerSources.size()+powerSources.get(0));
+        System.out.println("power Sources size: "+getPowerSources().size()+getPowerSources().get(0));
+        cityNameLabel=new Label(getName());
+        cityNameLabel.setLayoutX(Math.max(getCircle().getCenterX()-getCircle().getRadius(),0));
+        cityNameLabel.setLayoutY(Math.max(getCircle().getCenterY()+getCircle().getRadius(), 0));
+        getPane().getChildren().add(cityNameLabel);
     }
     private void initializePowerSources(){
         
@@ -51,7 +56,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
                 case 4: a=Ability.STAMINA;
                     break;
             }
-            powerSources.add(new PowerSource(new FightersAbility(a,randomGenerator.nextInt(maxInitFightersAbilityAttributeValue)+1),getGraph() ));
+            getPowerSources().add(new PowerSource(new FightersAbility(a,randomGenerator.nextInt(maxInitFightersAbilityAttributeValue)+1),getGraph() ));
                     
         }
     }
@@ -84,8 +89,8 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
                             foundException=true;
                         }
                     } while (foundException );
-        ans+="\nNumber of your guys: "+numOfCitizens;
-        for(PowerSource it: powerSources)
+        ans+="\nNumber of your guys in the City: "+numOfCitizens;
+        for(PowerSource it: getPowerSources())
             ans+="\n"+it;
         return ans; //To change body of generated methods, choose Tools | Templates.
     }
@@ -94,16 +99,27 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
         super(x, y, pane, radius, graph,name);
         initializeVariables(graph);
     }
-    public synchronized void getDrained(float ammount){
+    public synchronized Ability getDrained(float ammount){
         int ammountOfDeadPowerSources=0;
         if(!isIsDefeated()){
-        for(PowerSource it: powerSources){
+        for(PowerSource it: getPowerSources()){
+            if(it.getEnergy()>0){
             it.decreaseEnergy(ammount);
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    getGraph().getControlPanel().displayEntity();
+                }
+            });
+            
+            return it.getEnhancedAbility().getAbility();
+            }
             if(it.getEnergy()<=0) ammountOfDeadPowerSources++;
         }
-        if(ammountOfDeadPowerSources==powerSources.size()) {setDead(true);System.out.println("miasto umarlo");setIsDefeated(true);getGraph().decreaseNumOfCitiesAlive();}
+        if(ammountOfDeadPowerSources==getPowerSources().size()) {setDead(true);setIsDefeated(true);getGraph().decreaseNumOfCitiesAlive();}
         }
-        
+        return null;
     }
     public void createCitizen() {
 //        Citizen c=new Citizen(this);
@@ -148,6 +164,13 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
      */
     public synchronized void setBadGuyIsGoingToThisCity(boolean badGuyIsGoingToThisCity) {
         this.badGuyIsGoingToThisCity = badGuyIsGoingToThisCity;
+    }
+
+    /**
+     * @return the powerSources
+     */
+    public ArrayList<PowerSource> getPowerSources() {
+        return powerSources;
     }
 
 }
