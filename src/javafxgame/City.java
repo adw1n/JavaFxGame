@@ -12,7 +12,7 @@ import javafx.scene.layout.Pane;
  * It has mystical PowerSources that are needed to create superheroes.
  * @author adwin_
  */
-public class City extends Node { //city na razie ma tylko wiekszy promien
+public class City extends Node {
 
     private static final int radius = 32;
     private boolean badGuyIsGoingToThisCity;
@@ -24,10 +24,10 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     private boolean dead;
     /**
      * Initializes a city
-     * @param x
-     * @param y
-     * @param pane
-     * @param graph 
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param pane pane that u draw on
+     * @param graph graph in which City is a node
      */
     public City(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, radius, graph,graph.getNameGetter().getCityName());
@@ -77,7 +77,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     }
     /**
      * Provides a feedback of the city, by returning a String that carries all the needed info.
-     * @return 
+     * @return all info about this object
      */
     @Override
     public String toString() {
@@ -114,12 +114,12 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     }
     /**
      * Creates a city.
-     * @param x
-     * @param y
-     * @param pane
-     * @param graph
-     * @param radius
-     * @param name 
+     * @param x x coordinate of the center
+     * @param y y coordinate of the center
+     * @param pane pane that u draw on
+     * @param graph graph in which 
+     * @param radius radius of the city
+     * @param name name of the city
      */
     public City(int x, int y, Pane pane, Graph graph,int radius,String name) {
         super(x, y, pane, radius, graph,name);
@@ -127,7 +127,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     }
     /**
      * Weakens one of the PowerSources in the City. When all PowerSources are destroyed, sets a flag that the city is dead.
-     * @param ammount
+     * @param ammount the difference of energy before and after
      * @return returns the ability of the drained power source.
      */
     public synchronized Ability getDrained(float ammount){
@@ -170,7 +170,7 @@ public class City extends Node { //city na razie ma tylko wiekszy promien
     }
     /**
      * Sometimes usefull and faster than (this instanceof City).
-     * @return 
+     * @return returns true
      */
     public boolean isCity() {
         return true;

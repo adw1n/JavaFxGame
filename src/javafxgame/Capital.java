@@ -17,7 +17,7 @@ public class Capital extends City{
         * @param x x coordinate of the center of the Capital
         * @param y y coordinate of the center of the Capital
         * @param pane pane that you want to draw the Capital on
-        * @param graph 
+        * @param graph  the graph that the Capital belongs to
         */
     public Capital(int x, int y, Pane pane, Graph graph) {
         super(x, y, pane, graph,radius,graph.getNameGetter().getCapitalName());

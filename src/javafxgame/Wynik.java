@@ -23,9 +23,9 @@ public class Wynik implements Comparable<Wynik>,  Serializable{
     }
     /**
      * Tworzy wynik
-     * @param imieGracza
-     * @param liczbaPokonanychZloczyncow
-     * @param czasRozgrywki 
+     * @param imieGracza players name
+     * @param liczbaPokonanychZloczyncow how many enemies has the player slaid
+     * @param czasRozgrywki how long did the player last
      */
     public Wynik(String imieGracza,int liczbaPokonanychZloczyncow,double czasRozgrywki){
         this.idWyniku=licznik++;
@@ -35,15 +35,15 @@ public class Wynik implements Comparable<Wynik>,  Serializable{
     }
     /**
      * Zwraca dane gracza jako String
-     * @return 
+     * @return player's result
      */
     public String toString(){
        return imieGracza+", "+"time: "+czasRozgrywki;
     }
     /**
      * Przyrownuje
-     * @param o
-     * @return 
+     * @param o the result that u compare to this
+     * @return info which one is greater
      */
     @Override
     public int compareTo(Wynik o) {

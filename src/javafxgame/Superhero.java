@@ -2,7 +2,6 @@
 
 package javafxgame;
 
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.layout.Pane;
@@ -17,22 +16,19 @@ public class Superhero extends Fighter{
    private final Capital capital;
    /**
     * Creates a superhero.
-    * @param hp
-    * @param capital
-    * @param pane
-    * @param graph 
+    * @param hp number of health points of the object
+    * @param capital the capital where superhero is spawn
+    * @param pane the pane that superhero is drawn on
+    * @param graph the graph that the superhero belongs to
     */
     public Superhero(int hp, Capital capital, Pane pane, Graph graph) {
         super(hp, capital.getCircle().getCenterX(), capital.getCircle().getCenterY(), pane, null,graph.getNameGetter().getFemaleName());
         setGraph(graph);
-        setCurrentNode(capital);
-//        currentNode=capital;
-        
+        setCurrentNode(capital);        
         this.capital=capital;
         getCircle().setFill(valueOf("green"));
         graph.getControlPanel().displayEntity();
         updateCityInfo();
-        
     }
 
     @Override

@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Random;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Line;
 /**
  * Creates all the Cities, connects them, creates citizens, displays info about stuff.
@@ -34,7 +29,7 @@ public class Graph {
     private BadGuysCreator badGuysCreator;
     /**
      * Creates a graph, and starts a game by doing it.
-     * @param pane 
+     * @param pane pane that u draw stuff on
      */
     public Graph(Pane pane) {
         numOfCitiesAlive=0;
@@ -110,7 +105,7 @@ public class Graph {
     }
     /**
      * Forwards the request to display an entity.
-     * @param e 
+     * @param e entity to display
      */
     public synchronized void displayEntity(Entity e){
         getControlPanel().displayEntity(e);
@@ -123,14 +118,14 @@ public class Graph {
     }
     /**
      * Adds a guy to the list.
-     * @param guy 
+     * @param guy guy to add to the list
      */
     public synchronized void addGuy(Guy guy){
         getGuys().add(guy);
     }
     /**
      * Adds a bad guy to the list of bad guys.
-     * @param guy 
+     * @param guy guy that u want to add to the list of villains
      */
     public synchronized void addBadGuy(BadGuy guy){
         try{getBadGuys().add(guy);}
@@ -138,7 +133,7 @@ public class Graph {
     }
     /**
      * Adds a node in the graph.
-     * @param node 
+     * @param node  node that you want to add to the graph
      */
     public void addNode(Node node) {
         if(node instanceof City) increaseNumOfCitiesAlive();
@@ -167,15 +162,15 @@ public class Graph {
     }
     /**
      * Returns the number of cities with still working PowerSources.
-     * @return 
+     * @return returns the number of cities still alive
      */
     public synchronized int getNumOfCitiesAlive(){
         return numOfCitiesAlive;
     };
     /**
      * Returns a random City form the graph.
-     * @param n
-     * @return 
+     * @param n the node that you start your route from
+     * @return random node
      */
     public Node getRandomCity(Node n) {
         while (true) {
@@ -202,8 +197,8 @@ public class Graph {
     }
     /**
      * Provides a City for the superhero to go to. Hopefully a bad guy is near that city.
-     * @param n
-     * @return 
+     * @param n node that you start from
+     * @return random node
      */
     public Node getCityForSuperhero(Node n){
         for(Node it: getNodes()){
@@ -217,8 +212,8 @@ public class Graph {
     }
     /**
      * Creates roads adds them to the internal adjacency matrix.
-     * @param begin
-     * @param end 
+     * @param begin number of first node on the road
+     * @param end number of the second node on the road
      */
     public void addEdge(int begin, int end) {
 
@@ -270,9 +265,9 @@ public class Graph {
     }
     /**
      * Performs a dfs and returns a stack of the nodes to visit to get from the begin Node to the end Node.
-     * @param begin
-     * @param end
-     * @return 
+     * @param begin node that you start from
+     * @param end node that you finish in
+     * @return all the nodes that you have too visit
      */
     public Stack<Node> findPathBetweenCities(Node begin, Node end) {//przerobic na city
         Stack<Node> path = new Stack<>();
@@ -314,8 +309,8 @@ public class Graph {
     }
     /**
      * An overloaded func working on intigers instead of Node references. 
-     * @param begin
-     * @param end
+     * @param begin number of the node that you start from
+     * @param end number of the node that you finish in
      * @return returns the nodes numbers to visit
      */
     public Stack<Integer> findPathBetweenCities(int begin, int end) {

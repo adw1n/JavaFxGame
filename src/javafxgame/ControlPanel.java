@@ -46,8 +46,8 @@ public class ControlPanel {
     static final double minEnergyToCreateAHero=80;
     /**
      * Creates a control panel at a fixed position on the pane.
-     * @param pane
-     * @param graph 
+     * @param pane pane that u draw on
+     * @param graph graph that owns the control panel
      */
     public ControlPanel(Pane pane, Graph graph) {
         this.graph = graph;
@@ -73,7 +73,6 @@ public class ControlPanel {
         currentEntity = null;
         btnStop = new Button("Delete");
         soundEffect=new AudioClip(Paths.get("soundEffect.wav").toUri().toString());
-//        AudioClip sound = new AudioClip("laser.mp3");
         btnStop.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -132,10 +131,12 @@ public class ControlPanel {
             public void handle(ActionEvent event) {
                 if (currentEntity != null) {//if its a Capital
                     if (currentEntity instanceof Capital){
+                        if(!((Capital) currentEntity).isIsDefeated()){
                     ((Capital) currentEntity).createSuperhero();
                     timeOfLastGuyCreation=System.nanoTime();
                     if(!mute)soundEffect.play();
                     displayEntity();
+                        }
                     }
 
                 }
@@ -332,7 +333,7 @@ public class ControlPanel {
     }
     /**
      * Sets the currentEntity to new entity and displays info about it and provides an interface for user to communicate with the currentEntity, or blocks the ability to communicate with it.
-     * @param e 
+     * @param e the entity to be displayed
      */
     public synchronized void displayEntity(Entity e) {
         currentEntity = e;
@@ -374,7 +375,7 @@ public class ControlPanel {
                                 powerSourcesEnergy+=p.getEnergy();
                         }
                     }
-                    btnCreateSuperhero.setDisable(powerSourcesEnergy+seconds<minEnergyToCreateAHero && powerSourcesEnergy>10);
+                    btnCreateSuperhero.setDisable(powerSourcesEnergy+seconds<minEnergyToCreateAHero || powerSourcesEnergy<=10 || ((Capital)e).isIsDefeated());
                 }
             }
             

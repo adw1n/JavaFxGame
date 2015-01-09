@@ -46,11 +46,11 @@ public abstract class Fighter extends Guy{
         for(FightersAbility it: abilities)
             ans+=it;
         
-        return ans; //To change body of generated methods, choose Tools | Templates.
+        return ans;
     }
     /**
      * Makes two guys fight each other. 
-     * @param opponent 
+     * @param opponent the opponent that u fight with
      */
     public synchronized void fight(Fighter opponent){
         if(this.getOpponent()==null && opponent.getOpponent()==null){

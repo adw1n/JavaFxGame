@@ -5,13 +5,13 @@ package javafxgame;
  */
 public class PowerSource extends Entity{
     private static int ID_count=0;
-    private int ID;
+    private final int ID;
     
     private FightersAbility enhancedAbility;
     /**
      * Creates a power source.
-     * @param enhancedAbility
-     * @param graph 
+     * @param enhancedAbility the ability that the powersource has effect on
+     * @param graph the graph that the powersource bolongs to
      */
     public PowerSource(FightersAbility enhancedAbility,Graph graph) {
         super(graph.getNameGetter().getPowerSourceName());
@@ -53,14 +53,14 @@ public class PowerSource extends Entity{
     }
     /**
      * Increases the energy of the power source by the given ammount.
-     * @param energy 
+     * @param energy by how much you increase
      */
     public void increaseEnergy(float energy){
         enhancedAbility.increaseAbilityAttribute(energy);
     }
     /**
      * Decreases the energy of the power source by the given ammount.
-     * @param energy 
+     * @param energy by how much did it change
      */
     public void decreaseEnergy(float energy){
         if(energy>enhancedAbility.getAbilityAttribute()) {

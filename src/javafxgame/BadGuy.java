@@ -1,4 +1,3 @@
-
 package javafxgame;
 
 import java.util.ConcurrentModificationException;
@@ -10,13 +9,17 @@ import java.util.logging.Logger;
 import javafx.scene.layout.Pane;
 import static javafx.scene.paint.Color.valueOf;
 import javafx.scene.shape.Circle;
+
 /**
- * Enemy in the game, kills citizens, drains cities, fights fith superheroes.
+ * Enemy in the game, kills citizens, drains cities, fights with superheroes.
+ *
  * @author adwin_
  */
 public class BadGuy extends Fighter {
-    private static final int maxHP=1000;
+
+    private static final int maxHP = 1000;
     private City destination;
+
     /**
      * @return the maxHP
      */
@@ -25,28 +28,30 @@ public class BadGuy extends Fighter {
     }
     private Node closest = null;
     static final private int inf = 1000000;
+
     /**
      * Constructs an object of class BadGuy.
+     *
      * @param hp health points of the BadGuy
      * @param x x center coordinate of the BadGuy
      * @param y x center coordinate of the BadGuy
-     * @param pane
-     * @param graph 
+     * @param pane the pane that u draw on
+     * @param graph the graph that all the cities belong to
      */
     public BadGuy(int hp, double x, double y, Pane pane, Graph graph) {
-        super(hp, x, y, pane, null,graph.getNameGetter().getFemaleName());
+        super(hp, x, y, pane, null, graph.getNameGetter().getFemaleName());
         setGraph(graph);
         getCircle().setFill(valueOf("red"));
-        
+
     }
 
-    
-    private final int timeInterval=100;
-    
+    private final int timeInterval = 100;
+
     @Override
     public boolean isCitizen() {
         return false;
     }
+
     /**
      * Makes bad guy attack cities, kill citizens, fight with superheroes.
      */
@@ -71,7 +76,9 @@ public class BadGuy extends Fighter {
         }
         if (minDistance != inf) {
             //go to the closest
-            if(closest instanceof City) ((City)closest).setBadGuyIsGoingToThisCity(true);
+            if (closest instanceof City) {
+                ((City) closest).setBadGuyIsGoingToThisCity(true);
+            }
             int addX, addY;
             if (getCircle().getCenterX() < closest.getCircle().getCenterX()) {
                 addX = 1;
@@ -86,175 +93,177 @@ public class BadGuy extends Fighter {
             while (getCircle().getCenterX() != closest.getCircle().getCenterX()
                     || getCircle().getCenterY() != closest.getCircle().getCenterY()) {
                 try {
-                    Thread.sleep(timeInterval/2);
+                    Thread.sleep(timeInterval / 2);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                Thread t=new Thread(){
+                Thread t = new Thread() {
                     @Override
-                    public void run(){
+                    public void run() {
                         if (getCircle().getCenterX() != closest.getCircle().getCenterX()) {
-                    getCircle().setCenterX(getCircle().getCenterX() + addX);
-                }
+                            getCircle().setCenterX(getCircle().getCenterX() + addX);
+                        }
                     }
                 };
                 JavaFxGame.runAndWait(t);
                 try {
-                    Thread.sleep(timeInterval/2);
+                    Thread.sleep(timeInterval / 2);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                t=new Thread(){
-                    public void run(){
+                t = new Thread() {
+                    public void run() {
                         if (getCircle().getCenterY() != closest.getCircle().getCenterY()) {
-                    getCircle().setCenterY(getCircle().getCenterY() + addY);
-                }
+                            getCircle().setCenterY(getCircle().getCenterY() + addY);
+                        }
                     }
                 };
                 JavaFxGame.runAndWait(t);
-                
+
             }
             setCurrentNode(closest);
-            
-            
-            if(getCurrentNode()!=null){
-                
-                while(!isStopped() && !isSuspended()){
-                    while(isBusyCuzWorking()) try {
-                        Thread.sleep(timeInterval*10);
+
+            if (getCurrentNode() != null) {
+
+                while (!isStopped() && !isSuspended()) {
+                    while (isBusyCuzWorking()) {
+                        try {
+                            Thread.sleep(timeInterval * 10);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                              
-                while(getCurrentNode() instanceof City &&!((City) getCurrentNode()).isDead()){
-                    try {
-                        Thread.sleep(timeInterval);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    //check for collision with Superhero
-                    try {
-                                    synchronized (this) {
-                                        while (isSuspended()) {
-                                            Thread.sleep(timeInterval);
-                                        }
-                                        if (isStopped()) {
-                                            break;
-                                        }
-                                    }
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+
+                    while (getCurrentNode() instanceof City && !((City) getCurrentNode()).isDead()) {
+                        try {
+                            Thread.sleep(timeInterval);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        //check for collision with Superhero
+                        try {
+                            synchronized (this) {
+                                while (isSuspended()) {
+                                    Thread.sleep(timeInterval);
                                 }
-                    boolean exceptionCatched=false;
-                    do {
-                        exceptionCatched = false;
-                        try{
-                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
-                        {
-                            Guy iterator=iter.next();
-                            if (iterator instanceof Superhero &&!isStopped() &&!iterator.isStopped()  && getCircle().getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {                              
-                                fight((Superhero)iterator);
+                                if (isStopped()) {
+                                    break;
+                                }
                             }
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        }
-                        catch(ConcurrentModificationException e){
-                            exceptionCatched=true;
-                        }
-                    } while (exceptionCatched);
-                    //drain city
-                    try {
-                                    synchronized (this) {
-                                        while (isSuspended()) {
-                                            Thread.sleep(timeInterval);
-                                        }
-                                        if (isStopped()) {
-                                            break;
-                                        }
+                        boolean exceptionCatched = false;
+                        do {
+                            exceptionCatched = false;
+                            try {
+                                for (Iterator<Guy> iter = getGraph().getGuys().iterator(); iter.hasNext();) {
+                                    Guy iterator = iter.next();
+                                    if (iterator instanceof Superhero && !isStopped() && !iterator.isStopped() && getCircle().getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                        fight((Superhero) iterator);
                                     }
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                    increaseAbility((float)0.1*(float)0.1,((City)getCurrentNode()).getDrained((float)-0.1));
-                    boolean killed=false;
-                    exceptionCatched=false;
-                    try {
-                                    synchronized (this) {
-                                        while (isSuspended()) {
-                                            Thread.sleep(timeInterval);
-                                        }
-                                        if (isStopped()) {
-                                            break;
-                                        }
-                                    }
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                    do {
-                        exceptionCatched = false;
-                        try{
-                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
-                        {
-                            Guy iterator=iter.next();
-                            if (!killed &&iterator instanceof Citizen &&!isStopped() &&!iterator.isStopped()  && getCircle().getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {                              
-                                iterator.myStop();
-                                killed=true;
-                                
+                            } catch (ConcurrentModificationException e) {
+                                exceptionCatched = true;
                             }
+                        } while (exceptionCatched);
+                        //drain city
+                        try {
+                            synchronized (this) {
+                                while (isSuspended()) {
+                                    Thread.sleep(timeInterval);
+                                }
+                                if (isStopped()) {
+                                    break;
+                                }
+                            }
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        increaseAbility((float) 0.1 * (float) 0.1, ((City) getCurrentNode()).getDrained((float) -0.1));
+                        boolean killed = false;
+                        exceptionCatched = false;
+                        try {
+                            synchronized (this) {
+                                while (isSuspended()) {
+                                    Thread.sleep(timeInterval);
+                                }
+                                if (isStopped()) {
+                                    break;
+                                }
+                            }
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        catch(ConcurrentModificationException e){
-                            exceptionCatched=true;
-                        }
-                    } while (exceptionCatched && !killed);
-                    
-                }
-                if( getCurrentNode() instanceof City) ((City)getCurrentNode()).setBadGuyIsGoingToThisCity(false);
-               Random randomGenerator= new Random();
+                        do {
+                            exceptionCatched = false;
+                            try {
+                                for (Iterator<Guy> iter = getGraph().getGuys().iterator(); iter.hasNext();) {
+                                    Guy iterator = iter.next();
+                                    if (!killed && iterator instanceof Citizen && !isStopped() && !iterator.isStopped() && getCircle().getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                        iterator.myStop();
+                                        killed = true;
+
+                                    }
+                                }
+                            } catch (ConcurrentModificationException e) {
+                                exceptionCatched = true;
+                            }
+                        } while (exceptionCatched && !killed);
+
+                    }
+                    if (getCurrentNode() instanceof City) {
+                        ((City) getCurrentNode()).setBadGuyIsGoingToThisCity(false);
+                    }
+                    Random randomGenerator = new Random();
                     try {
                         Thread.sleep(randomGenerator.nextInt(400));
                     } catch (InterruptedException ex) {
                         Logger.getLogger(BadGuy.class.getName()).log(Level.SEVERE, null, ex);
                     }
-            //go to the next city
-            try{
-                go(getGraph().findPathBetweenCities(getCurrentNode(), getGraph().getRandomCity(getCurrentNode())));
+                    //go to the next city
+                    try {
+                        go(getGraph().findPathBetweenCities(getCurrentNode(), getGraph().getRandomCity(getCurrentNode())));
+                    } catch (TryLater e) {
                     }
-                    catch(TryLater e){
-                    }
+                }
             }
-            }
-            
+
         }
-        if(destination!=null){
+        if (destination != null) {
             destination.setBadGuyIsGoingToThisCity(false);
         }
         getGraph().getBadGuys().remove(this);
         deleteFromPane();
     }
-        /**
-         * Makes BadGuy visit all Nodes on the Stack.
+
+    /**
+     * Makes BadGuy visit all Nodes on the Stack.
+     *
      * @param the following nodes on the path to visit
      */
     void go(Stack<Node> path) {
         setBusyCuzWorking(true);
         if (!path.empty()) {
             setCurrentNode(path.get(0));
-            if(getCurrentNode() instanceof City) ((City)getCurrentNode()).setBadGuyIsGoingToThisCity(false);
-            if(path.lastElement() instanceof City){ ((City)path.lastElement()).setBadGuyIsGoingToThisCity(true);
-            destination=(City)path.lastElement();
+            if (getCurrentNode() instanceof City) {
+                ((City) getCurrentNode()).setBadGuyIsGoingToThisCity(false);
+            }
+            if (path.lastElement() instanceof City) {
+                ((City) path.lastElement()).setBadGuyIsGoingToThisCity(true);
+                destination = (City) path.lastElement();
             }
             path.remove(0);
-            
+
             Thread renderer;
             renderer = new Thread() {
                 private boolean found = false;
                 private Circle c;
-                
-                
+
                 @Override
                 public void run() {
                     for (Node it : path) {
-                        
+
                         Thread t;
                         if (getCircle().getCenterY() == it.getCircle().getCenterY() && getCircle().getCenterX() < it.getCircle().getCenterX()) {//go right
                             try {
@@ -290,11 +299,11 @@ public class BadGuy extends Fighter {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 try {
-                                    Thread.sleep(timeInterval/2);
+                                    Thread.sleep(timeInterval / 2);
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                checkIntersectionsWhileGoingRight(); 
+                                checkIntersectionsWhileGoingRight();
                                 t = new Thread() {
                                     public void run() {
                                         getCircle().setCenterX(getCircle().getCenterX() + 1);
@@ -355,7 +364,7 @@ public class BadGuy extends Fighter {
                                 }
                                 checkIntersectionsWhileGoingLeft();
                                 try {
-                                    Thread.sleep(timeInterval/2);
+                                    Thread.sleep(timeInterval / 2);
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -364,7 +373,7 @@ public class BadGuy extends Fighter {
                                         getCircle().setCenterX(getCircle().getCenterX() - 1);
                                     }
                                 };
-                                JavaFxGame.runAndWait(t);                                    
+                                JavaFxGame.runAndWait(t);
                             }
                             try {
                                 synchronized (this) {
@@ -420,7 +429,7 @@ public class BadGuy extends Fighter {
                                 }
                                 checkIntersectionsWhileGoingDown();
                                 try {
-                                    Thread.sleep(timeInterval/2);
+                                    Thread.sleep(timeInterval / 2);
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -484,7 +493,7 @@ public class BadGuy extends Fighter {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 try {
-                                    Thread.sleep(timeInterval/2);
+                                    Thread.sleep(timeInterval / 2);
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -514,215 +523,220 @@ public class BadGuy extends Fighter {
                                 }
                             };
                             JavaFxGame.runAndWait(t);
-                        } 
+                        }
                         setCurrentNode(path.lastElement());
-                        
+
                     }
                     setBusyCuzWorking(false);
                 }
+
                 /**
-                 * Checks for intersections and makes sure BadGuy can move forward.
+                 * Checks for intersections and makes sure BadGuy can move
+                 * forward.
                  */
                 private void checkIntersectionsWhileGoingLeft() {
                     c = new Circle(getCircle().getCenterX() - 1, getCircle().getCenterY(), getRadius());
-                    
+
                     do {
                         found = false;
-                        try{
-                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
-                        {
-                            Guy iterator=iter.next();
-                            if (!(iterator instanceof BadGuy) && !isStopped() &&!iterator.isStopped() && iterator.getCircle() != getCircle()   && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
-                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
+                        try {
+                            for (Iterator<Guy> iter = getGraph().getGuys().iterator(); iter.hasNext();) {
+                                Guy iterator = iter.next();
+                                if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
+                                }
+                                if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && Math.abs(iterator.getCircle().getCenterX() - c.getCenterX()) <= 2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY()) <= 2 * Graph.getRoadWidth()) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
+                                }
                             }
-                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped() && iterator.getCircle() != getCircle() && Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2*Graph.getRoadWidth() ) {
-                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
-                            }
-                        }
-                        }
-                        catch(ConcurrentModificationException e){
-                            found=true;
+                        } catch (ConcurrentModificationException e) {
+                            found = true;
                         }
                     } while (found);
                     do {
                         found = false;
-                        
-                        try{
-                        for(Iterator<BadGuy> iter=getGraph().getBadGuys().iterator();iter.hasNext();)
-//                        for (Guy iterator : graph.getGuys()) 
-                                                {
-                            Guy iterator=iter.next();
-                            if (!isStopped() &&!iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() <= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
-                                try {
-                                    Thread.sleep(timeInterval);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+
+                        try {
+                            for (Iterator<BadGuy> iter = getGraph().getBadGuys().iterator(); iter.hasNext();) //                        for (Guy iterator : graph.getGuys()) 
+                            {
+                                Guy iterator = iter.next();
+                                if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() <= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    try {
+                                        Thread.sleep(timeInterval);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    found = true;
                                 }
-                                found = true;
                             }
+                        } catch (ConcurrentModificationException e) {
+
+                            found = true;
                         }
-                        }
-                        catch(ConcurrentModificationException e){
-                            
-                            found=true;
-                        }
-                    } while (found );
+                    } while (found);
                 }
-                   /**
-                 * Checks for intersections and makes sure BadGuy can move forward.
+
+                /**
+                 * Checks for intersections and makes sure BadGuy can move
+                 * forward.
                  */
                 private void checkIntersectionsWhileGoingDown() {
                     c = new Circle(getCircle().getCenterX(), getCircle().getCenterY() + 1, getRadius());
-                    
+
                     do {
                         found = false;
-                        try{
-                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
-                        {
-                            Guy iterator=iter.next();
-                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped()   &&iterator.getCircle() != getCircle()&& c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {                              
-                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
-   
-                            }
-                            else if (!(iterator instanceof BadGuy) &&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2*Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2 ) {
-                                                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
-                            }
-                        }
-                        }
-                        catch(ConcurrentModificationException e){
-                            found=true;
-                        }
-                    } while (found);
-                    do {
-                        found = false;
-                        try{
-                        for(Iterator<BadGuy> iter=getGraph().getBadGuys().iterator();iter.hasNext();)
-//                        for (Guy iterator : graph.getGuys()) 
-                                                {
-                            Guy iterator=iter.next();
-                            if (!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
-                                try {
-                                    Thread.sleep(timeInterval);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                        try {
+                            for (Iterator<Guy> iter = getGraph().getGuys().iterator(); iter.hasNext();) {
+                                Guy iterator = iter.next();
+                                if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
+
+                                } else if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && Math.abs(iterator.getCircle().getCenterX() - c.getCenterX()) <= 2 * Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY()) <= 2) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
                                 }
-                                found = true;
                             }
-                        }
-                        }
-                        catch(ConcurrentModificationException e){
-                           
-                            found=true;
+                        } catch (ConcurrentModificationException e) {
+                            found = true;
                         }
                     } while (found);
-                    
+                    do {
+                        found = false;
+                        try {
+                            for (Iterator<BadGuy> iter = getGraph().getBadGuys().iterator(); iter.hasNext();) //                        for (Guy iterator : graph.getGuys()) 
+                            {
+                                Guy iterator = iter.next();
+                                if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() >= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    try {
+                                        Thread.sleep(timeInterval);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    found = true;
+                                }
+                            }
+                        } catch (ConcurrentModificationException e) {
+
+                            found = true;
+                        }
+                    } while (found);
+
                 }
-/**
-                 * Checks for intersections and makes sure object can move forward.
+
+                /**
+                 * Checks for intersections and makes sure object can move
+                 * forward.
                  */
                 private void checkIntersectionsWhileGoingUp() {
                     c = new Circle(getCircle().getCenterX(), getCircle().getCenterY() - 1, getRadius());
-                    
+
                     do {
                         found = false;
-                    try{
-                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();) 
-                        {
-                            Guy iterator=iter.next();
-                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != getCircle() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
-                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
+                        try {
+                            for (Iterator<Guy> iter = getGraph().getGuys().iterator(); iter.hasNext();) {
+                                Guy iterator = iter.next();
+                                if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
+                                } else if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && Math.abs(iterator.getCircle().getCenterX() - c.getCenterX()) <= 2 * Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY()) <= 2) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
+                                }
                             }
-                            else if (!(iterator instanceof BadGuy)&&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2*Graph.getRoadWidth() && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2) {
-                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
-                            }  
-                        }
-                    }
-                    catch(ConcurrentModificationException e){
-                            found=true;
+                        } catch (ConcurrentModificationException e) {
+                            found = true;
                         }
                     } while (found);
-                     do {
+                    do {
                         found = false;
-                        try{
-                        for(Iterator<BadGuy> iter=getGraph().getBadGuys().iterator();iter.hasNext();)
-//                        for (Guy iterator : graph.getGuys()) 
-                                                {
-                            Guy iterator=iter.next();
-                            if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
-                                try {
-                                    Thread.sleep(timeInterval);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                        try {
+                            for (Iterator<BadGuy> iter = getGraph().getBadGuys().iterator(); iter.hasNext();) //                        for (Guy iterator : graph.getGuys()) 
+                            {
+                                Guy iterator = iter.next();
+                                if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() == c.getCenterX() && iterator.getCircle().getCenterY() <= c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    try {
+                                        Thread.sleep(timeInterval);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    found = true;
                                 }
-                                found = true;
                             }
-                        }
-                        }
-                        catch(ConcurrentModificationException e){
-                            found=true;
+                        } catch (ConcurrentModificationException e) {
+                            found = true;
                         }
                     } while (found);
                 }
-/**
-                 * Checks for intersections and makes sure object can move forward.
+
+                /**
+                 * Checks for intersections and makes sure object can move
+                 * forward.
                  */
                 private void checkIntersectionsWhileGoingRight() {
                     c = new Circle(getCircle().getCenterX() + 1, getCircle().getCenterY(), getRadius());
-                    
+
                     do {
                         found = false;
-                    try{
-                        for(Iterator<Guy> iter=getGraph().getGuys().iterator();iter.hasNext();)
-                        {
-                            Guy iterator=iter.next();
-                            if (!(iterator instanceof BadGuy) &&!isStopped() &&!iterator.isStopped() &&  iterator.getCircle() != getCircle()  && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
-                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
+                        try {
+                            for (Iterator<Guy> iter = getGraph().getGuys().iterator(); iter.hasNext();) {
+                                Guy iterator = iter.next();
+                                if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
+                                } else if (!(iterator instanceof BadGuy) && !isStopped() && !iterator.isStopped() && Math.abs(iterator.getCircle().getCenterX() - c.getCenterX()) <= 2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY()) <= 2 * Graph.getRoadWidth()) {
+                                    if (iterator.isCitizen()) {
+                                        iterator.myStop();
+                                    } else {
+                                        fight((Superhero) iterator);
+                                    }
+                                }
                             }
-                            else if (!(iterator instanceof BadGuy) &&!isStopped()  &&!iterator.isStopped() &&  Math.abs(iterator.getCircle().getCenterX() - c.getCenterX())<=2 && Math.abs(iterator.getCircle().getCenterY() - c.getCenterY())<=2*Graph.getRoadWidth() ) {
-                                if(iterator.isCitizen())
-                                iterator.myStop();
-                                else fight((Superhero)iterator);
-                            }
-                        }
-                    }
-                    catch(ConcurrentModificationException e){
-                            found=true;
+                        } catch (ConcurrentModificationException e) {
+                            found = true;
                         }
                     } while (found);
                     do {
                         found = false;
-                        try{
-                        for(Iterator<BadGuy> iter=getGraph().getBadGuys().iterator();iter.hasNext();)
-//                        for (Guy iterator : graph.getGuys()) 
-                                                {
-                            Guy iterator=iter.next();
-                            if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
-                                try {
-                                    Thread.sleep(timeInterval);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                        try {
+                            for (Iterator<BadGuy> iter = getGraph().getBadGuys().iterator(); iter.hasNext();) //                        for (Guy iterator : graph.getGuys()) 
+                            {
+                                Guy iterator = iter.next();
+                                if (!isStopped() && !iterator.isStopped() && iterator.getCircle() != getCircle() && iterator.getCircle().getCenterX() >= c.getCenterX() && iterator.getCircle().getCenterY() == c.getCenterY() && c.getBoundsInParent().intersects(iterator.getCircle().getBoundsInParent())) {
+                                    try {
+                                        Thread.sleep(timeInterval);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    found = true;
                                 }
-                                found = true;
                             }
-                        }
-                        }
-                        catch(ConcurrentModificationException e){
-                 
-                            found=true;
+                        } catch (ConcurrentModificationException e) {
+
+                            found = true;
                         }
                     } while (found);
                 }
@@ -732,5 +746,5 @@ public class BadGuy extends Fighter {
             renderer.start();
         }
     }
-    
+
 }

@@ -1,6 +1,5 @@
 package javafxgame;
 
-import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -20,12 +19,12 @@ public abstract class Node extends Entity {
     private boolean isDefeated;
     /**
      * Creates a Node.
-     * @param x
-     * @param y
-     * @param pane
-     * @param radius
-     * @param graph
-     * @param name 
+     * @param x x coordinate of the center
+     * @param y y coordinate of the center
+     * @param pane pane that u draw node on
+     * @param radius radius of the node
+     * @param graph graph that the node belongs to
+     * @param name name of the node
      */
     public Node(int x, int y, Pane pane, int radius, Graph graph,String name) {
         super(name);
@@ -46,13 +45,13 @@ public abstract class Node extends Entity {
     }
     /**
      * Creates a node.
-     * @param x
-     * @param y
-     * @param pane
-     * @param radius
-     * @param color
-     * @param graph
-     * @param name 
+     * @param x x coordinate of the center
+     * @param y y coordinate of the center
+     * @param pane pane that u draw on
+     * @param radius radius of the node
+     * @param color color of the node
+     * @param graph graph that the node belongs to
+     * @param name name of the node
      */
     public Node(int x, int y, Pane pane, int radius, String color, Graph graph,String name) {
         this(x, y, pane, radius, graph,name);
@@ -61,7 +60,6 @@ public abstract class Node extends Entity {
 
 
     /**
-     * @param t
      * @return the circle
      */
     public Circle getCircle() {
@@ -90,7 +88,7 @@ public abstract class Node extends Entity {
     }
     /**
      * Checks whether it is a city, equivalent to this instanceof City 
-     * @return 
+     * @return whether its indeed a city or not
      */
     public abstract boolean isCity();
 

@@ -24,7 +24,7 @@ public class Crossroads extends Node {
     }
     /**
      * Informs that this object is not a city.
-     * @return 
+     * @return not a city
      */
     public boolean isCity() {
         return false;

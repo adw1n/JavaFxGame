@@ -21,7 +21,7 @@ public class JavaFxGame extends Application {
     private static final int downScreenEdge=700;
     /**
      * Sets up the whole game in JavaFX, initializes the graph, which is responsible for the rest of the stuff.
-     * @param primaryStage 
+     * @param primaryStage the stage that u will be drawing on
      */
     @Override
     public void start(Stage primaryStage) {
@@ -46,7 +46,7 @@ public class JavaFxGame extends Application {
     /**
      * Runs the specified {@link Runnable} on the JavaFX application thread and
      * waits for completion.
-     * @autor:http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/ (not me!!!)
+     * @autor http://news.kynosarges.org/2014/05/01/simulating-platform-runandwait/ (not me!!!)
      *
      * @param action the {@link Runnable} to run
      * @throws NullPointerException if {@code action} is {@code null}

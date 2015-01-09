@@ -13,8 +13,8 @@ public class FightersAbility {
     private float abilityAttribute;
     /** 
      * Creates an ability
-     * @param ability
-     * @param abilityAttribute 
+     * @param ability the ability that abilityAttribute belongs to 
+     * @param abilityAttribute how strong is that ability
      */
     public FightersAbility(Ability ability,float abilityAttribute) {
         this.ability=ability;
@@ -42,14 +42,14 @@ public class FightersAbility {
     }
     /**
      * Makes the ability stronger.
-     * @param difference 
+     * @param difference by how much did the abilityAttribute change
      */
     public void increaseAbilityAttribute(float difference){
         abilityAttribute+=Math.abs(difference);
     }
     /**
      * Makes the ability weaker.
-     * @param difference 
+     * @param difference  by how much did the abilityAttribute change
      */
     public void decreaseAbilityAttribute(float difference){
         abilityAttribute-=Math.abs(difference);

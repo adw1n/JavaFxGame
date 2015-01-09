@@ -50,9 +50,9 @@ private final int numberOfUpdates=20;
           * @param hp num of health points
           * @param x x coordinate of the center of the guy
           * @param y y coordinate of the center of the guy
-          * @param pane
-          * @param currentNode
-          * @param name 
+          * @param pane pane that u draw stuff on
+          * @param currentNode the node that u are currently in
+          * @param name object name
           */
     public Guy(int hp, double x, double y, Pane pane, Node currentNode, String name) {
         super(name);
@@ -87,8 +87,8 @@ private final int numberOfUpdates=20;
     }
     /**
      * Updates the PowerSources in a city.
-     * @param city
-     * @param howMuch 
+     * @param city the city that you update PowerSources in
+     * @param howMuch by how much you increase the energy
      */
     public void updatePowerSources(City city,float howMuch){
         if(!city.isIsDefeated()){
@@ -105,10 +105,9 @@ private final int numberOfUpdates=20;
         }
     }
     /**
-     * Works on the PowerSources and makes them more powerful.
-     * @throws InterruptedException 
+     * Works on the PowerSources and makes them more powerful. 
      */
-    public void sleepAndUpdatePowerSources() throws InterruptedException {
+    public void sleepAndUpdatePowerSources()  {
       
         int timeToSpendInTheCity=randomGenerator.nextInt(20000)+1000;
         if(this instanceof Superhero) //sleep much shorter
@@ -116,7 +115,11 @@ private final int numberOfUpdates=20;
         if(getCurrentNode()!=null){
         if(!currentNode.isIsDefeated()){
             for(int numOfTimeToUpdatePowerSources=0;numOfTimeToUpdatePowerSources<numberOfUpdates;numOfTimeToUpdatePowerSources++){
+                try {
                     getThrd().sleep(timeToSpendInTheCity/numberOfUpdates);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Guy.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 if( getCurrentNode() instanceof City)
                     updatePowerSources((City)getCurrentNode(), (timeToSpendInTheCity/numberOfUpdates)*factor);
             }

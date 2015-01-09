@@ -1,15 +1,10 @@
 package javafxgame;
 
-import java.util.Iterator;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 /**
  * Citizen is a guy, who keeps traveling between his native city and other cities, has the power to heal/strenghten a city by making PowerSouces in a city stronger.
- * He is extreamly fragile and easy to kill. He cant fight. Sometimes he suspends on a road and can cause a roadblock, so watch out!
+ * He is extreamly fragile and easy to kill. He cant fight. Sometimes he suspends on the road and can cause a roadblock, so watch out!
  * @author adwin_
  */
 public class Citizen extends Guy {
@@ -21,8 +16,8 @@ public class Citizen extends Guy {
     /**
      * Initializes a citizen.
      * @param nativeCity the native city, where the citizen was born and he grew up, where he lives and has family
-     * @param graph 
-     */
+     * @param graph the graph that the citizen belongs to
+     */ 
     public Citizen(City nativeCity,Graph graph) {
         super(hp, nativeCity.getCircle().getCenterX(), nativeCity.getCircle().getCenterY(), nativeCity.getPane(), nativeCity,graph.getNameGetter().getFemaleName());
         this.nativeCity = nativeCity;
